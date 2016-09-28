@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2016 rel. 2 (http://www.altova.com) by Francisco (UCLM) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" elementFormDefault="qualified" attributeFormDefault="unqualified" vc:minVersion="1.1">
+	<xs:element name="Student">
+		<xs:annotation>
+			<xs:documentation>Comment describing your root element</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Identification">
+					<xs:complexType>
+						<xs:attribute name="id" use="required"/>
+						<xs:attribute name="name" use="required"/>
+						<xs:attribute name="address"/>
+						<xs:attribute name="phone"/>
+						<xs:attribute name="email" use="required"/>
+						<xs:attribute name="type" use="required">
+							<xs:annotation>
+								<xs:documentation>computed value</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:enumeration value="beginner"/>
+									<xs:enumeration value="medium"/>
+									<xs:enumeration value="advanced"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+					</xs:complexType>
+				</xs:element>
+				<xs:element ref="LearningStyle"/>
+				<xs:element name="CurrentCourse">
+					<xs:annotation>
+						<xs:documentation>only one course</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="LearningPath"/>
+						</xs:sequence>
+						<xs:attribute name="name"/>
+						<xs:attribute name="finalmark"/>
+						<xs:attribute name="weight">
+							<xs:annotation>
+								<xs:documentation>relevancy of the course</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="LearningMethod">
+		<xs:annotation>
+			<xs:documentation>relación entre metodo y estilos (tab. 8.26)</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="type">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:enumeration value="instruccional"/>
+							<xs:enumeration value="orientador"/>
+							<xs:enumeration value="socrático"/>
+							<xs:enumeration value="constructivista"/>
+							<xs:enumeration value="cooperativo"/>
+							<xs:enumeration value="contextual"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="autonomy">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:enumeration value="baja"/>
+							<xs:enumeration value="media"/>
+							<xs:enumeration value="alta"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="guided">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:enumeration value="profesor"/>
+							<xs:enumeration value="mentor"/>
+							<xs:enumeration value="iguales"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="LearningStyle">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Procesamiento">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:enumeration value="activo"/>
+							<xs:enumeration value="reflexivo"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="Percepcion">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:enumeration value="sensorial"/>
+							<xs:enumeration value="intuitiva"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="Entrada">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:enumeration value="visual"/>
+							<xs:enumeration value="verbal"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="Comprensión">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:enumeration value="secuencial"/>
+							<xs:enumeration value="global"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="type">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="strong"/>
+						<xs:enumeration value="moderate"/>
+						<xs:enumeration value="balanced"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Course" type="CourseType"/>
+	<xs:element name="LOM">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="format" type="xs:string"/>
+				<xs:element name="semantic" type="xs:string"/>
+				<xs:element name="difficulty" type="xs:string"/>
+				<xs:element name="type" type="xs:string"/>
+				<xs:element name="interactivity" type="xs:string"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="bloom">
+		<xs:annotation>
+			<xs:documentation>taxonomia de bloom</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="target">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:enumeration value="conocimiento"/>
+							<xs:enumeration value="comprensión"/>
+							<xs:enumeration value="aplicación"/>
+							<xs:enumeration value="análisis"/>
+							<xs:enumeration value="síntesis"/>
+							<xs:enumeration value="evaluación"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="level">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:enumeration value="principiante"/>
+							<xs:enumeration value="medio"/>
+							<xs:enumeration value="experto"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="LearningPath">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="KnowledgeLevel">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="lastlesson" type="LessonType"/>
+							<xs:element name="section"/>
+							<xs:element name="time"/>
+							<xs:element ref="bloom"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element ref="Course"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Lesson" type="LessonType"/>
+	<xs:complexType name="LessonType">
+		<xs:sequence maxOccurs="unbounded">
+			<xs:element name="resource">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element ref="LOM">
+							<xs:annotation>
+								<xs:documentation>learning object metadata</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element ref="bloom">
+							<xs:annotation>
+								<xs:documentation>bloom taxonomy</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="CourseType">
+		<xs:sequence maxOccurs="unbounded">
+			<xs:element name="Section">
+				<xs:complexType>
+					<xs:sequence maxOccurs="unbounded">
+						<xs:element ref="Lesson"/>
+					</xs:sequence>
+					<xs:attribute name="id"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>
