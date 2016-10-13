@@ -69,6 +69,27 @@
 			},
 			"required": ["id", "Lessons"]
 		},
+		
+		"Courses": {
+			"$schema": "http://json-schema.org/schema#",
+			"title": "Courses collection",
+			"description": "It is a list of Botbloq catalog courses",
+			"type": "object",
+			"properties": {
+				"id": {
+					"description": "Courses collection unique identifier",
+					"type": "integer"
+				},
+				"Courses": {
+					"description": "list of courses",
+					"type": "array",
+					"items": {"type": { "$ref": "#/definitions/Course" } }
+				},
+			"minItems": 1,
+			"uniqueItems": true
+			},
+			"required": ["id", "Courses"]
+		},
 			
 		"Lesson": {
 			"$schema": "http://json-schema.org/schema#",
