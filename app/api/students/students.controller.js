@@ -11,14 +11,15 @@ studentRouter.use(bodyParser.json());
 
 
 //ALL STUDENTS
-studentRouter.route('/')
-.get(function (req, res, next) {
+exports.all = function (req, res, next) {
     Students.find({}, function (err, student) {
         if (err) throw err;
         res.json(student);
     });
-})
-.post(function(req, res, next){
+}
+
+
+exports.create = function(req, res, next){
     Students.create(req.body, function (err, student) {
         if (err) throw err;
         console.log('Student created!');
@@ -29,26 +30,29 @@ studentRouter.route('/')
         });
         res.end('Added the student with id: ' + id);
     });
-})
+};
 
-.delete(function(req, res, next){
+
+
+exports.deleteAll  = function(req, res, next){
     Students.remove({}, function (err, resp) {
         if (err) throw err;
         res.json(resp);
     });
-});
+};
 
 
 //BY ID	
-studentRouter.route('/:studentId')
-.get(function (req, res, next) {
+exports.get = function (req, res, next) {
     Students.findById(req.params.studentId, function (err, student) {
        if (err) throw err;
         res.json(student);
     });
-})
+}
 
-.put(function (req, res, next) {
+
+
+exports.update = function (req, res, next) {
     Students.findByIdAndUpdate(req.params.studentId, {
         $set: req.body
     }, {
@@ -57,13 +61,14 @@ studentRouter.route('/:studentId')
         if (err) throw err;
         res.json(student);
     });
-})
+};
 
-.delete(function (req, res, next) {
+
+exports.deleteOne = function (req, res, next) {
     Students.findByIdAndRemove(req.params.studentId, function (err, resp) {
         if (err) throw err;
         res.json(resp);
     });
-});
+};
 
 module.exports = studentRouter;
