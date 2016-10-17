@@ -11,8 +11,8 @@ var router = express.Router();
 module.exports = function(app) {
 
     // Insert routes below
-    router.use('/example', require('./api/example/index'));
-
+    // router.use('/example', require('./api/example/index'));
+	router.use('/students', require('./api/students/index'));
     // Set a prefix for all calls
     app.use('/botbloq/v1', router);
 
