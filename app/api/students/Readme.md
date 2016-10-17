@@ -48,7 +48,7 @@ unicamente de su id.
 Actualizar un estudiante según su ID
 -------------
 
-** PUT localhost:3000/:id **
+**PUT localhost:3000/:id**
 Mediante esta función se podrá actualizar la información de un alumno a través unicamente de su id. 
 
 **PUT localhost:3000/5801ff06d2f6610307011209**
@@ -61,7 +61,7 @@ Eliminar un estudiante según su ID
 Mediante esta función se podrá eliminar la información de un alumno a través
 unicamente de su id. 
 
-** DELETE localhost:3000/5801ff06d2f6610307011209**
+**DELETE localhost:3000/5801ff06d2f6610307011209**
 
 
 

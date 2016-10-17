@@ -12,21 +12,22 @@ var router = express.Router();
 // router.get('/:id', controller.show);
 
 router.get('/', controller.all);
-router.get('/:id', controller.get)
-
+router.get('/:id', controller.get);
 
 
 // POSTs
-router.post('/', controller.create)
+router.post('/', controller.create); // create
 
 
 // PUTs
-router.put('/:id', controller.update);
+router.put('/:id',  controller.update);// update
 
 // DELETEs
 
-router.delete('/', controller.deleteAll);
-router.delete('/:studentID', controller.deleteOne);
+router.delete('/',  controller.destroy);
+
+
+router.delete('/:id',  controller.remove);
 
 
 
