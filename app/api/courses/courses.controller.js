@@ -19,7 +19,7 @@ var dat = {
 
 exports.listCourses = function(req, res) {
 	console.log( dat );
-	res.end( data );
+	res.end('Prueba' );
 	}
 	// res.send('Element: ' + elementId);
 
