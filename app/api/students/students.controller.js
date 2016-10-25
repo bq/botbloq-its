@@ -1,24 +1,23 @@
-var express = require('express'); // FRM ??
-var bodyParser = require('body-parser'); // FRM ??
+'use strict';
 
-var Students = require('../../data-access/models/student');
- //   config = require('../../res/config.js'), // FRM configuracion de la BD
- //   async = require('async'),
- //   _ = require('lodash');
-
-var studentRouter = express.Router();
-studentRouter.use(bodyParser.json());
+var Students = require('./students.model.js'),
+   config = require('../../res/config.js'), 
+   async = require('async'),
+   _ = require('lodash');
 
 
 //ALL STUDENTS
-studentRouter.route('/')
-.get(function (req, res, next) {
+exports.all = function (req, res) {
     Students.find({}, function (err, student) {
         if (err) throw err;
         res.json(student);
     });
-})
-.post(function(req, res, next){
+};
+
+/**
+ * Creates a new element
+ */
+exports.create = function(req, res) {
     Students.create(req.body, function (err, student) {
         if (err) throw err;
         console.log('Student created!');
@@ -29,27 +28,31 @@ studentRouter.route('/')
         });
         res.end('Added the student with id: ' + id);
     });
-})
+};
 
-.delete(function(req, res, next){
+
+
+exports.destroy  = function(req, res){
     Students.remove({}, function (err, resp) {
         if (err) throw err;
         res.json(resp);
     });
-});
+};
 
 
 //BY ID	
-studentRouter.route('/:studentId')
-.get(function (req, res, next) {
-    Students.findById(req.params.studentId, function (err, student) {
+exports.get = function (req, res) {
+    console.log(req.params.id)
+    Students.findById(req.params.id, function (err, student) {
        if (err) throw err;
         res.json(student);
     });
-})
+};
 
-.put(function (req, res, next) {
-    Students.findByIdAndUpdate(req.params.studentId, {
+
+
+exports.update = function (req, res) {
+    Students.findByIdAndUpdate(req.params.id, {
         $set: req.body
     }, {
         new: true
@@ -57,13 +60,16 @@ studentRouter.route('/:studentId')
         if (err) throw err;
         res.json(student);
     });
-})
+};
 
-.delete(function (req, res, next) {
-    Students.findByIdAndRemove(req.params.studentId, function (err, resp) {
+
+exports.remove = function (req, res) {
+    console.log(req.params.id)
+    Students.findByIdAndRemove(req.params.id, function (err, resp) {
         if (err) throw err;
         res.json(resp);
     });
-});
+};
 
-module.exports = studentRouter;
+
+
