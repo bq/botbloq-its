@@ -5,12 +5,8 @@ var controller = require('./students.controller.js');
 
 var router = express.Router();
 
-// HEADs
-//router.head('/:email', controller.emailExists);
 
 // GETs
-// router.get('/:id', controller.show);
-
 router.get('/', controller.all);
 router.get('/:id', controller.get);
 

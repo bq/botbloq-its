@@ -12,9 +12,12 @@ module.exports = function(app) {
 
     // Insert routes below
     //router.use('/example', require('./api/example/index'));
-	router.use('/students', require('./api/students/index'));
+	router.use('/students', require('./api/students/index')); // students
+	router.use('/courses', require('./api/courses/index')); // Courses
+	// router.use('/loms', require('./api/courses/index')); // Learning Object Metadata
+	
     // Set a prefix for all calls
-    app.use('/botbloq/v1', router);
+    app.use('/botbloq/v1/its', router);
 
     // All undefined asset or api routes should return a 404
     app.route('/:url(api|auth|components|app|bower_components|assets)/*').get(errors[404]);
