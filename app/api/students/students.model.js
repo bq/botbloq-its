@@ -5,37 +5,72 @@ var Schema = mongoose.Schema;
 var identificationSchema = new Schema({
     name: {
         type: String,
+		required: true
     },
     email: {
         type: String,
+		required: true
     },
     address: {
-        type: String,
+        type: String
     },
     phone: {
-        type: String,
+        type: String
     },
     type: {
         type: String,
-    }
+		required: true,
+		enum: [
+			"beginner",
+			"medium",
+			"advanced"
+		]
+    },
+	_id: false
 });
 
 var learningStyleSchema = new Schema({
     type: {
         type: String,
+		enum: [
+			"strong",
+			"moderate",
+			"balanced"
+		]
     },
-    comprension: {
+    comprehension: {
         type: String,
+		required: true,
+		enum:[
+			"sequential",
+			"global"
+		]
     },
-    entrada: {
+    input: {
         type: String,
+		required: true,
+		enum:[
+			"visual",
+			"verbal"
+		]
     },
-    percepcion: {
+    perception: {
         type: String,
+		required: true,
+		enum: [
+			"sensing",
+			"intuitive"
+		]
     },
-    procesamiento: {
+    processing: {
         type: String,
-    }
+		required: true,
+		enum: [
+			"active",
+			"reflexive"
+		]
+    },
+	_id: false
 });
 
 var knowledgeLevelSchema = new Schema({
@@ -47,7 +82,8 @@ var knowledgeLevelSchema = new Schema({
     },
     target: {
         type: String,
-    }
+    },
+	_id: false
 });
 
 

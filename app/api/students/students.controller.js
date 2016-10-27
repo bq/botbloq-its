@@ -9,7 +9,7 @@ var Students = require('./students.model.js'),
 //ALL STUDENTS
 exports.all = function (req, res) {
     Students.find({}, function (err, student) {
-        if (err) throw err;
+        if (err) res.sendStatus(err.code);
         res.json(student);
     });
 };
@@ -19,7 +19,7 @@ exports.all = function (req, res) {
  */
 exports.create = function(req, res) {
     Students.create(req.body, function (err, student) {
-        if (err) throw err;
+        if (err) res.sendStatus(err.code);
         console.log('Student created!');
         var id = student._id;
 
@@ -34,7 +34,7 @@ exports.create = function(req, res) {
 
 exports.destroy  = function(req, res){
     Students.remove({}, function (err, resp) {
-        if (err) throw err;
+        if (err) res.sendStatus(err.code);
         res.json(resp);
     });
 };
@@ -44,7 +44,7 @@ exports.destroy  = function(req, res){
 exports.get = function (req, res) {
     console.log(req.params.id)
     Students.findById(req.params.id, function (err, student) {
-       if (err) throw err;
+       if (err) res.sendStatus(err.code);
         res.json(student);
     });
 };
@@ -52,21 +52,48 @@ exports.get = function (req, res) {
 
 
 exports.update = function (req, res) {
-    Students.findByIdAndUpdate(req.params.id, {
-        $set: req.body
-    }, {
-        new: true
-    }, function (err, student) {
-        if (err) throw err;
-        res.json(student);
-    });
+	async.waterfall([
+	    Students.findById.bind(Students, req.params.id),
+	    function(student, next) {
+	        student = _.extend(student, req.body);
+	        student.save(next);
+	    }
+	], function(err, student) {
+	    if (err) {
+	        console.log(err);
+	        res.status(err.code).send(err);
+	    } else {
+	        if (!student) {
+	            res.sendStatus(404);
+	        } else {
+	            res.json(student);
+	        }
+	    }
+	});
 };
 
 
 exports.remove = function (req, res) {
-    console.log(req.params.id)
+    console.log(req.params.id);
+	async.waterfall([
+	    Students.findById.bind(Students, req.params.id),
+	    function(student, next) {
+			Students.remove(student);
+	    }
+	], function(err, student) {
+	    if (err) {
+	        console.log(err);
+	        res.status(err.code).send(err);
+	    } else {
+	        if (!student) {
+	            res.sendStatus(404);
+	        } else {
+	            res.json(student);
+	        }
+	    }
+	});
     Students.findByIdAndRemove(req.params.id, function (err, resp) {
-        if (err) throw err;
+        if (err) res.sendStatus(err.code);
         res.json(resp);
     });
 };
