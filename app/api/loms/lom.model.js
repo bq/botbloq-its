@@ -1,93 +1,145 @@
-'use strict';
-
+// grab the things we need
 var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
 
-var LOMSchema = new mongoose.Schema({
-    title: {
-        type: String,
-		required:true,
-        trim: true
-    },
-    status: {
-        type: String,
-        trim: true
-    },
-    author: {
-        type: String,
-        trim: true
-    },
-    counter: {
-        type: Number,
-        default: 0
-    }
-	_id: false
-
-}, {
-    timestamps: true
+var generalSchema = new Schema({
+	id_catalog: {
+		type: String,
+		default: 'botbloq'
+	},	
+	id_entry: {
+		type: String	
+	},
+	title: {
+		type: String
+	},
+	language: {
+		type: String,
+		enum: [
+			"es",
+			"en"
+		]
+	},
+	structure: {
+		type: String,
+		enum: [
+			"atomic",
+			"complex"
+		]
+	},
+	aggregation_level: {
+		type: Number,
+		default: 1
+	},
+	_id : false
 });
 
-/**
- * Virtuals
- */
-
-// Public profile information
-LOMSchema
-    .virtual('profile')
-    .get(function() {
-        return {
-            'title': this.title,
-        };
-    });
-
-
-/**
- * Validations
- */
-
-// Validate title is not taken
-LOMSchema
-    .path('title')
-    .validate(function(value, respond) {
-        var self = this,
-            exists = false;
-        this.constructor.findOne({
-            username: value
-        }, function(err, user) {
-            if (!user || self.id !== user.id) {
-                exists = true;
-            }
-            return respond(true);
-        })
-    }, 'The specified name is already in use.');
+var lifecycleSchema = new Schema({
+	version: {
+		type: Number,
+		default: 1
+	},
+	state: {
+		type: String,
+		enum: [
+			"draft",
+			"final"
+		],
+		default: "final"
+	},
+	contribution_type: {
+		type: String
+	},
+	contribution_entity: {
+		type: String
+	},
+	contribution_date: {
+		type: Date,
+		default: Date.now
+	}
+});
 
 
-/**
- * Pre-save hook
- */
-LOMSchema
-    .pre('save', function(next) {
-        if (this.title) {
-            console.log('Title element: ', this.title);
-        }
-        next();
-    });
+var metadataSchema = new Schema({
+	contribution_type: {
+		type: String
+	},
+	contribution_entity: {
+		type: String
+	},
+	contribution_date: {
+		type: Date,
+		default: Date.now
+	}
+});
 
-/**
- * Methods
- */
-LOMSchema.methods = {
-    /**
-     * increaseCounter - Increase the counter
-     *
-     * @param {Number} addNumber
-     * @param {Function} callback
-     * @api public
-     */
+var technicalSchema = new Schema({
+	format: {
+		type: String
+	},
+	size_kb: {
+		type: Number
+	},
+	url: {
+		type: String
+	}
+});
 
-    increaseCounter: function(number, callback) {
-        this.counter = this.counter + number;
-        callback(null, this.counter);
-    }
-};
+var useSchema = new Schema({
+	interactivity_type: {
+		type: String
+	},
+	interactivity_level: {
+		type: String
+	},
+	language: {
+		type: String
+	},	
+	resource_type: {
+		ttype: String
+	},
+	resource_target: {
+		type: String
+	},
+	resource_context: {
+		type: String
+	},
+	resource_difficulty: {
+		type: String
+	}
+});
 
-module.exports = mongoose.model('LOM', LOMSchema);
+var lomSchema = new Schema({
+	general: {
+		type: generalSchema,
+		required: false,
+		default: ''
+	},
+	lifecycle: {
+		type: lifecycleSchema,
+		required: false,
+		default: ''
+	},
+	metadata: {
+		type: metadataSchema,
+		required: false,
+		default: ''
+	},
+	technical: {
+		type: technicalSchema,
+		required: false,
+		default: ''
+	},
+	use: {
+		type: useSchema,
+		required: false,
+		default : ''
+	}
+});
+
+// the schema is useless so far
+// we need to create a model using it
+var LOMS = mongoose.model('LOM', lomSchema);
+
+// make this available to our Node applications
+module.exports = LOMS;
