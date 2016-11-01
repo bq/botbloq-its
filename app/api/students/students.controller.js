@@ -92,10 +92,6 @@ exports.remove = function (req, res) {
 	        }
 	    }
 	});
-    Students.findByIdAndRemove(req.params.id, function (err, resp) {
-        if (err) res.sendStatus(err.code);
-        res.json(resp);
-    });
 };
 
 
