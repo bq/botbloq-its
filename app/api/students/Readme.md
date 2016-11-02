@@ -1,69 +1,98 @@
-Gestión de los estudiantes
+Student Model (basic management)
 ===================
+
 
 A continuación se explicarán las distintas operaciones que se permiten realizar en la primera versión del tutor inteligente. Por el momento se han desarrollado las distintas operaciones relacionadas con el tratamiento de los alumnos en la base de datos.
 
 ----------
 
-Regresar una lista de todos los estudiantes gestionados
--------------
-
 **GET /botbloq/v1/its/students**
-
-Devuelve una lista con todos los alumnos que contiene la base de datos. El
-formato de los datos retornados es una lista de objetos en JSON.
-
-Introducir un nuevo estudiante
 -------------
-**POST localhost:3000/botbloq/v1/its/students**
-Mediante esta función se podría introducir un nuevo alumno en la base de
-datos. 
 
-Eliminar todos los estudiantes de la base de datos
+Retrieve of all the students registered in the system. 
+
+** Parameters **: None
+** Query Parameters **:
+** Permisions **:
+** Status Codes **:
+** Input **:
+** Return **:  
+If successful, this action returns a JSON data block containing the information for each student.
+If this action is not successful, it returns the error code. 
+
+
+
+**POST /botbloq/v1/its/students**
 -------------
-**DELETE localhost:3000/botbloq/v1/its/students**
 
-Con esta función se suprimirán todos los alumnos que contiene la base de
-datos. El sistema mostrará
- el número de alumnos eliminados (variable ”n”) y si se ha realizado con  ́exito la operación (variable .ok”).
- 
+The service creates a new student with  the provided values.
+
+** Parameters **: None
+** Query Parameters **:
+** Permisions **:
+** Status Codes **:
+** Input **: 
+** Return **:  
+
+
+**DELETE /botbloq/v1/its/students**
+-------------
+
+Delete all students of the repository
+
+** Parameters **: None
+** Query Parameters **:
+** Permisions **:
+** Status Codes **:
+** Input **: 
+** Return **:  Number of removed students (N) and the success of the operation (.ok)
+
 {
 si
 ” ok ” : 1 ,
 ”n ” : 3
 }
 
->Funcionalidad no definitiva
 
-Regresar un estudiante según su ID
--------------
-**GET localhost:3000//botbloq/v1/its/students/:id**
+**GET /botbloq/v1/its/students/:id**
+------------
 
-Mediante esta función se podrá obtener la información de un alumno a través
-unicamente de su id. 
+Retrieve the basic information of a student
 
-**GET localhost:3000/5801ff06d2f6610307011209**
+** Parameters ** 
+
+- id: Student ID
+
+** Query Parameters **:
+** Permisions **:
+** Status Codes **:
+** Input **: 
+** Return **:  Number of removed students (N) and the success of the operation (.ok)
 
 
-Actualizar un estudiante según su ID
--------------
-
-**PUT localhost:3000/botbloq/v1/its/students:id**
-Mediante esta función se podrá actualizar la información de un alumno a través unicamente de su id. 
-
-**PUT localhost:3000/5801ff06d2f6610307011209**
-
-Eliminar un estudiante según su ID
+**PUT /botbloq/v1/its/students/:id**
 -------------
 
-**DELETE localhost:3000/:id**
+Update the information of a student in  the repository.
 
-Mediante esta función se podrá eliminar la información de un alumno a través
-unicamente de su id. 
+** Parameters ** 
 
-**DELETE localhost:3000/5801ff06d2f6610307011209**
+- id: Student ID
+
+** Query Parameters **:
+** Permisions **:
+** Status Codes **:
+** Input **: 
+** Return **:  Number of removed students (N) and the success of the operation (.ok)
 
 
+**DELETE /botbloq/v1/its/students/:id**
+-------------
 
+Delete all the information about a student in the repository
+
+** Parameters ** 
+
+- id: Student ID
 
 
