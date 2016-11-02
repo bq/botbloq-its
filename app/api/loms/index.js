@@ -6,7 +6,7 @@ var controller = require('./lom.controller.js');
 var router = express.Router();
 
 // PUTs
-router.put('/me', controller.insert);
+router.put('/me', controller.create);
 
 
 module.exports = router;

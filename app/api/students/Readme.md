@@ -8,7 +8,7 @@ A continuación se explicarán las distintas operaciones que se permiten realiza
 Regresar una lista de todos los estudiantes gestionados
 -------------
 
-**GET localhost:8000/botbloq/v1/its/students**
+**GET /botbloq/v1/its/students**
 
 Devuelve una lista con todos los alumnos que contiene la base de datos. El
 formato de los datos retornados es una lista de objetos en JSON.

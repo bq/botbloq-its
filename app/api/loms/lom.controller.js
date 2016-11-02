@@ -20,7 +20,8 @@ exports.all = function (req, res) {
  */
 exports.create = function(req, res) {
     LOMS.create(req.body, function (err, lom) {
-        if (err) res.sendStatus(err.code);
+		console.log(lom);
+	    if (err) res.sendStatus(err.code);
         console.log('LOMS created!');
         var id = lom._id;
 
