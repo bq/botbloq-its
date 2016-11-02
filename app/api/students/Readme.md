@@ -2,7 +2,7 @@ Student Model (basic management)
 ===================
 
 
-A continuación se explicarán las distintas operaciones que se permiten realizar en la primera versión del tutor inteligente. Por el momento se han desarrollado las distintas operaciones relacionadas con el tratamiento de los alumnos en la base de datos.
+(under construction)
 
 ----------
 
