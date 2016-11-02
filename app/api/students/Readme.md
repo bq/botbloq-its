@@ -11,12 +11,12 @@ A continuación se explicarán las distintas operaciones que se permiten realiza
 
 Retrieve of all the students registered in the system. 
 
-** Parameters **: None
-** Query Parameters **:
-** Permisions **:
-** Status Codes **:
-** Input **:
-** Return **:  
+**Parameters**: None
+**Query Parameters**:
+**Permisions**:
+**Status Codes**:
+**Input**:
+**Return**:  
 If successful, this action returns a JSON data block containing the information for each student.
 If this action is not successful, it returns the error code. 
 
@@ -27,12 +27,12 @@ If this action is not successful, it returns the error code.
 
 The service creates a new student with  the provided values.
 
-** Parameters **: None
-** Query Parameters **:
-** Permisions **:
-** Status Codes **:
-** Input **: 
-** Return **:  
+**Parameters**: None
+**Query Parameters**:
+**Permisions**:
+**Status Codes**:
+**Input**: 
+**Return**:  
 
 
 **DELETE /botbloq/v1/its/students**
@@ -40,12 +40,12 @@ The service creates a new student with  the provided values.
 
 Delete all students of the repository
 
-** Parameters **: None
-** Query Parameters **:
-** Permisions **:
-** Status Codes **:
-** Input **: 
-** Return **:  Number of removed students (N) and the success of the operation (.ok)
+**Parameters**: None
+**Query Parameters**:
+**Permisions**:
+**Status Codes**:
+**Input**: 
+**Return**:  Number of removed students (N) and the success of the operation (.ok)
 
 {
 si
@@ -59,15 +59,15 @@ si
 
 Retrieve the basic information of a student
 
-** Parameters ** 
+**Parameters**
 
 - id: Student ID
 
-** Query Parameters **:
-** Permisions **:
-** Status Codes **:
-** Input **: 
-** Return **:  Number of removed students (N) and the success of the operation (.ok)
+**Query Parameters**:
+**Permisions**:
+**Status Codes**:
+**Input**: 
+**Return**:  Number of removed students (N) and the success of the operation (.ok)
 
 
 **PUT /botbloq/v1/its/students/:id**
@@ -75,15 +75,15 @@ Retrieve the basic information of a student
 
 Update the information of a student in  the repository.
 
-** Parameters ** 
+**Parameters**
 
 - id: Student ID
 
-** Query Parameters **:
-** Permisions **:
-** Status Codes **:
-** Input **: 
-** Return **:  Number of removed students (N) and the success of the operation (.ok)
+**Query Parameters**:
+**Permisions**:
+**Status Codes**:
+**Input**: 
+**Return**:  Number of removed students (N) and the success of the operation (.ok)
 
 
 **DELETE /botbloq/v1/its/students/:id**
@@ -91,7 +91,7 @@ Update the information of a student in  the repository.
 
 Delete all the information about a student in the repository
 
-** Parameters ** 
+**Parameters**
 
 - id: Student ID
 
