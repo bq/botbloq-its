@@ -15,7 +15,7 @@ Retrieve of all the students registered in the system.
 
 **Query Parameters**:
 
-**Permisions**:
+**Permissions**:
 
 **Status Codes**:
 
@@ -36,7 +36,7 @@ The service creates a new student with  the provided values.
 
 **Query Parameters**:
 
-**Permisions**:
+**Permissions**:
 
 **Status Codes**:
 
@@ -54,7 +54,7 @@ Delete all students of the repository
 
 **Query Parameters**:
 
-**Permisions**:
+**Permissions**:
 
 **Status Codes**:
 
@@ -86,7 +86,7 @@ Retrieve the basic information of a student
 
 **Input**: 
 
-**Return**:  Number of removed students (N) and the success of the operation (.ok)
+**Return**: 
 
 
 **PUT /botbloq/v1/its/students/:id**
@@ -100,14 +100,13 @@ Update the information of a student in  the repository.
 
 **Query Parameters**:
 
-**Permisions**:
+**Permissions**:
 
 **Status Codes**:
 
 **Input**: 
 
-**Return**:  Number of removed students (N) and the success of the operation (.ok)
-
+**Return**:  
 
 **DELETE /botbloq/v1/its/students/:id**
 -------------
@@ -117,5 +116,15 @@ Delete all the information about a student in the repository
 **Parameters**
 
 - id: Student ID
+
+**Query Parameters**:
+
+**Permissions**:
+
+**Status Codes**:
+
+**Input**: 
+
+**Return**:  
 
 
