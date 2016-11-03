@@ -20,10 +20,8 @@ router.put('/:id',  controller.update);// update
 
 // DELETEs
 
-router.delete('/',  controller.destroy);
-
-
-router.delete('/:id',  controller.remove);
+router.delete('/',  controller.destroy);// destroy
+router.delete('/:id',  controller.remove); //delete
 
 
 

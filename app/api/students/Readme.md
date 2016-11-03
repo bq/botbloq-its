@@ -41,9 +41,11 @@ The service creates a new student with  the provided values.
 **Status Codes**:
 
 **Input**: 
-
+A JSON student object.
 **Return**:  
 
+If successful, this action returns: "Added the student with id: " and the id of the new student.
+If this action is not successful, it returns the error code. 
 
 **DELETE /botbloq/v1/its/students**
 -------------
@@ -60,10 +62,11 @@ Delete all students of the repository
 
 **Input**: 
 
-**Return**:  Number of removed students (N) and the success of the operation (.ok)
+**Return**:  
+
+Number of removed students (N) and the success of the operation (.ok)
 
 {
-si
 ” ok ” : 1 ,
 ”n ” : 3
 }
@@ -87,8 +90,8 @@ Retrieve the basic information of a student
 **Input**: 
 
 **Return**: 
-
-
+If successful, this action returns the corresponding JSON object student with id introduced.
+If this action is not successful, it returns the error code. 
 **PUT /botbloq/v1/its/students/:id**
 -------------
 
@@ -107,7 +110,8 @@ Update the information of a student in  the repository.
 **Input**: 
 
 **Return**:  
-
+If successful, this action returns a JSON data block containing the information for each student.
+If this action is not successful, it returns the error code. 
 **DELETE /botbloq/v1/its/students/:id**
 -------------
 
@@ -127,4 +131,10 @@ Delete all the information about a student in the repository
 
 **Return**:  
 
+Number of removed students (N) and the success of the operation (.ok)
+
+{
+” ok ” : 1 ,
+”n ” : 1
+}
 

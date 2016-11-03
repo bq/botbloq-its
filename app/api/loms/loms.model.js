@@ -8,7 +8,8 @@ var generalSchema = new Schema({
 		default: 'botbloq'
 	},	
 	id_entry: {
-		type: String	
+		type: Number,
+		default: 0	
 	},
 	title: {
 		type: String
@@ -34,6 +35,21 @@ var generalSchema = new Schema({
 	_id : false
 });
 
+generalSchema.methods = {
+    /**
+     * increaseCounter - Increase the counter
+     *
+     * @param {Number} addNumber
+     * @param {Function} callback
+     * @api public
+     */
+
+    increaseCounter: function(number, callback) {
+        this.id_entry = this.id_entry + number;
+        callback(null, this.id_entry);
+    }
+};
+
 var lifecycleSchema = new Schema({
 	version: {
 		type: Number,
@@ -56,7 +72,8 @@ var lifecycleSchema = new Schema({
 	contribution_date: {
 		type: Date,
 		default: Date.now
-	}
+	},
+	_id : false
 });
 
 
@@ -70,7 +87,8 @@ var metadataSchema = new Schema({
 	contribution_date: {
 		type: Date,
 		default: Date.now
-	}
+	},
+	_id : false
 });
 
 var technicalSchema = new Schema({
@@ -82,7 +100,8 @@ var technicalSchema = new Schema({
 	},
 	url: {
 		type: String
-	}
+	},
+	_id : false
 });
 
 var useSchema = new Schema({
@@ -106,7 +125,8 @@ var useSchema = new Schema({
 	},
 	resource_difficulty: {
 		type: String
-	}
+	},
+	_id : false
 });
 
 var lomSchema = new Schema({
@@ -136,6 +156,8 @@ var lomSchema = new Schema({
 		default : ''
 	}
 });
+
+
 
 // the schema is useless so far
 // we need to create a model using it

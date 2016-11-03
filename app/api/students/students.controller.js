@@ -7,6 +7,9 @@ var Students = require('./students.model.js'),
 
 
 //ALL STUDENTS
+/**
+ * Returns all elements
+ */
 exports.all = function (req, res) {
     Students.find({}, function (err, student) {
         if (err) res.sendStatus(err.code);
@@ -29,9 +32,9 @@ exports.create = function(req, res) {
         res.end('Added the student with id: ' + id);
     });
 };
-
-
-
+/**
+ * Destroys all elements
+ */
 exports.destroy  = function(req, res){
     Students.remove({}, function (err, resp) {
         if (err) res.sendStatus(err.code);
@@ -41,6 +44,9 @@ exports.destroy  = function(req, res){
 
 
 //BY ID	
+/**
+ * Returns an element by id
+ */
 exports.get = function (req, res) {
     console.log(req.params.id)
     Students.findById(req.params.id, function (err, student) {
@@ -48,9 +54,9 @@ exports.get = function (req, res) {
         res.json(student);
     });
 };
-
-
-
+/**
+ * Updates an element by id
+ */
 exports.update = function (req, res) {
 	async.waterfall([
 	    Students.findById.bind(Students, req.params.id),
@@ -71,14 +77,18 @@ exports.update = function (req, res) {
 	    }
 	});
 };
-
-
+/**
+ * Removes an element by id
+ */
 exports.remove = function (req, res) {
     console.log(req.params.id);
 	async.waterfall([
 	    Students.findById.bind(Students, req.params.id),
 	    function(student, next) {
-			Students.remove(student);
+		    Students.remove(student, function (err, resp) {
+		        if (err) res.sendStatus(err.code);
+		        res.json(resp);
+		    });
 	    }
 	], function(err, student) {
 	    if (err) {

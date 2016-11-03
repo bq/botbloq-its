@@ -41,9 +41,11 @@ The service creates a LO with  the provided metadata.
 **Status Codes**:
 
 **Input**: 
+A JSON lom object.
 
 **Return**:  
-
+If successful, this action returns: "Added the lom with id: " and the id of the new lom.
+If this action is not successful, it returns the error code. 
 
 **DELETE /botbloq/v1/its/loms**
 -------------
@@ -60,10 +62,9 @@ Delete all Learning Objects of the repository
 
 **Input**: 
 
-**Return**:  Number of removed LO (N) and the success of the operation (.ok)
+**Return**:  Number of removed LOM (N) and the success of the operation (.ok)
 
 {
-si
 ” ok ” : 1 ,
 ”n ” : 3
 }
@@ -72,11 +73,11 @@ si
 **GET /botbloq/v1/its/loms/:id**
 ------------
 
-Retrieve the metadata of a LO
+Retrieve the metadata of a LOM
 
 **Parameters**
 
-- id: LO ID
+- id: LOM ID
 
 **Query Parameters**:
 
@@ -87,16 +88,17 @@ Retrieve the metadata of a LO
 **Input**: 
 
 **Return**: 
-
+If successful, this action returns the corresponding JSON object LOM with id introduced.
+If this action is not successful, it returns the error code. 
 
 **PUT /botbloq/v1/its/loms/:id**
 -------------
 
-Update the metadata of a LO in  the repository.
+Update the metadata of a LOM in  the repository.
 
 **Parameters**
 
-- id: LO ID
+- id: LOM ID
 
 **Query Parameters**:
 
@@ -107,7 +109,8 @@ Update the metadata of a LO in  the repository.
 **Input**: 
 
 **Return**:  
-
+If successful, this action returns a JSON data block containing the information for each LOM.
+If this action is not successful, it returns the error code. 
 
 **DELETE /botbloq/v1/its/loms/:id**
 -------------
@@ -116,7 +119,7 @@ Delete all the metadata of a LO in the repository
 
 **Parameters**
 
-- id: LO ID
+- id: LOM ID
 
 
 **Query Parameters**:
@@ -128,4 +131,9 @@ Delete all the metadata of a LO in the repository
 **Input**: 
 
 **Return**:  
+Number of removed LOM (N) and the success of the operation (.ok)
 
+{
+” ok ” : 1 ,
+”n ” : 1
+}

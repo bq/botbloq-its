@@ -13,17 +13,16 @@ router.get('/', controller.all);
 router.get('/:id', controller.get);
 
 // POSTS
-router.post('/', controller.create);
+router.post('/', controller.create); //create
 
 
 // PUTs
-router.put('/:id', controller.update);
+router.put('/:id', controller.update); //update
 
 // DELETEs
-router.delete('/',  controller.destroy);
-router.delete('/:id',  controller.remove);
 
-
+router.delete('/',  controller.destroy); //destroy
+router.delete('/:id',  controller.remove); //delete
 
 
 
