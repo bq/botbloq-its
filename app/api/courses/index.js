@@ -6,24 +6,17 @@ var controller = require('./courses.controller.js');
 var router = express.Router();
 
 // GETs
-router.get('/listCourses', controller.listCourses);
-
-// BQ command examples
-
-// HEADs
-// router.head('/:email', controller.emailExists);
-
-// GETs
-// router.get('/:id', controller.show);
+router.get('/', controller.all); // list all courses
+router.get('/:id', controller.get); // list the indicated course 
 
 // POSTs
-// router.post('/', controller.create);
+router.post('/', controller.create);
 
 // PUTs
-// router.put('/me', controller.update);
+router.put('/:id', controller.update);
 
 // DELETEs
-// router.delete('/:id', controller.destroy);
+router.delete('/:id', controller.remove);
 
 
 module.exports = router;
