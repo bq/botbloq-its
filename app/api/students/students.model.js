@@ -106,6 +106,11 @@ var studentSchema = new Schema({
 		required: false,
 		default: ''
 	},
+	active:{
+		type: Boolean,
+		required: false,
+		default: true
+	},
     course: {
         type: String,
         required: false,

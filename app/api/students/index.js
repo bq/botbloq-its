@@ -14,9 +14,14 @@ router.get('/:id', controller.get);
 // POSTs
 router.post('/', controller.create); // create
 
+//LOCKs
+
+router.unlock('/:id', controller.activate) // activate
+router.lock('/:id', controller.deactivate) // deactivate
 
 // PUTs
 router.put('/:id',  controller.update);// update
+
 
 // DELETEs
 
