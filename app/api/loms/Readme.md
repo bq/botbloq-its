@@ -18,7 +18,8 @@ Retrieve the metadata of all the Learning Object (LO) stored in the repository
 **Permissions**:
 
 **Status Codes**:
-
+200 OK - Action successfully attempted.
+400 Bad Request - The request contains bad syntax.
 **Input**:
 
 **Return**:  
@@ -39,7 +40,8 @@ The service creates a LO with  the provided metadata.
 **Permissions**:
 
 **Status Codes**:
-
+200 OK - Action successfully attempted.
+400 Bad Request - The request contains bad syntax.
 **Input**: 
 A JSON lom object.
 
@@ -59,7 +61,9 @@ Delete all Learning Objects of the repository
 **Permissions**:
 
 **Status Codes**:
-
+200 OK - Action successfully attempted.
+400 Bad Request - The request contains bad syntax.
+404 Not Found - Resource not found.
 **Input**: 
 
 **Return**:  Number of removed LOM (N) and the success of the operation (.ok)
@@ -84,7 +88,9 @@ Retrieve the metadata of a LOM
 **Permissions**:
 
 **Status Codes**:
-
+200 OK - Action successfully attempted.
+400 Bad Request - The request contains bad syntax.
+404 Not Found - Resource not found.
 **Input**: 
 
 **Return**: 
@@ -105,7 +111,9 @@ Update the metadata of a LOM in  the repository.
 **Permissions**:
 
 **Status Codes**:
-
+200 OK - Action successfully attempted.
+400 Bad Request - The request contains bad syntax.
+404 Not Found - Resource not found.
 **Input**: 
 
 **Return**:  
@@ -127,7 +135,9 @@ Delete all the metadata of a LO in the repository
 **Permissions**:
 
 **Status Codes**:
-
+200 OK - Action successfully attempted.
+400 Bad Request - The request contains bad syntax.
+404 Not Found - Resource not found.
 **Input**: 
 
 **Return**:  

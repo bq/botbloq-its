@@ -18,6 +18,9 @@ Retrieve of all the students registered in the system.
 **Permissions**:
 
 **Status Codes**:
+200 OK - Action successfully attempted.
+400 Bad Request - The request contains bad syntax.
+404 Not Found - Resource not found.
 
 **Input**:
 
@@ -39,7 +42,8 @@ The service creates a new student with  the provided values.
 **Permissions**:
 
 **Status Codes**:
-
+200 OK - Action successfully attempted.
+400 Bad Request - The request contains bad syntax.
 **Input**: 
 A JSON student object.
 **Return**:  
@@ -59,7 +63,9 @@ Delete all students of the repository
 **Permissions**:
 
 **Status Codes**:
-
+200 OK - Action successfully attempted.
+400 Bad Request - The request contains bad syntax.
+404 Not Found - Resource not found.
 **Input**: 
 
 **Return**:  
@@ -86,7 +92,9 @@ Retrieve the basic information of a student
 **Permissions**:
 
 **Status Codes**:
-
+200 OK - Action successfully attempted.
+400 Bad Request - The request contains bad syntax.
+404 Not Found - Resource not found.
 **Input**: 
 
 **Return**: 
@@ -106,7 +114,9 @@ Update the information of a student in  the repository.
 **Permissions**:
 
 **Status Codes**:
-
+200 OK - Action successfully attempted.
+400 Bad Request - The request contains bad syntax.
+404 Not Found - Resource not found.
 **Input**: 
 
 **Return**:  
@@ -127,7 +137,9 @@ Delete all the information about a student in the repository
 **Permissions**:
 
 **Status Codes**:
-
+200 OK - Action successfully attempted.
+400 Bad Request - The request contains bad syntax.
+404 Not Found - Resource not found.
 **Input**: 
 
 **Return**:  
@@ -153,7 +165,9 @@ Deactivate the information of a student in  the repository (logic deleted).
 **Permissions**:
 
 **Status Codes**:
-
+200 OK - Action successfully attempted.
+400 Bad Request - The request contains bad syntax.
+404 Not Found - Resource not found.
 **Input**: 
 
 **Return**:  
@@ -174,7 +188,9 @@ Activate the information of a student in  the repository.
 **Permissions**:
 
 **Status Codes**:
-
+200 OK - Action successfully attempted.
+400 Bad Request - The request contains bad syntax.
+404 Not Found - Resource not found.
 **Input**: 
 
 **Return**:  

@@ -12,7 +12,7 @@ $ npm install
 Second install and run mongodb with this guide:
 <https://docs.mongodb.com/manual/installation/>
 
-Create base config.json file in config/config.json:
+Create base config.json file in app/res/config/config.json:
 ```bash
 {
     "env": "local",
