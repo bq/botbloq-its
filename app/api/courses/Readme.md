@@ -69,14 +69,14 @@ si
 }
 
 
-**GET /botbloq/v1/its/courses/:id**
+**GET /botbloq/v1/its/courses/:name**
 ------------
 
 Retrieve the basic information of a course
 
 **Parameters**
 
-- id: Course ID
+- id: Course name
 
 **Query Parameters**:
 
@@ -87,6 +87,34 @@ Retrieve the basic information of a course
 **Input**: 
 
 **Return**: 
+
+**PUT /botbloq/v1/its/courses/Update**
+-------------
+
+Update the information of a course in  the repository.
+
+**Parameters**
+Using Postman, a JSON object with the following format
+should be submitted:
+name: the name of the course to be updated
+field: the name of the field to be updated
+value: the new content of that field
+Example: 
+{ 
+    "name": "Course2",
+    "field":"content",
+    "value": "content2.2"
+  }
+
+**Query Parameters**:
+
+**Permissions**:
+
+**Status Codes**:
+
+**Input**: 
+
+**Return**:  
 
 
 **PUT /botbloq/v1/its/courses/:id**
