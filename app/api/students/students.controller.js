@@ -109,7 +109,7 @@ exports.update = function (req, res) {
 	async.waterfall([
 	    Students.findById.bind(Students,  req.params.id),
 	    function(student, next) {
-			if(student.active == true){} student = _.extend(student, req.body);
+			if(student.active == true) student = _.extend(student, req.body);
 			student.save(next);
 	
 	    }
@@ -126,6 +126,54 @@ exports.update = function (req, res) {
 	    }
 	});
 };
+
+/**
+ * Matriculates a Student by id in a course
+ */
+exports.matriculate = function (req, res) {
+	async.waterfall([
+	    Students.findById.bind(Students,  req.params.idstd),
+	    function(student, next) { 
+			//find a student by id
+			var Courses = require('../courses/courses.model.js');
+			Courses.find({_id: req.params.idc}, function(err, course){ 
+				// find a course by id
+			    if (err) {
+			        console.log(err);
+			        res.status(err.code).send(err);
+			    } else {
+					// If the course exists and the student is active
+					// The course is assigned to the student
+					if(student.active == true) student.course = req.params.idc;
+					student.save(next);					
+			    }
+			});	
+	    }
+	], function(err, student) {
+	    if (err) {
+	        console.log(err);
+	        res.status(err.code).send(err);
+	    } else {
+	        if (!student) {
+	            res.sendStatus(404);
+	        } else { 
+				var LOMS = require('../loms/loms.model.js');
+				LOMS.find({}, function(err, loms) {
+					// get all loms
+				    if (err) {
+				        console.log(err);
+				        res.status(err.code).send(err);
+					} else {
+						// Returns the first lom tu the student
+	            		if(!loms) res.end('There are no courses to assign the student: ' + student._id);
+						else res.json(loms[0]);	
+					}
+				});			
+	        }
+	    }
+	});
+};
+
 /**
  * Removes an element by id
  */
