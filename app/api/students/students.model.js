@@ -5,11 +5,11 @@ var Schema = mongoose.Schema;
 var identificationSchema = new Schema({
     name: {
         type: String,
-		required: false
+		required: false,		
     },
     email: {
         type: String,
-		required: false
+		required: false,
     },
     address: {
         type: String,
