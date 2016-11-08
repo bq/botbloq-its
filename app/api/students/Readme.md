@@ -123,6 +123,33 @@ Update the information of a student in  the repository.
 If successful, this action returns a JSON data block containing the information for each student.
 If this action is not successful, it returns the error code. 
 
+**PUT /botbloq/v1/its/students/:idstd/courses/:idc**
+-------------
+
+Assigns a course to a student.
+
+
+**Parameters**
+
+- idstd: Student ID
+- idc: Course ID
+
+**Query Parameters**:
+
+**Permissions**:
+
+**Status Codes**:
+200 OK - Action successfully attempted.
+400 Bad Request - The request contains bad syntax.
+404 Not Found - Resource not found.
+**Input**: 
+
+**Return**:  
+If successful, Returns the lom assigned to the student if it exists.
+If there are no loms, return the student's information.
+If this action is not successful, it returns the error code. 
+
+
 **DELETE /botbloq/v1/its/students/:id**
 -------------
 
@@ -196,3 +223,5 @@ Activate the information of a student in  the repository.
 **Return**:  
 If successful, this action returns a JSON data block containing the information for each student.
 If this action is not successful, it returns the error code. 
+
+
