@@ -2,12 +2,17 @@
 
 /*
 This version works with the following exported functions.
-listCourses: list all courses
-listCourse: list the course specified by course_name. 
+all: list all courses
+get: list the course specified by course_name. 
 	If there are several courses with the same name,
 	then all of them will be showed
-insertCourse: insert the course received as parameter
-deleteCourse: delete the course received as parameter
+create: insert the course received as parameter
+remove: delete the course received as parameter
+update: update the course received as parameter
+the new course is received via the request body in JSON format
+update1: update the course received as parameter, but 
+just the field with the value indicated via JSON 
+format in the body of the request. 
 */
 
 var Courses = require('./courses.model.js'),
@@ -27,15 +32,14 @@ exports.all = function (req, res)
 	});
 };
 
-// exports.prueba = function (req, res) 
-	// {
-		// var p1 = req.params.param1;
-		// var p2 = req.params.param2;
-	// console.log(p1);
-	// console.log(p2);    
-	// res.json("Parametros"+p1+p2);
-
-// };
+exports.prueba = function (req, res) 
+	{
+	console.log('params',req.params);
+	var p1 = req.params.term
+	var p2 = req.params.location
+	console.log('p1,p2',p1,p2);
+    res.end('params: ' + p1 + ' ' + p2);
+	};
 
 
 // Exporting get function
@@ -114,9 +118,10 @@ exports.update = function(req, res) {
 };
 
 // Exporting update function
-// update the course received as parameter
-// the new course is received via the request body in JSON format
-exports.update1 = function(req, res) {
+// update the field of the course received as parameter
+// it updates just the field with the value indicated via JSON 
+// format in the body of the request. 
+exports.update_field = function(req, res) {
 	var courseId = req.body.name;
 	
 	console.log('Updating course',courseId);	
