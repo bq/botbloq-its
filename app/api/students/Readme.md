@@ -126,7 +126,7 @@ If this action is not successful, it returns the error code.
 **PUT /botbloq/v1/its/students/:idstd/courses/:idc**
 -------------
 
-Assigns a course to a student.
+Enrollments a student in a course.
 
 
 **Parameters**

@@ -22,7 +22,7 @@ router.lock('/:id', controller.deactivate) // deactivate
 // PUTs
 router.put('/:id',  controller.update);// update
 
-router.put('/:idstd/course/:idc', controller.matriculate); //matriculate
+router.put('/:idstd/course/:idc', controller.enrollment); //enrollment
 
 
 // DELETEs

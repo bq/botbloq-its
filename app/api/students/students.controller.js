@@ -128,9 +128,9 @@ exports.update = function (req, res) {
 };
 
 /**
- * Matriculates a Student by id in a course
+ * Enrollments a Student by id in a course
  */
-exports.matriculate = function (req, res) {
+exports.enrollment = function (req, res) {
 	async.waterfall([
 	    Students.findById.bind(Students,  req.params.idstd),
 	    function(student, next) { 
