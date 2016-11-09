@@ -24,6 +24,7 @@ var Section = new Schema({
 var CoursesSchema = new mongoose.Schema(
 	{
 	"name": { type: String, trim: true, required: true },
+	"code": { type: String, index: { unique: true } },
 	"content": { type: String, trim: true },
 	"objetives": { type: String, trim: true },
 	"bibliography": { type: String, trim: true },
