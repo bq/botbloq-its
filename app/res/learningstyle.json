@@ -1,0 +1,188 @@
+{
+  "uniques": [],
+  "firstPageTitleDescription": false,
+  "languageDisplayStyle": "dropdown",
+  "description": {
+    "en": ""
+  },
+  "form": [
+    {
+      "type": "page",
+      "children": [
+       {
+          "description": {
+            "en": ""
+          },
+          "title": {
+            "en": "Type?"
+          },
+          "idname": "single-choice",
+          "children": [
+            {
+              "type": "single",
+              "required": true,
+              "choices": [
+                {
+                  "label": {
+                    "en": "Strong"
+                  }
+                },
+                {
+                  "label": {
+                    "en": "Moderate"
+                  }
+                }
+				{
+                  "label": {
+                    "en": "Balanced"
+                  }
+                }
+              ]
+            }
+          ],
+          "width": 100,
+          "type": "question",
+          "id": "ls_type"
+        }
+	   
+	   {
+          "description": {
+            "en": ""
+          },
+          "title": {
+            "en": "Comprehension?"
+          },
+          "idname": "single-choice",
+          "children": [
+            {
+              "type": "single",
+              "required": true,
+              "choices": [
+                {
+                  "label": {
+                    "en": "Sequential"
+                  }
+                },
+                {
+                  "label": {
+                    "en": "Global"
+                  }
+                }
+              ]
+            }
+          ],
+          "width": 100,
+          "type": "question",
+          "id": "ls_comp"
+        }
+		
+		{
+          "description": {
+            "en": ""
+          },
+          "title": {
+            "en": "Input Type Preferences?"
+          },
+          "idname": "single-choice",
+          "children": [
+            {
+              "type": "single",
+              "required": true,
+              "choices": [
+                {
+                  "label": {
+                    "en": "Visual"
+                  }
+                },
+                {
+                  "label": {
+                    "en": "Verbal"
+                  }
+                }
+              ]
+            }
+          ],
+          "width": 100,
+          "type": "question",
+          "id": "ls_input"
+        }
+		
+		{
+          "description": {
+            "en": ""
+          },
+          "title": {
+            "en": "Type of Perception?"
+          },
+          "idname": "single-choice",
+          "children": [
+            {
+              "type": "single",
+              "required": true,
+              "choices": [
+                {
+                  "label": {
+                    "en": "Sensing"
+                  }
+                },
+                {
+                  "label": {
+                    "en": "Intuitive"
+                  }
+                }
+              ]
+            }
+          ],
+          "width": 100,
+          "type": "question",
+          "id": "ls_per"
+        }
+		
+		{
+          "description": {
+            "en": ""
+          },
+          "title": {
+            "en": "Type of Processing?"
+          },
+          "idname": "single-choice",
+          "children": [
+            {
+              "type": "single",
+              "required": true,
+              "choices": [
+                {
+                  "label": {
+                    "en": "Active"
+                  }
+                },
+                {
+                  "label": {
+                    "en": "Reflexive"
+                  }
+                }
+              ]
+            }
+          ],
+          "width": 100,
+          "type": "question",
+          "id": "ls_input"
+        }
+		
+		
+		
+		
+      ]
+    }
+  ],
+  "title": {
+    "en": "Learning Style Survey"
+  },
+  "languages": [
+    {
+      "code": "en",
+      "name": "English",
+      "isDefault": true
+    }
+  ],
+}
