@@ -14,42 +14,6 @@
             "en": ""
           },
           "title": {
-            "en": "Type?"
-          },
-          "idname": "single-choice",
-          "children": [
-            {
-              "type": "single",
-              "required": true,
-              "choices": [
-                {
-                  "label": {
-                    "en": "Strong"
-                  }
-                },
-                {
-                  "label": {
-                    "en": "Moderate"
-                  }
-                }
-				{
-                  "label": {
-                    "en": "Balanced"
-                  }
-                }
-              ]
-            }
-          ],
-          "width": 100,
-          "type": "question",
-          "id": "ls_type"
-        }
-	   
-	   {
-          "description": {
-            "en": ""
-          },
-          "title": {
             "en": "Comprehension?"
           },
           "idname": "single-choice",
@@ -81,7 +45,7 @@
             "en": ""
           },
           "title": {
-            "en": "Input Type Preferences?"
+            "en": "How you prefer information to be presented?"
           },
           "idname": "single-choice",
           "children": [
@@ -112,7 +76,7 @@
             "en": ""
           },
           "title": {
-            "en": "Type of Perception?"
+            "en": "How do you prefer to perceive or take information?"
           },
           "idname": "single-choice",
           "children": [
@@ -143,7 +107,7 @@
             "en": ""
           },
           "title": {
-            "en": "Type of Processing?"
+            "en": "How do you prefer to process information?"
           },
           "idname": "single-choice",
           "children": [
