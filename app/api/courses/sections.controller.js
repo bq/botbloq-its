@@ -10,71 +10,102 @@ var Courses = require('./courses.model.js'),
     async = require('async'),
     _ = require('lodash');
 	
-// Exporting create function
-// It receives as parameters the Id of the course where the section 
-// should be created and the section Id to be created and
+// Exporting create_section function
+// It receives as the body of the request in JSON format
+// the Id (name) of the course where the section 
+// should be created and the section Id (name) to be created and
 // the information about the section as the body of the
 // request in JSON format
 // Example: localhost:8000/botbloq/v1/its/courses/course/Course2/section/Section2.1
-// JSON: { "resume": "section resume","lessons":{}}
+// JSON: { "course" : "Course2", "section" : "Section2.1","resume": "section resume","lessons":[]}
 // Up to the moment, it has not be possible to insert the new property
 // and value in the course
-exports.create = function (req, res) 
-	{
-	console.log('params',req.params);
-	var courseId = req.params.course
-	console.log('courseId ',courseId);	
-	Courses.findOne({"name" : courseId}, function(err, course) 
-		{
-        if (err) { res.status(500).send(err);} 
-		else if (course) { 
-				var sectionId = req.params.section
-				console.log('sectionId ',sectionId);
-				console.log('section body',req.body);
-				console.log('course obj',course);
-				var aux = course;
-				if ('sections' in course) {console.log('esta --> agregarla');
-				// hay que averiguar si la section no existía ya
-				// y falta agregarla
-				}
-				else {console.log('no esta --> crear el campo con esa section');
-					var field = "sections"
-					course[field] = { sectionId : req.body }; // {"prueba":333};esto tampoco funciona
-					console.log('course updated',course);
-					course.save(function (err) {
-						if(err) {
-							console.error('ERROR!');
-							res.send('error while updating');
-						};
+exports.create_section = function(req, res) {	
+	// este es el update_field que estoy cambiando
+	console.log('course body',req.body);
+	var courseId = req.body.course,
+		sectionId = req.body.section,
+		resume = req.body.resume;
+	
+	console.log('Creating section',courseId);	
+	console.log('course body',req.body);	
+	
+	Courses.findOne({"name" : courseId}, 
+		function (err, course) 
+			{
+			if (err) { res.status(500).send(err);} 
+			console.log('old course object',course);
+			if (course["sections"].lenth > 0)
+				{ 	// if there are some sections, we have to
+					// verify that the 'new' section does not
+					// already exists. In this case, it is an ERROR		
+				course["sections"].forEach(function(element) 
+					{if (element.name == sectionId)
+						{
+						console.error('ERROR!');
+						res.send('error section already exist');
+						}	
 					});
 				}
-				res.end('Section ' + sectionId + ' created in ' + courseId);
-				// res.status(200).json(course); 
-				} 
-			 else { res.sendStatus(404);}    
-		}
-	);    
+			// if there were no sections before OR
+			// the new section does not already exists
+			// then we have to insert it in the array			
+			// push the new section at the end of the sections array
+			var new_sec = {name: sectionId,
+							resume  : req.body.resume, 
+							lessons  : []
+							};
+			course["sections"] = course.sections.push(new_sec);
+			console.log('new course body',course);
+			course.save(function (err) 
+				{
+				if(err) 
+					{
+					console.error('ERROR!');
+					res.send('error while updating');
+					}
+				res.end('Updated the course with id: ' + courseId);
+				});
+			}
+			);
 };
+	
+
+// exports.create1 = function (req, res) 
+	// {
+	// console.log('params',req.params);
+	// var courseId = req.params.course
+	// console.log('courseId ',courseId);	
+	// Courses.findOne({"name" : courseId}, function(err, course) 
+		// {
+        // if (err) { res.status(500).send(err);} 
+		// else if (course) { 
+				// var sectionId = req.params.section
+				// console.log('sectionId ',sectionId);
+				// console.log('section body',req.body);
+				// console.log('course obj',course);
+				// var aux = course;
+				// if ('sections' in course) {console.log('esta --> agregarla');
+				// // hay que averiguar si la section no existía ya
+				// // y falta agregarla
+				// }
+				// else {console.log('no esta --> crear el campo con esa section');
+					// var field = "sections"
+					// course[field] = { sectionId : req.body }; // {"prueba":333};esto tampoco funciona
+					// console.log('course updated',course);
+					// course.save(function (err) {
+						// if(err) {
+							// console.error('ERROR!');
+							// res.send('error while updating');
+						// };
+					// });
+				// }
+				// res.end('Section ' + sectionId + ' created in ' + courseId);
+				// // res.status(200).json(course); 
+				// } 
+			 // else { res.sendStatus(404);}    
+		// }
+	// );    
+// };
 
 	
-// Exporting create function
-// insert the section received as parameter
-// exports.create = function(req, res) {
-	// console.log('params',req.params);
-	// var p1 = req.params.courses
-	// var p2 = req.params.sections
-	// console.log('courses',p1);
-	// console.log('sections',p1);
-    // res.end('params: ' + p1 + ' ' + p2);
-
-	// // console.log('section body',req.body);
-    // // Sections.create(req.body, 
-		// // function (err, section) {
-			// // if (err) res.sendStatus(err.code);
-			// // console.log('section created!');
-			// // var id = section._id;
-			// // res.writeHead(200, {'Content-Type': 'text/plain'});
-			// // res.end('Added the section with id: ' + id);
-		// // }
-	// // );
-// };

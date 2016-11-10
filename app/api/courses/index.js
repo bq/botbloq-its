@@ -11,7 +11,7 @@ var router = express.Router();
 */
 
 // POSTs
-router.post('/course/:course/section/:section', section_ctrl.create);
+router.post('/create_section', section_ctrl.create_section);
 // router.post('/term/:term/location/:location', section_ctrl.prueba); // create a Section by the object
 // router.get('/term/:term/location/:location', controller.prueba);
 // router.post('/term/:courses/location/:sections', controller.create);
