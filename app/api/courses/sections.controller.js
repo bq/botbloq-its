@@ -35,6 +35,7 @@ exports.all_sections = function (req, res)
 
 // Exporting function get_section
 // list the indicated section from a course
+// If the section does not exists, prints a message
 exports.get_section = function (req, res) 
 	{	
 	// console.log("params",req.params);
@@ -49,15 +50,20 @@ exports.get_section = function (req, res)
 		else if (course) 
 			{ 
 			console.log("course",course);
-			// console.log("course.sections",course["sections"]); //course.sections);
-			course["sections"].forEach(function(element) 
-					{if (element.name == sectionId)
+			var sections = course["sections"];
+			console.log("sections",sections);
+			var len = sections.length;
+			for (var i = 0; i < len; i++) {
+					console.log("elem",sections[i]);
+					var elem = sections[i];
+					if (elem.name == sectionId)
 						{
-						res.send("course: "+courseId+"\nsection:\n"+JSON.stringify(element));
-						}	
-					});
+						res.send("course: "+courseId+"\nsection:\n"+JSON.stringify(elem));
+						};
+			}			
+			res.send("course: "+courseId+" section: "+sectionId+" not found");			
 			} 
-			 else { res.sendStatus(404);}    
+			else { res.sendStatus(404);}    
 	});	
 	}
 		
@@ -89,8 +95,8 @@ exports.create_section = function(req, res) {
 				{ 	// if there are some sections, we have to
 					// verify that the 'new' section does not
 					// already exists. In this case, it is an ERROR		
-				course["sections"].forEach(function(element) 
-					{if (element.name == sectionId)
+				course["sections"].forEach(function(elem) 
+					{if (elem.name == sectionId)
 						{
 						console.error('ERROR!');
 						res.send('error section already exist');
