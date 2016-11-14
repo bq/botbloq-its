@@ -37,8 +37,7 @@ exports.all_sections = function (req, res)
 // list the indicated section from a course
 // If the section does not exists, prints a message
 exports.get_section = function (req, res) 
-	{	
-	// console.log("params",req.params);
+	{		
 	var courseId = req.params.course_id;
 	var sectionId = req.params.section_id;
 	console.log("course",courseId);
@@ -66,6 +65,55 @@ exports.get_section = function (req, res)
 			else { res.sendStatus(404);}    
 	});	
 	}
+	
+// Exporting remove function
+// delete the section indicated for the course received as parameter
+// If either the course or the section does not exist,
+// it considers it removed anyway
+exports.delete_section = function(req,res) 
+	{		
+	var courseId = req.params.course_id;
+	var sectionId = req.params.section_id;
+	console.log("course",courseId);
+	console.log("section",sectionId);
+	// var courseId = req.params.id;
+	Courses.findOne({"name" : courseId}, function(err, course){
+        if (err) { res.status(500).send(err);} 
+		else if (course) 
+			{ 
+			console.log("course",course);
+			var sections = course["sections"];
+			console.log("sections",sections);
+			var len = sections.length;
+			for (var i = 0; i < len; i++) {					
+					var elem = sections[i];
+					console.log("elem ",i,"\n",elem);
+					if (elem.name == sectionId)
+						{
+							course["sections"].splice(i,1);
+							console.log("course[sections]",course["sections"])
+							// res.send("course: "+courseId+"\nsection:\n"+sectionId+"removed");
+							course.save(function (err) {
+								if(!err) {
+									console.log("course: "+courseId+"\nsection:\n"+sectionId+"removed");
+									res.send("course: "+courseId+"\nsection:\n"+sectionId+"removed");
+									res.end();
+									// res.end("course: "+courseId+"\nsection:\n"+sectionId+"removed");
+									// console.log("contact " + contact.phone + " created at " + contact.createdAt + " updated at " + contact.updatedAt);
+								}
+								else {
+									console.log("Error: could not save course " + err);
+									res.send("Error: could not save course " + err);
+									res.end();
+								}								
+							});
+						};
+			}			
+			res.send("course: "+courseId+" section: "+sectionId+" not found");			
+			} 
+			else { res.sendStatus(404);}    
+	});	
+};
 		
 // Exporting create_section function
 // It receives as the body of the request in JSON format

@@ -14,6 +14,9 @@ var router = express.Router();
 router.get('/course/:course_id', section_ctrl.all_sections); // list all sections from course
 router.get('/course/:course_id/section/:section_id', section_ctrl.get_section); // list the indicated section
 
+// DELETEs
+router.delete('/course/:course_id/section/:section_id', section_ctrl.delete_section);
+
 // POSTs
 router.put('/create_section', section_ctrl.create_section);
 // router.post('/term/:term/location/:location', section_ctrl.prueba); // create a Section by the object
