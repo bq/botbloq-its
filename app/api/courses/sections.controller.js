@@ -1,6 +1,9 @@
 'use strict';
 
 /*
+This version works with the following exported functions.
+function all: list all sections from a course
+function get_section: list the indicated section from a course
 
 */
 
@@ -10,6 +13,54 @@ var Courses = require('./courses.model.js'),
     async = require('async'),
     _ = require('lodash');
 	
+// Exporting function all
+// list all sections from a course
+exports.all_sections = function (req, res) 
+	{	
+	var courseId = req.params.course_id;
+	console.log("course_id",courseId);
+	Courses.findOne({"name" : courseId}, function(err, course) 
+		{
+        if (err) { res.status(500).send(err);} 
+		else if (course) 
+			{ 
+			console.log("course",course);
+			// console.log("course.sections",course["sections"]); //course.sections);
+			res.send(course.sections);
+			// res.status(200).json(course.sections); 
+			} 
+			 else { res.sendStatus(404);}    
+	});
+};
+
+// Exporting function get_section
+// list the indicated section from a course
+exports.get_section = function (req, res) 
+	{	
+	// console.log("params",req.params);
+	var courseId = req.params.course_id;
+	var sectionId = req.params.section_id;
+	console.log("course",courseId);
+	console.log("section",sectionId);
+	
+	Courses.findOne({"name" : courseId}, function(err, course) 
+		{
+        if (err) { res.status(500).send(err);} 
+		else if (course) 
+			{ 
+			console.log("course",course);
+			// console.log("course.sections",course["sections"]); //course.sections);
+			course["sections"].forEach(function(element) 
+					{if (element.name == sectionId)
+						{
+						res.send("course: "+courseId+"\nsection:\n"+JSON.stringify(element));
+						}	
+					});
+			} 
+			 else { res.sendStatus(404);}    
+	});	
+	}
+		
 // Exporting create_section function
 // It receives as the body of the request in JSON format
 // the Id (name) of the course where the section 
@@ -21,11 +72,10 @@ var Courses = require('./courses.model.js'),
 // Up to the moment, it has not be possible to insert the new property
 // and value in the course
 exports.create_section = function(req, res) {	
-	// este es el update_field que estoy cambiando
 	console.log('course body',req.body);
 	var courseId = req.body.course,
-		sectionId = req.body.section,
-		resume = req.body.resume;
+		sectionId = req.body.section;
+		// resume = req.body.resume;
 	
 	console.log('Creating section',courseId);	
 	console.log('course body',req.body);	
@@ -56,18 +106,17 @@ exports.create_section = function(req, res) {
 							lessons  : []
 							};
 			course["sections"] = course.sections.push(new_sec);
-			console.log('new course body',course);
-			course.save(function (err) 
-				{
-				if(err) 
-					{
+			console.log('new course body\n',course);
+			// course.save();
+			course.save(function (err) {
+				if(err) {
 					console.error('ERROR!');
-					res.send('error while updating');
-					}
-				res.end('Updated the course with id: ' + courseId);
-				});
-			}
-			);
+					res.send('error while updating '+err)
+				}
+			res.end('Updated the course with id: ' + JSON.stringify(course));
+			});
+			
+	});
 };
 	
 

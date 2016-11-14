@@ -10,14 +10,18 @@ var router = express.Router();
 **************SECTIONS******************************
 */
 
+// GETs
+router.get('/course/:course_id', section_ctrl.all_sections); // list all sections from course
+router.get('/course/:course_id/section/:section_id', section_ctrl.get_section); // list the indicated section
+
 // POSTs
-router.post('/create_section', section_ctrl.create_section);
+router.put('/create_section', section_ctrl.create_section);
 // router.post('/term/:term/location/:location', section_ctrl.prueba); // create a Section by the object
 // router.get('/term/:term/location/:location', controller.prueba);
 // router.post('/term/:courses/location/:sections', controller.create);
 
 /*
-**************COURSES******************************
+***************COURSES******************************
 */
 
 // GETs
