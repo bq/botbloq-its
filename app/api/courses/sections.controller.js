@@ -12,6 +12,7 @@ var Courses = require('./courses.model.js'),
     config = require('../../res/config.js'),
     async = require('async'),
     _ = require('lodash');
+var controller = require('./courses.controller.js');
 	
 // Exporting function all
 // list all sections from a course
@@ -114,6 +115,71 @@ exports.delete_section = function(req,res)
 			else { res.sendStatus(404);}    
 	});	
 };
+
+function exist_section(sectionId,sections){
+	console.log('verifying if already exists section',sectionId);
+	console.log(sections);
+	// if (sections.length > 0)
+		// { 	
+			// if there are some sections, we have to
+			// verify that the 'new' section does not
+			// already exists. In this case, it is an ERROR			
+	var resp = sections.some(function(elem) 
+		{
+			console.log('elem.name, sectionId',elem.name, sectionId);
+			var cmp = sectionId.localeCompare(elem.name);
+			console.log('comparing',cmp);
+			if ( cmp === 0 ) { console.log('string match');
+				return true;
+				}
+		}
+	);
+	console.log('forEach end ',resp);
+	return resp;
+		// if (resp === true){return true;}
+		// else {return false;}
+		// }
+}
+
+exports.create_section2 = function(req, res) {	
+	var courseId = req.body.course,
+		new_sec = req.body.section,
+		sectionId = new_sec.name;
+		
+	console.log('Creating section ',sectionId,'in course ',courseId);	
+	console.log('section body',new_sec);	
+	
+	Courses.findOne({"name" : courseId}, 
+		function (err, course){
+			if (err) { res.status(500).send(err);} 
+			else {
+				console.log('old course object',course);
+				var sections = course["sections"];
+				if (exist_section(sectionId,sections)){
+					console.error('error section already exist');
+					res.end('error section already exist');
+				}
+				else {
+					console.log('section does not exist previously');
+					// if there were no sections before OR
+					// the new section does not already exists
+					// then we have to insert it in the array			
+					// push the new section at the end of the sections array					
+					// sections.push(new_sec);
+					sections[sections.length] = new_sec;
+					console.log('new sections',sections);
+					console.log('calling update_course_field');
+					var err1 = controller.update_course_field(courseId,"sections",sections);
+					if (err1) {
+						console.error('error while updating '+err);
+						res.end('error while updating '+err)
+						}
+						else res.end('Updated the course with id: ' + JSON.stringify(course));
+					}
+			}
+		}
+	);
+}
 		
 // Exporting create_section function
 // It receives as the body of the request in JSON format

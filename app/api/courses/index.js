@@ -19,6 +19,7 @@ router.delete('/course/:course_id/section/:section_id', section_ctrl.delete_sect
 
 // POSTs
 router.put('/create_section', section_ctrl.create_section);
+router.put('/create_section2', section_ctrl.create_section2);
 // router.post('/term/:term/location/:location', section_ctrl.prueba); // create a Section by the object
 // router.get('/term/:term/location/:location', controller.prueba);
 // router.post('/term/:courses/location/:sections', controller.create);

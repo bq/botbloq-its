@@ -25,22 +25,12 @@ var Courses = require('./courses.model.js'),
 // list all courses
 exports.all = function (req, res) 
 	{
-	console.log(config)
+	// console.log(config)
     Courses.find({}, function (err, course) {
 		if (err) res.sendStatus(err.code);
 		res.json(course);
 	});
 };
-
-exports.prueba = function (req, res) 
-	{
-	console.log('params',req.params);
-	var p1 = req.params.term
-	var p2 = req.params.location
-	console.log('p1,p2',p1,p2);
-    res.end('params: ' + p1 + ' ' + p2);
-	};
-
 
 // Exporting get function
 // list the course specified by its name
@@ -117,29 +107,52 @@ exports.update = function(req, res) {
 	);		
 };
 
+var update_field1 = function(courseId,field,value){
+	console.log('Updating course ',courseId);
+	console.log('courseId,field',courseId,field);
+	console.log('value\n',value);
+	Courses.findOne({"name" : courseId}, 
+		function (err, course) {
+			console.log('course object',course);
+			course[field] = value;
+			console.log('new course body',course);
+			course.save(function (err) {return err});
+		}
+	);
+}
+
+exports.update_course_field = function(courseId,field,value){
+	console.log('calling update_field1');
+	var err = update_field1(courseId,field,value);
+	return err;
+}
+
 // Exporting update function
 // update the field of the course received as parameter
 // it updates just the field with the value indicated via JSON 
 // format in the body of the request. 
 exports.update_field = function(req, res) {
-	var courseId = req.body.name;
-	
-	console.log('Updating course',courseId);	
-	console.log('course body',req.body);
-	
-	Courses.findOne({"name" : courseId}, 
-		function (err, course) {
-			console.log('course object',course);
-			course[req.body.field] = req.body.value			
-			course.save(function (err) {
-				if(err) {
-					console.error('ERROR!');
-					res.send('error while updating')
-				}
-			});
-			console.log('new course body',course);
-			res.end('Updated the course with id: ' + courseId);
-			});
+	var err = update_field1(req.body.name,req.body.field,req.body.value);	
+	if(err) {
+		console.error('ERROR!');
+		res.end('error while updating');
+	}	
+	res.end('Updated the course with id: ' + req.body.name);
+			
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
