@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 ### Added
 
-** Module: Domain (Courses) **
+**Module: Domain (Courses)**
 - Lesson Management.
 - Learning Path Management
 
@@ -22,16 +22,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [0.0.7] - 2016-11-17
 
 ### Added
-** Module: Students **
+**Module: Students**
 - Lock and Unlock of Students (logical removal)
 - Initial Survey to establish the Knowledge Style.
 - Enrollment: Basic Management 
 - Activity: Basic Management
 
-** Module: Domain (Courses) **
+**Module: Domain (Courses)**
 - Section Management.
 
-** Module: Learning Objects **
+**Module: Learning Objects**
 - Include operations to Upload/Download a physical Learning Object.
 
 
@@ -43,10 +43,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
-** Module: Domain (Courses) **
+**Module: Domain (Courses)**
 - Courses Management.
 
-** Module: Learning Objects ** 
+**Module: Learning Objects**
 - Basic Operations
 
 ### Changed
@@ -54,6 +54,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [0.0.5] - 2016-10-17
 ### Added
-** Module: Students **
+**Module: Students**
 - Basic Operations
 
