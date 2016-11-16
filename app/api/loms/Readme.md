@@ -1,7 +1,6 @@
 Learning Object Repository (basic metadata management)
 ===================
 
-
 (under construction)
 
 ----------
@@ -26,6 +25,31 @@ Retrieve the metadata of all the Learning Object (LO) stored in the repository
 If successful, this action returns a JSON data block containing the information for each LO metadata.
 If this action is not successful, it returns the error code. 
 
+**GET /botbloq/v1/its/loms/:id/download/:file**
+-------------
+
+Download the file with the specified name linked to the id lom.
+
+**Parameters**: 
+
+- id: LOM ID. 
+- file: file to download.
+
+**Query Parameters**:
+
+**Permissions**:
+
+**Status Codes**:
+200 OK - Action successfully attempted.
+400 Bad Request - The request contains bad syntax.
+404 Not Found - Resource not found.
+
+**Input**:
+
+**Return**:  
+If successful, this action returns a file specified.
+If this action is not successful, it returns the error code. 
+
 
 
 **POST /botbloq/v1/its/loms**
@@ -47,7 +71,34 @@ A JSON lom object.
 
 **Return**:  
 If successful, this action returns: "Added the lom with id: " and the id of the new lom.
-If this action is not successful, it returns the error code. 
+If this action is not successful, it returns the error code.
+
+**POST /botbloq/v1/its/loms/:id/upload**
+-------------
+
+The service uploads the selected file and links it to the lom of the indicated id.
+
+**Parameters**: 
+
+id: LOM ID.
+
+**Query Parameters**:
+
+**Permissions**:
+
+**Status Codes**:
+200 OK - Action successfully attempted.
+400 Bad Request - The request contains bad syntax.
+404 Not Found - Resource not found.
+
+**Input**: 
+
+A file specidied.
+
+**Return**:  
+If successful, this action returns: File: <filename.ext> uploaded successfully in the lom with id: <LOM ID>.
+If this action is not successful, it returns the error code.
+ 
 
 **DELETE /botbloq/v1/its/loms**
 -------------

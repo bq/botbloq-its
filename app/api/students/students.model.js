@@ -34,11 +34,7 @@ var identificationSchema = new Schema({
 var learningStyleSchema = new Schema({
     type: {
         type: String,
-		enum: [
-			"strong",
-			"moderate",
-			"balanced"
-		]
+		required: false
     },
     comprehension: {
         type: String,
@@ -88,6 +84,22 @@ var knowledgeLevelSchema = new Schema({
 	_id: false
 });
 
+var courseSchema = new Schema({
+	idCourse: {
+		type: String,
+		required: false
+	},
+	idLom: {
+		type: String,
+		required: false
+	},
+	status: {
+		type: Number,
+		required: false,
+		default: 0
+	},
+	_id: false
+});
 
 
 var studentSchema = new Schema({
@@ -111,11 +123,7 @@ var studentSchema = new Schema({
 		required: false,
 		default: true
 	},
-    course: {
-        type: String,
-        required: false,
-		default: ''
-    }
+    course: [courseSchema]
 });
 
 // the schema is useless so far

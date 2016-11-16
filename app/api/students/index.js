@@ -6,29 +6,54 @@ var controller = require('./students.controller.js');
 var router = express.Router();
 
 
-// GETs
+
+/////////////////////////////// GETs
+
+// gets all students
 router.get('/', controller.all);
-router.get('/:id', controller.get);
+ 
+// gets a student 
+router.get('/:id', controller.get); 
 
 
-// POSTs
-router.post('/', controller.create); // create
 
-//LOCKs
+//////////////////////////// POSTs
 
-router.unlock('/:id', controller.activate) // activate
-router.lock('/:id', controller.deactivate) // deactivate
+// creates a student
+router.post('/', controller.create); 
 
-// PUTs
-router.put('/:id',  controller.update);// update
-
-router.put('/:idstd/course/:idc', controller.enrollment); //enrollment
+// includes learning style in a student
+router.post('/:id/init', controller.init); 
 
 
-// DELETEs
 
-router.delete('/',  controller.destroy);// destroy
-router.delete('/:id',  controller.remove); //delete
+////////////////////////// LOCKs
+
+ // activates a student
+router.unlock('/:id', controller.activate)
+
+// deactivates a student
+router.lock('/:id', controller.deactivate) 
+
+
+
+/////////////////////////// PUTs
+
+// updates a student
+router.put('/:id',  controller.update);
+
+//enrollments a student in a course
+router.put('/:idstd/course/:idc', controller.enrollment); 
+
+
+
+////////////////////////// DELETEs
+
+// destroys all students
+router.delete('/',  controller.destroy);
+
+ //deletes a student
+router.delete('/:id',  controller.remove);
 
 
 

@@ -4,9 +4,8 @@ var Students = require('./students.model.js'),
    config = require('../../res/config.js'), 
    async = require('async'),
    _ = require('lodash');
-   
+   var fs = require('fs');
    var merge = require('merge');
-
 
 //ALL STUDENTS
 /**
@@ -28,12 +27,12 @@ exports.create = function(req, res) {
         console.log('Student created!');
         var id = student._id;
 
-        res.writeHead(200, {
-            'Content-Type': 'text/plain'
-        });
-        res.end('Added the student with id: ' + id);
+		var form = fs.readFileSync('/Users/Alvaro/Desktop/botbloq-its/app/res/learningstyle.json');           
+        res.end('Added the student with id: ' + id + '\n'+ form);
     });
+	
 };
+
 /**
  * Destroys all elements
  */
@@ -47,7 +46,7 @@ exports.destroy  = function(req, res){
 
 //BY ID	
 /**
- * Activates an element by ID
+ * Activates an student by ID
  */
 exports.activate = function (req, res) {
 	async.waterfall([
@@ -71,7 +70,7 @@ exports.activate = function (req, res) {
 };
 
 /**
- * Deactivates an element by ID
+ * Deactivates an student by ID
  */
 exports.deactivate = function (req, res) {
 	async.waterfall([
@@ -93,8 +92,9 @@ exports.deactivate = function (req, res) {
 	    }
 	});
 };
+
 /**
- * Returns an element by id
+ * Returns an student by id
  */
 exports.get = function (req, res) {
     Students.find({active: true, _id: req.params.id}, function (err, student) {
@@ -102,8 +102,9 @@ exports.get = function (req, res) {
 		res.json(student);
     });
 };
+
 /**
- * Updates an element by id
+ * Updates a student by id
  */
 exports.update = function (req, res) {
 	async.waterfall([
@@ -128,9 +129,56 @@ exports.update = function (req, res) {
 };
 
 /**
- * Enrollments a Student by id in a course
+ * Includes a learning style in a student
+ */
+exports.init = function (req, res) {
+	async.waterfall([
+	    Students.findById.bind(Students,  req.params.id),
+	    function(student, next) {
+			if(student.active == true){
+				var answers = req.body.answers;
+				for (var i = 0; i < answers.length; i++) { 
+					switch(answers[i].id_question) {
+				   		case "ls_comp":
+				        	student.learningStyle.comprehension = answers[i].value;
+				        	break;
+				    	case "ls_input":
+				        	student.learningStyle.input = answers[i].value;
+				        	break;
+				    	case "ls_per":
+				        	student.learningStyle.perception = answers[i].value;
+				        	break;
+				    	case "ls_proc":
+				        	student.learningStyle.processing = answers[i].value;
+				        	break;
+				    	default:
+				    		res.end("The id_question: " + answers[i].id_question + " is not correct")
+					}
+				}
+			} else {
+				console.log("The student with id: " + req.params.id + "is not activated")
+			} 
+			student.save(next);
+	    }
+	], function(err, student) {
+	    if (err) {
+	        console.log(err);
+	        res.status(err.code).send(err);
+	    } else {
+	        if (!student) {
+	            res.sendStatus(404);
+	        } else {
+	            res.json(student);
+	        }
+	    }
+	});
+};
+
+/**
+ * Enrollments a student by id in a course
  */
 exports.enrollment = function (req, res) {
+	var courseIndex = 0;
 	async.waterfall([
 	    Students.findById.bind(Students,  req.params.idstd),
 	    function(student, next) { 
@@ -144,7 +192,19 @@ exports.enrollment = function (req, res) {
 			    } else {
 					// If the course exists and the student is active
 					// The course is assigned to the student
-					if(student.active == true) student.course = req.params.idc;
+					if(student.active == true){
+						var coursed = false;
+						student.course.find(function(element ,index , array){
+							if(element.idCourse == req.params.idc){
+								courseIndex = index;
+								res.end('The student: ' + student._id + " is already enrolled in the course: " + req.params.idc);
+								coursed = true;
+							}
+						});
+						if(!coursed){ 
+							student.course.push({idCourse: req.params.idc, status: 0});
+						}
+					} 
 					student.save(next);					
 			    }
 			});	
@@ -175,7 +235,7 @@ exports.enrollment = function (req, res) {
 };
 
 /**
- * Removes an element by id
+ * Removes a element by id
  */
 exports.remove = function (req, res) {
 	async.waterfall([
@@ -199,6 +259,3 @@ exports.remove = function (req, res) {
 	    }
 	});
 };
-
-
-

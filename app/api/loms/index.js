@@ -2,27 +2,47 @@
 
 var express = require('express');
 var controller = require('./loms.controller.js');
+var multer = require('multer');
 
 var router = express.Router();
+var upload = multer({ dest: '/tmp' })
 
 
 
+//////////////////////////// GETs
 
-// GETs
+//gets all loms
 router.get('/', controller.all);
+
+//gets a lom selected
 router.get('/:id', controller.get);
 
-// POSTS
-router.post('/', controller.create); //create
+//downloads a file of a lom
+router.get('/:id/download/:file', controller.downloadFile);
 
 
-// PUTs
-router.put('/:id', controller.update); //update
+/////////////////////////// POSTS
 
-// DELETEs
+// creates a lom
+router.post('/', controller.create);
 
-router.delete('/',  controller.destroy); //destroy
-router.delete('/:id',  controller.remove); //delete
+// uploads a file in a lom
+router.post('/:id/upload', upload.single("file"), controller.uploadFile);
+
+
+/////////////////////////// PUTs
+
+// updates a loms
+router.put('/:id', controller.update);
+
+
+/////////////////////////// DELETEs
+
+// destroys all loms
+router.delete('/',  controller.destroy);
+
+// destroys a lom
+router.delete('/:id',  controller.remove);
 
 
 

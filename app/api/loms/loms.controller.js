@@ -4,9 +4,11 @@ var LOMS = require('./loms.model.js'),
     config = require('../../res/config.js'),
     async = require('async'),
     _ = require('lodash');
+	var fs = require("fs");
 
 
 //ALL LOMS
+	
 /**
  * Returns all elements
  */
@@ -18,7 +20,7 @@ exports.all = function (req, res) {
 };
 
 /**
- * Creates a new element
+ * Creates a new lom
  */
 exports.create = function(req, res) {
     LOMS.create(req.body, function (err, lom) {
@@ -32,8 +34,9 @@ exports.create = function(req, res) {
         res.end('Added the lom with id: ' + id);
     });
 };
+
 /**
- * Destroys all elements
+ * Destroys all loms
  */
 exports.destroy  = function(req, res){
     LOMS.remove({}, function (err, resp) {
@@ -41,9 +44,11 @@ exports.destroy  = function(req, res){
         res.json(resp);
     });
 };
+
 //BY ID	
+
 /**
- * Returns an element by id
+ * Returns a lom by id
  */
 exports.get = function (req, res) {
     console.log(req.params.id)
@@ -52,8 +57,9 @@ exports.get = function (req, res) {
         res.json(lom);
     });
 };
+
 /**
- * Updates an element by id
+ * Updates a lom by id
  */	
 exports.update = function (req, res) {
 	async.waterfall([
@@ -75,8 +81,9 @@ exports.update = function (req, res) {
 	    }
 	});
 };
+
 /**
- * Removes an element by id
+ * Removes a lom by id
  */
 exports.remove = function (req, res) {
     console.log(req.params.id);
@@ -102,8 +109,48 @@ exports.remove = function (req, res) {
 	});
 };
 
+/**
+ * Uploads a file in a lom
+ */
+exports.uploadFile =  function (req, res) {
+	fs.stat(__dirname + "/files/" + req.params.id, function(err, stats){
+		if(err) fs.mkdir(__dirname + "/files/" + req.params.id);
+	});
+	var file = __dirname + "/files/" + req.params.id + "/" + req.file.originalname;
+	
+	fs.readFile( req.file.path, function (err, data) {
+		fs.writeFile(file, data, function (err) {
+			if( err ){
+				console.error( err );
+		        res.status(err.code).send(err);
+			    res.end('Sorry, the file: '+  req.file.originalname 
+				+' couldn\'t be uploaded in the lom with id: ' + req.params.id);
 
+			}else{
+			    res.end('File: '+  req.file.originalname 
+				+' uploaded successfully in the lom with id: ' + req.params.id);
+			}
+		});
+	});
+};
 
+/**
+ * Downloads a file of a lom
+ */
+exports.downloadFile = function(req, res, next){
+  var file = req.params.file
+    , path = __dirname + "/files/" + req.params.id + '/' + file;
+
+  res.download(path, function(err){
+	  if(err){
+		  console.error( err );
+		  res.status(err.code).send(err);
+		  res.end('Sorry, the file: '+  file +' couldn\'t be downloaded');
+	  } else {
+		  res.end('File: '+  file +' download successfully');	
+	  }
+  });
+};
 
 
 
