@@ -9,6 +9,9 @@ function create_section: creates a new section for the indicated
 	an error message
 function delete_section: delete the section indicated for the course received as parameter
 	If either the course or the section does not exist, it considers it removed anyway
+function update_section: update the section indicated for the course received as parameter
+	If the section already exist, it updates the section
+	If section doesn't exist previously, it sets an error
 
 */
 
@@ -133,6 +136,59 @@ exports.create_section = function(req, res) {
 					// push the new section at the end of the sections array					
 					// sections.push(new_sec);
 					sections[sections.length] = new_sec;
+					console.log('new sections',sections);
+					console.log('calling update_course_field');
+					var err1 = controller.update_course_field(courseId,"sections",sections);
+					if (err1) {
+						console.error('error while updating '+err);
+						res.end('error while updating '+err)
+						}
+						else res.end('Updated the course with id: ' + JSON.stringify(course));
+					}
+			}
+		}
+	);
+}
+
+// Exporting update_section function
+// It receives as the body of the request in JSON format
+// the name of the course where the section should be created and 
+// the section name to be created and the new information about the section 
+// If the section already exist, it updates the section
+// If section doesn't exist previously, it sets an error
+// Example: 
+// {
+	// "course":"Course1",
+	// "section":{  
+    		// "name": "Section1.3",
+       		// "resume": "Section1.3 resume",
+       		// "lessons": [] 
+	  // }
+// }
+
+exports.update_section = function(req, res) {	
+	var courseId = req.body.course,
+		new_sec = req.body.section,
+		sectionId = new_sec.name;
+		
+	console.log('Creating section ',sectionId,'in course ',courseId);	
+	console.log('section body',new_sec);	
+	
+	Courses.findOne({"name" : courseId}, 
+		function (err, course){
+			if (err) { res.status(500).send(err);} 
+			else {
+				console.log('old course object',course);
+				var sections = course["sections"];
+				var ind = find_section(sectionId,sections);
+				if ( ind < 0 ){
+					console.error('error section does not exist');
+					res.end('error section does not exist');
+				}
+				else {
+					console.log('section already exist');
+					course["sections"].splice(ind,1); //remove old section
+					sections[sections.length] = new_sec; //push the new one
 					console.log('new sections',sections);
 					console.log('calling update_course_field');
 					var err1 = controller.update_course_field(courseId,"sections",sections);

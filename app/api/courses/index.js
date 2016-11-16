@@ -24,6 +24,9 @@ router.put('/create_section', section_ctrl.create_section);
 // router.get('/term/:term/location/:location', controller.prueba);
 // router.post('/term/:courses/location/:sections', controller.create);
 
+// PUTs
+router.put('/update_section', section_ctrl.update_section); // update a particular section of a course
+
 /*
 ***************COURSES******************************
 */
