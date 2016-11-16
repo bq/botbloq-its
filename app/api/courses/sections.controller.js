@@ -12,7 +12,10 @@ function delete_section: delete the section indicated for the course received as
 function update_section: update the section indicated for the course received as parameter
 	If the section already exist, it updates the section
 	If section doesn't exist previously, it sets an error
-
+function update_section_field: updates just a field of a section
+// It receives as the body of the request in JSON format
+// the names of the course, the section and the field and 
+// the new value of the field 
 */
 
 var Courses = require('./courses.model.js'),
@@ -171,7 +174,7 @@ exports.update_section = function(req, res) {
 		new_sec = req.body.section,
 		sectionId = new_sec.name;
 		
-	console.log('Creating section ',sectionId,'in course ',courseId);	
+	console.log('Updating section ',sectionId,'in course ',courseId);	
 	console.log('section body',new_sec);	
 	
 	Courses.findOne({"name" : courseId}, 
@@ -190,6 +193,58 @@ exports.update_section = function(req, res) {
 					course["sections"].splice(ind,1); //remove old section
 					sections[sections.length] = new_sec; //push the new one
 					console.log('new sections',sections);
+					console.log('calling update_course_field');
+					var err1 = controller.update_course_field(courseId,"sections",sections);
+					if (err1) {
+						console.error('error while updating '+err);
+						res.end('error while updating '+err)
+						}
+						else res.end('Updated the course with id: ' + JSON.stringify(course));
+					}
+			}
+		}
+	);
+}
+
+// Exporting update_section_field function
+// It receives as the body of the request in JSON format
+// the names of the course, the section and the field and 
+// the new value of the field 
+// Example: 
+// { 
+    // "course": "Course1",
+    // "section": "Section1.1",
+    // "field":"resume",
+    // "value": "Section1.1 new resume"
+  // }
+
+exports.update_section_field = function(req, res) {	
+	var courseId = req.body.course,
+		sectionId = req.body.section,
+		field = req.body.field,
+		value = req.body.value;
+		
+	console.log('Updating section field',sectionId,'in course ',courseId);	
+	console.log('field, value',field,value);	
+	
+	Courses.findOne({"name" : courseId}, 
+		function (err, course){
+			if (err) { res.status(500).send(err);} 
+			else {
+				console.log('old course object',course);
+				var sections = course["sections"];
+				var ind = find_section(sectionId,sections);
+				if ( ind < 0 ){
+					console.error('error section does not exist');
+					res.end('error section does not exist');
+				}
+				else {
+					console.log('section already exist in position',ind);
+					var sec = sections[ind];
+					console.log('old field value',sec[field]);
+					sec[field] = value;
+					console.log('new field value',sec[field]);
+					// console.log('new sections',sections);
 					console.log('calling update_course_field');
 					var err1 = controller.update_course_field(courseId,"sections",sections);
 					if (err1) {
