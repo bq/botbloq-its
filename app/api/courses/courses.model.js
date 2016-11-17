@@ -3,23 +3,18 @@
 // var mongoose = require('mongoose');
 var mongoose = require('mongoose')
   , Schema = mongoose.Schema;
-  					
-var Lo = new Schema({
-	name: String,
-	lo : String	
-})
+  										
+var Lo = new Schema( // { autoIndex: false },
+	{ name: String, lo : String	}
+	);
 
-var Lesson = new Schema({
-	name: String,
-    resume  : String,
-	los : [Lo]	
-})
+var Lesson = new Schema( // { autoIndex: false },
+	{ name: String, resume  : String, los : [Lo] }
+	);
 
-var Section = new Schema({
-	name: String,
-    resume  : String, 
-	lessons  : [Lesson]
-});
+var Section = new Schema( // { autoIndex: false },
+	{ name: String, resume  : String, lessons  : [Lesson]}
+	);
 
 var CoursesSchema = new mongoose.Schema(
 	{
@@ -28,7 +23,6 @@ var CoursesSchema = new mongoose.Schema(
 	"content": { type: String, trim: true },
 	"objetives": { type: String, trim: true },
 	"bibliography": { type: String, trim: true },
-	// "sections": {type: object, trim: true }
 	sections  : [Section]
 	}, 
 	{ timestamps: true }

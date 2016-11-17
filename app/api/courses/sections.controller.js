@@ -2,7 +2,7 @@
 
 /*
 This version works with the following exported functions.
-function all: list all sections from a course
+function all_sections: list all sections from a course
 function get_section: list the indicated section from a course
 function create_section: creates a new section for the indicated
 	course. If the there exists a section with the same name, gives
@@ -25,7 +25,7 @@ var Courses = require('./courses.model.js'),
     _ = require('lodash');
 var controller = require('./courses.controller.js');
 	
-// Exporting function all
+// Exporting function all_sections
 // list all sections from a course
 exports.all_sections = function (req, res) 
 	{	

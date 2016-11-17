@@ -3,8 +3,16 @@
 var express = require('express');
 var controller = require('./courses.controller.js');
 var section_ctrl = require('./sections.controller.js');
+var lesson_ctrl = require('./lessons.controller.js');
 
 var router = express.Router();
+
+/*
+**************LESSONS******************************
+*/
+
+// GETs // list all lessons from a course section
+router.get('/course/:course_id/section/:section_id/', lesson_ctrl.all_lessons); 
 
 /*
 **************SECTIONS******************************
@@ -19,10 +27,6 @@ router.delete('/course/:course_id/section/:section_id', section_ctrl.delete_sect
 
 // POSTs
 router.put('/create_section', section_ctrl.create_section);
-// router.put('/create_section2', section_ctrl.create_section2);
-// router.post('/term/:term/location/:location', section_ctrl.prueba); // create a Section by the object
-// router.get('/term/:term/location/:location', controller.prueba);
-// router.post('/term/:courses/location/:sections', controller.create);
 
 // PUTs
 router.put('/update_section_field', section_ctrl.update_section_field); // update a particular field 
@@ -50,3 +54,13 @@ router.delete('/:id', controller.remove);
 
 
 module.exports = router;
+
+
+
+
+
+
+
+
+
+
