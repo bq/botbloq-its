@@ -113,6 +113,7 @@ exports.remove = function (req, res) {
  * Uploads a file in a lom
  */
 exports.uploadFile =  function (req, res) {
+	console.log(req.params.id);
 	fs.stat(__dirname + "/files/" + req.params.id, function(err, stats){
 		if(err) fs.mkdir(__dirname + "/files/" + req.params.id);
 	});

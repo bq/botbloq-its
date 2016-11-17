@@ -15,7 +15,6 @@ module.exports = function(app) {
 	router.use('/students', require('./api/students/index')); // students
 	router.use('/courses', require('./api/courses/index')); // Courses
 	router.use('/loms', require('./api/loms/index')); // Learning Object Metadata
-	router.use('/files', require('./api/files/index')); // Learning Object Metadata
 	
     // Set a prefix for all calls
     app.use('/botbloq/v1/its', router);

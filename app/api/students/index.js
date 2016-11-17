@@ -15,6 +15,7 @@ router.get('/', controller.all);
 // gets a student 
 router.get('/:id', controller.get); 
 
+router.get('/:idstd/course/:idc', controller.newActivity); 
 
 
 //////////////////////////// POSTs
@@ -42,8 +43,12 @@ router.lock('/:id', controller.deactivate)
 // updates a student
 router.put('/:id',  controller.update);
 
-//enrollments a student in a course
+// enrollments a student in a course
 router.put('/:idstd/course/:idc', controller.enrollment); 
+
+// Updates the status of the lom for a student and a course
+router.put('/:idstd/course/:idc/lom/:idl/:status', controller.updateActivity);
+
 
 
 

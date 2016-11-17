@@ -28,6 +28,7 @@ router.post('/', controller.create);
 
 // uploads a file in a lom
 router.post('/:id/upload', upload.single("file"), controller.uploadFile);
+//router.post('/:id/upload', controller.uploadFile);
 
 
 /////////////////////////// PUTs

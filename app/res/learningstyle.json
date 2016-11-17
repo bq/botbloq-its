@@ -1,152 +1,128 @@
 {
-  "uniques": [],
-  "firstPageTitleDescription": false,
-  "languageDisplayStyle": "dropdown",
-  "description": {
-    "en": ""
-  },
-  "form": [
-    {
-      "type": "page",
-      "children": [
-       {
-          "description": {
-            "en": ""
-          },
-          "title": {
-            "en": "Comprehension?"
-          },
-          "idname": "single-choice",
-          "children": [
-            {
-              "type": "single",
-              "required": true,
-              "choices": [
-                {
-                  "label": {
-                    "en": "Sequential"
-                  }
-                },
-                {
-                  "label": {
-                    "en": "Global"
-                  }
-                }
-              ]
-            }
-          ],
-          "width": 100,
-          "type": "question",
-          "id": "ls_comp"
-        }
-		
-		{
-          "description": {
-            "en": ""
-          },
-          "title": {
-            "en": "How you prefer information to be presented?"
-          },
-          "idname": "single-choice",
-          "children": [
-            {
-              "type": "single",
-              "required": true,
-              "choices": [
-                {
-                  "label": {
-                    "en": "Visual"
-                  }
-                },
-                {
-                  "label": {
-                    "en": "Verbal"
-                  }
-                }
-              ]
-            }
-          ],
-          "width": 100,
-          "type": "question",
-          "id": "ls_input"
-        }
-		
-		{
-          "description": {
-            "en": ""
-          },
-          "title": {
-            "en": "How do you prefer to perceive or take information?"
-          },
-          "idname": "single-choice",
-          "children": [
-            {
-              "type": "single",
-              "required": true,
-              "choices": [
-                {
-                  "label": {
-                    "en": "Sensing"
-                  }
-                },
-                {
-                  "label": {
-                    "en": "Intuitive"
-                  }
-                }
-              ]
-            }
-          ],
-          "width": 100,
-          "type": "question",
-          "id": "ls_per"
-        }
-		
-		{
-          "description": {
-            "en": ""
-          },
-          "title": {
-            "en": "How do you prefer to process information?"
-          },
-          "idname": "single-choice",
-          "children": [
-            {
-              "type": "single",
-              "required": true,
-              "choices": [
-                {
-                  "label": {
-                    "en": "Active"
-                  }
-                },
-                {
-                  "label": {
-                    "en": "Reflexive"
-                  }
-                }
-              ]
-            }
-          ],
-          "width": 100,
-          "type": "question",
-          "id": "ls_input"
-        }
-		
-		
-		
-		
-      ]
-    }
-  ],
-  "title": {
-    "en": "Learning Style Survey"
-  },
-  "languages": [
-    {
-      "code": "en",
-      "name": "English",
-      "isDefault": true
-    }
-  ],
+	"id_student":"",
+	"uniques": [],
+	"firstPageTitleDescription": false,
+	"languageDisplayStyle": "dropdown",
+	"description": {
+		"en": ""
+	},
+	"form": [{
+		"type": "page",
+		"children": [{
+				"description": {
+					"en": ""
+				},
+				"title": {
+					"en": "Comprehension?"
+				},
+				"idname": "single-choice",
+				"children": [{
+					"type": "single",
+					"required": true,
+					"choices": [{
+						"label": {
+							"en": "Sequential"
+						}
+					}, {
+						"label": {
+							"en": "Global"
+						}
+					}]
+				}],
+				"width": 100,
+				"type": "question",
+				"id": "ls_comp"
+			},
+
+			{
+				"description": {
+					"en": ""
+				},
+				"title": {
+					"en": "How you prefer information to be presented?"
+				},
+				"idname": "single-choice",
+				"children": [{
+					"type": "single",
+					"required": true,
+					"choices": [{
+						"label": {
+							"en": "Visual"
+						}
+					}, {
+						"label": {
+							"en": "Verbal"
+						}
+					}]
+				}],
+				"width": 100,
+				"type": "question",
+				"id": "ls_input"
+			},
+
+			{
+				"description": {
+					"en": ""
+				},
+				"title": {
+					"en": "How do you prefer to perceive or take information?"
+				},
+				"idname": "single-choice",
+				"children": [{
+					"type": "single",
+					"required": true,
+					"choices": [{
+						"label": {
+							"en": "Sensing"
+						}
+					}, {
+						"label": {
+							"en": "Intuitive"
+						}
+					}]
+				}],
+				"width": 100,
+				"type": "question",
+				"id": "ls_per"
+			},
+
+			{
+				"description": {
+					"en": ""
+				},
+				"title": {
+					"en": "How do you prefer to process information?"
+				},
+				"idname": "single-choice",
+				"children": [{
+					"type": "single",
+					"required": true,
+					"choices": [{
+						"label": {
+							"en": "Active"
+						}
+					}, {
+						"label": {
+							"en": "Reflexive"
+						}
+					}]
+				}],
+				"width": 100,
+				"type": "question",
+				"id": "ls_input"
+			}
+
+
+
+
+		]
+	}],
+	"title": {
+		"en": "Learning Style Survey"
+	},
+	"languages": [{
+		"code": "en",
+		"name": "English",
+		"isDefault": true
+	}]
 }

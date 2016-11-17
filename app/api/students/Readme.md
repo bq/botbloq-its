@@ -123,7 +123,7 @@ Update the information of a student in  the repository.
 If successful, this action returns a JSON data block containing the information for each student.
 If this action is not successful, it returns the error code. 
 
-**PUT /botbloq/v1/its/students/:idstd/courses/:idc**
+**PUT /botbloq/v1/its/students/:idstd/course/:idc**
 -------------
 
 Enrollments a student in a course.
