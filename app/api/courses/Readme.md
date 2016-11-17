@@ -59,6 +59,33 @@ If this action is not successful, it returns the error code.
 
 
 ---------------------------------------
+**DELETE /botbloq/v1/its/courses/course/:course_id/section/:section_id/lesson/lesson_id**
+---------------------------------------
+
+- Delete the indicated lesson from a course section. 
+	If lesson does not exist, it considers the section deleted (i.e. not an error)
+	If the course or the section doesn't exist, it sends an error message
+
+**Parameters**: 
+- course_id: name of the course to be deleted
+- section_id: name of the section to be deleted
+- lesson_id: name of the lesson of the course section to be deleted
+
+**Query Parameters**:
+
+**Permissions**:
+
+**Status Codes**:
+
+**Input**: 
+
+**Return**:  
+-the indicated lesson is removed from the repository 
+	If lesson does not exist, it considers the section deleted (i.e. not an error)
+	If the course or the section doesn't exist, it sends an error message
+
+
+---------------------------------------
 **PUT /botbloq/v1/its/courses/create_lesson**
 ---------------------------------------
 

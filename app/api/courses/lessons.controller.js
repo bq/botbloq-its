@@ -99,6 +99,61 @@ exports.get_lesson = function (req, res)
 	);
 };
 
+// Exporting function delete_lesson
+// delete the indicated lesson from a course section. 
+// If lesson does not exist, it considers the section deleted (i.e. not an error)
+// If the course or the section doesn't exist, it sends an error message
+
+exports.delete_lesson = function (req, res) 
+	{	
+	console.log("deleting lesson", req.params.lesson_id);
+	var courseId = req.params.course_id;
+	var sectionId = req.params.section_id;
+	var lessonId = req.params.lesson_id;
+	console.log("course_id",courseId);
+	console.log("section_id",sectionId);
+	console.log("lesson_id",lessonId);
+	Courses.findOne({"name" : courseId}, function(err, course) 
+		{
+        if (err) { res.status(ServerError500).send(err);} 
+		else if (!course) { res.status(NotFound404).send("Error: course does not exists "+courseId); }
+			else 
+			{ 
+				console.log("course",course);
+				var inds = CoursesFunctions.find_section(sectionId,course.sections);
+				console.log("section position",inds);
+				if (inds < 0){
+					console.log("Error: section does not exists",sectionId);
+					res.status(NotFound404).send("Error: section does not exists "+sectionId);
+				}
+				else {	// section exists
+					console.log("course section lessons",course.sections[inds].lessons);
+					var indl = CoursesFunctions.find_lesson(lessonId,course.sections[inds].lessons);
+					console.log("lesson position",indl);
+					if ( indl < 0 ){
+						console.error('error lesson does not exist');
+						res.status(NotFound404).send('error lesson does not exist'+lessonId);
+					}
+					else {
+						console.log('lesson exist previously');
+						console.log("course section",course.sections[inds].lessons[indl]);
+						course.sections[inds].lessons.splice(indl,1);
+						console.log("new course section",course.sections[inds].lessons[indl]);						
+						console.log('calling update_course_field');
+						var err1 = controller.update_course_field(courseId,"sections",course.sections);
+						if (err1) {
+							console.error('error while updating '+err);
+							res.end('error while updating '+err)
+							}
+						else res.end('Updated the course with id: ' + JSON.stringify(course));
+						// res.status(OK200).send(course.sections[inds].lessons[indl]);
+					}			
+				}    
+			}
+		}
+	);
+};
+
 // Exporting create_lesson function
 // It receives as the body of the request in JSON format
 // the name of the course and the section where the new lesson should be created and 
