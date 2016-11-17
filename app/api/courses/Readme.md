@@ -4,6 +4,67 @@ Domain Model - Course Repository (basic management)
 
 (under construction)
 
+
+---------------------------------------------------------------------------------------------------------------------
+>>>>>>>>>>>>						LESSONS
+---------------------------------------------------------------------------------------------------------------------
+
+---------------------------------------
+**GET /botbloq/v1/its/courses/course/:course_id/**
+---------------------------------------
+
+- list all lessons from the indicated course section
+
+**Parameters**: 
+- course_id: name of the course to be listed
+- section_id: name of the section of the course to be listed
+
+**Query Parameters**:
+
+**Permissions**:
+
+**Status Codes**:
+
+**Input**:
+
+**Return**:  
+If successful, this action returns a list with the information for each one of the lessons 
+	contained into the course section.
+If this action is not successful, it returns the error code. 
+
+
+---------------------------------------
+**PUT /botbloq/v1/its/courses/create_lesson**
+---------------------------------------
+
+- create a lesson in a section of a course. 
+	It verifies if section and course exist. 
+	If lesson already exist, it sets an error
+	If lesson doesn't exist previously, it creates the new lesson
+
+**Parameters**: Example (raw body of the request in JSON format)
+{
+	"course":"Course2",
+	"section":"Section2.1",
+	"lesson": {  
+    		"name": "Lesson2.1.1",
+       		"resume": "Lesson2.1.1 resume",
+       		"los": [] 
+	   }
+}
+
+**Query Parameters**:
+
+**Permissions**:
+
+**Status Codes**:
+
+**Input**: 
+
+**Return**:  
+- the new section is included into the sections field of the course. 
+	A message with the updated list of lessons is returned
+
 ---------------------------------------------------------------------------------------------------------------------
 >>>>>>>>>>>>						SECTIONS
 ---------------------------------------------------------------------------------------------------------------------
@@ -74,7 +135,7 @@ If this action is not successful, it returns the error code.
 -the indicated course is removed from the repository
 
 ---------------------------------------
-**POST /botbloq/v1/its/courses/create_section**
+**PUT /botbloq/v1/its/courses/create_section**
 ---------------------------------------
 
 - create a section of a course. 

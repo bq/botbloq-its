@@ -74,3 +74,29 @@ exports.find_section = function(sectionId,sections){
 	return -1;
 }
 
+/*
+returns the index position of the lesson identified by lessonId
+in the list of lessons. If it doesn't exists in the list returns -1
+*/
+
+exports.find_lesson = function(lessonId,lessons){
+	console.log('find the lesson index position. Otherwise -1',lessonId);
+	console.log("lessons\n",lessons);	
+	// verify that the 'new' lesson does not
+	// already exists. In this case, it is an ERROR	
+	console.log("lessons",lessons);
+	var len = lessons.length;
+	for (var i = 0; i < len; i++) {		
+		var elem = lessons[i];
+		console.log("elem ",i,"\n",elem);
+		var cmp = lessonId.localeCompare(elem.name);
+		console.log('comparing',cmp);
+		if ( cmp === 0 ) 
+			{ 
+				console.log('string match');
+				return i;
+			}
+	}
+	return -1;
+}
+

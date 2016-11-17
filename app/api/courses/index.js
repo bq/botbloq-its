@@ -14,6 +14,9 @@ var router = express.Router();
 // GETs // list all lessons from a course section
 router.get('/course/:course_id/section/:section_id/', lesson_ctrl.all_lessons); 
 
+// PUTs
+router.put('/create_lesson', lesson_ctrl.create_lesson);
+
 /*
 **************SECTIONS******************************
 */
@@ -25,7 +28,7 @@ router.get('/course/:course_id/section/:section_id', section_ctrl.get_section); 
 // DELETEs
 router.delete('/course/:course_id/section/:section_id', section_ctrl.delete_section);
 
-// POSTs
+// PUTs
 router.put('/create_section', section_ctrl.create_section);
 
 // PUTs
