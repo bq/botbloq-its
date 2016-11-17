@@ -54,11 +54,57 @@ exports.all_lessons = function (req, res)
 	});
 };
 
+// Exporting function get_lesson
+// lists the indicated lesson from a course section. 
+// If some of them i.e. course, section or lesson doesn't exist, it sends an error message
+
+exports.get_lesson = function (req, res) 
+	{	
+	console.log("listing lesson", req.params.lesson_id);
+	var courseId = req.params.course_id;
+	var sectionId = req.params.section_id;
+	var lessonId = req.params.lesson_id;
+	console.log("course_id",courseId);
+	console.log("section_id",sectionId);
+	console.log("lesson_id",lessonId);
+	Courses.findOne({"name" : courseId}, function(err, course) 
+		{
+        if (err) { res.status(ServerError500).send(err);} 
+		else if (!course) { res.status(NotFound404).send("Error: course does not exists "+courseId); }
+			else 
+			{ 
+				console.log("course",course);
+				var inds = CoursesFunctions.find_section(sectionId,course.sections);
+				console.log("section position",inds);
+				if (inds < 0){
+					console.log("Error: section does not exists",sectionId);
+					res.status(NotFound404).send("Error: section does not exists "+sectionId);
+				}
+				else {	// section exists
+					console.log("course section lessons",course.sections[inds].lessons);
+					var indl = CoursesFunctions.find_lesson(lessonId,course.sections[inds].lessons);
+					console.log("lesson position",indl);
+					if ( indl < 0 ){
+						console.error('error lesson does not exist');
+						res.status(NotFound404).send('error lesson does not exist'+lessonId);
+					}
+					else {
+						console.log('lesson exist previously');
+						console.log("course section",course.sections[inds].lessons[indl]);
+						res.status(OK200).send(course.sections[inds].lessons[indl]);
+					}			
+				}    
+			}
+		}
+	);
+};
+
 // Exporting create_lesson function
 // It receives as the body of the request in JSON format
 // the name of the course and the section where the new lesson should be created and 
 // the name of the lesson to be created and its information
-// It verifies if the lesson already exist, in which case, it sets an error
+// It verifies if section and course exist. 
+// If lesson already exist, it sets an error
 // If lesson doesn't exist previously, it creates the new lesson
 // Example: 
 // {
@@ -119,3 +165,4 @@ exports.create_lesson = function(req, res) {
 		}
 	);
 }
+

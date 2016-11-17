@@ -10,7 +10,7 @@ Domain Model - Course Repository (basic management)
 ---------------------------------------------------------------------------------------------------------------------
 
 ---------------------------------------
-**GET /botbloq/v1/its/courses/course/:course_id/**
+**GET /botbloq/v1/its/courses/course/:course_id/section/section_id**
 ---------------------------------------
 
 - list all lessons from the indicated course section
@@ -29,6 +29,31 @@ Domain Model - Course Repository (basic management)
 
 **Return**:  
 If successful, this action returns a list with the information for each one of the lessons 
+	contained into the course section.
+If this action is not successful, it returns the error code. 
+
+---------------------------------------
+**GET /botbloq/v1/its/courses/course/:course_id/section/section_id/lesson/lesson_id**
+---------------------------------------
+
+- lists the indicated lesson from a course section. 
+	If some of them i.e. course, section or lesson doesn't exist, it sends an error message
+
+**Parameters**: 
+- course_id: name of the course to be listed
+- section_id: name of the section of the course to be listed
+- lesson_id: name of the lesson of the course section to be listed
+
+**Query Parameters**:
+
+**Permissions**:
+
+**Status Codes**:
+
+**Input**:
+
+**Return**:  
+If successful, this action returns a list with the information of the lesson
 	contained into the course section.
 If this action is not successful, it returns the error code. 
 

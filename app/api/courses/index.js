@@ -13,6 +13,9 @@ var router = express.Router();
 
 // GETs // list all lessons from a course section
 router.get('/course/:course_id/section/:section_id/', lesson_ctrl.all_lessons); 
+// list the indicated lesson
+router.get('/course/:course_id/section/:section_id/lesson/:lesson_id', lesson_ctrl.get_lesson); 
+
 
 // PUTs
 router.put('/create_lesson', lesson_ctrl.create_lesson);
