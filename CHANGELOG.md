@@ -8,16 +8,28 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 ### Added
 
+
+**Module: Students**
+- Un-enrollment
+
+
 **Module: Domain (Courses)**
 - Lesson Management.
 - Learning Path Management
 
-
-
+**Module: Global**
+- Introduce unit tests.
 
 ### Changed
+
+**Module: Domain (Courses)**
+
+**Module: Students**
+- Error Control Added: No LOMS found for course
+
+**Module: Learning Objects**
 - Learning Objects: upload/download to the database
-- Global: introduce unit tests.
+- Error Control Added: No file is found for the request
 
 ## [0.0.7] - 2016-11-17
 
@@ -36,6 +48,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
 ### Changed
+**Module: Students**
+- New Students return a Initial Survey in JSON format
+
+
+** Global **
 - Correct error in delete operations
 
 
