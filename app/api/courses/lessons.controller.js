@@ -288,3 +288,76 @@ exports.update_lesson = function(req, res) {
 		}
 	);
 }
+
+// Exporting update_lesson_field function
+// It receives as the body of the request in JSON format
+// the names of the course, the section, the lesson and the field and 
+// the new value of the field 
+// Example: 
+// { 
+    // "course": "Course1",
+    // "section": "Section1.1",
+	// "lesson": "Lesson1.1.1",
+    // "field":"resume",
+    // "value": "Lesson1.1.1 new resume"
+  // }
+
+exports.update_lesson_field = function(req, res) {	
+	var courseId = req.body.course,
+		sectionId = req.body.section,
+		lessonId = req.body.lesson,
+		field = req.body.field,
+		value = req.body.value;
+		
+	console.log('Updating lesson field ',field, 'in lesson ',lessonId,'in section ',sectionId,'of course ',courseId);	
+	console.log('new field value',value);	
+	
+	Courses.findOne({"name" : courseId}, 
+		function (err, course){
+			if (err) { res.status(ServerError500).send(err);} 
+			else if ( !course ) { res.status(NotFound404).send("Error: course does not exists "+courseId); }
+				else {
+					console.log('old course object',course);				
+					var inds = CoursesFunctions.find_section(sectionId,course.sections);
+					console.log("section position",inds);
+					if (inds < 0){
+						console.log("Error: section does not exists",sectionId);
+						res.status(NotFound404).send("Error: section does not exists "+sectionId);
+					}
+					else {					
+						console.log("course section lessons",course.sections[inds].lessons);
+						var indl = CoursesFunctions.find_lesson(lessonId,course.sections[inds].lessons);
+						console.log("lesson position",indl);
+						if ( indl < 0 ){
+							console.error('error lesson does not exist previously');
+							res.end('error lesson does not exist previously');
+						}
+						else {
+							// console.log('lesson already exist in position',indl);
+							// var sec = sections[ind];
+							// console.log('old field value',sec[field]);
+							// sec[field] = value;
+							// console.log('new field value',sec[field]);
+							
+							console.log('lesson already exist in position',indl);
+							var lessons = course.sections[inds].lessons,
+								lesson = lessons[indl];
+							console.log('old field value',lesson[field]);
+							lessons.splice(indl,1);
+							lesson[field] = value;
+							lessons[lessons.length] = lesson;
+							console.log('new lessons',lessons);
+							console.log('calling update_course_field');
+							var err1 = controller.update_course_field(courseId,"sections",course.sections);
+							if (err1) {
+								console.error('error while updating '+err);
+								res.end('error while updating '+err)
+								}							
+							else res.status(OK200).send(course.sections[inds].lessons);
+						
+						}
+					}	
+				}
+		}
+	);
+}

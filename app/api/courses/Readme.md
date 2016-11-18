@@ -115,7 +115,6 @@ If this action is not successful, it returns the error code.
 - the new section is included into the sections field of the course. 
 	A message with the updated list of lessons is returned
 
-
 ---------------------------------------
 **PUT /botbloq/v1/its/courses/update_lesson**
 ---------------------------------------
@@ -151,6 +150,35 @@ Example:
 **Return**:
 The old value of the lesson is substituted by new value received
 
+---------------------------------------
+**PUT /botbloq/v1/its/courses/update_lesson_field**
+---------------------------------------
+
+- Update a particular field of a lesson in a course section
+
+**Parameters**
+It receives as the body of the request in JSON format
+the names of the course, the section, the lesson and the field and 
+the new value of the field 
+Example: 
+{ 
+    "course": "Course1",
+    "section": "Section1.1",
+	"lesson": "Lesson1.1.1",
+    "field":"resume",
+    "value": "Lesson1.1.1 new resume"
+  }
+
+**Query Parameters**:
+
+**Permissions**:
+
+**Status Codes**:
+
+**Input**: 
+
+**Return**:
+The old value of the section is substituted by new value received
 
 ---------------------------------------------------------------------------------------------------------------------
 >>>>>>>>>>>>						SECTIONS

@@ -21,8 +21,12 @@ router.get('/course/:course_id/section/:section_id/lesson/:lesson_id', lesson_ct
 router.delete('/course/:course_id/section/:section_id/lesson/:lesson_id', lesson_ctrl.delete_lesson);
 
 // PUTs
-router.put('/create_lesson', lesson_ctrl.create_lesson); // create a particular lesson of a section
-router.put('/update_lesson', lesson_ctrl.update_lesson); // update a particular lesson of a section
+// create a particular lesson of a course section
+router.put('/create_lesson', lesson_ctrl.create_lesson); 
+// update a particular lesson of a course section
+router.put('/update_lesson', lesson_ctrl.update_lesson); 
+// update a particular field of lesson of a course section
+router.put('/update_lesson_field', lesson_ctrl.update_lesson_field); 
 
 /*
 **************SECTIONS******************************
