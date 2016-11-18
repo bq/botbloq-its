@@ -11,16 +11,18 @@ var router = express.Router();
 **************LESSONS******************************
 */
 
-// GETs // list all lessons from a course section
+// GETs 
+// list all lessons from a course section
 router.get('/course/:course_id/section/:section_id/', lesson_ctrl.all_lessons); 
 // list the indicated lesson
 router.get('/course/:course_id/section/:section_id/lesson/:lesson_id', lesson_ctrl.get_lesson); 
 
-// DELETEs
+// DELETEs a particular lesson of a section
 router.delete('/course/:course_id/section/:section_id/lesson/:lesson_id', lesson_ctrl.delete_lesson);
 
 // PUTs
-router.put('/create_lesson', lesson_ctrl.create_lesson);
+router.put('/create_lesson', lesson_ctrl.create_lesson); // create a particular lesson of a section
+router.put('/update_lesson', lesson_ctrl.update_lesson); // update a particular lesson of a section
 
 /*
 **************SECTIONS******************************

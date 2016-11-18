@@ -57,7 +57,6 @@ If successful, this action returns a list with the information of the lesson
 	contained into the course section.
 If this action is not successful, it returns the error code. 
 
-
 ---------------------------------------
 **DELETE /botbloq/v1/its/courses/course/:course_id/section/:section_id/lesson/lesson_id**
 ---------------------------------------
@@ -83,7 +82,6 @@ If this action is not successful, it returns the error code.
 -the indicated lesson is removed from the repository 
 	If lesson does not exist, it considers the section deleted (i.e. not an error)
 	If the course or the section doesn't exist, it sends an error message
-
 
 ---------------------------------------
 **PUT /botbloq/v1/its/courses/create_lesson**
@@ -116,6 +114,43 @@ If this action is not successful, it returns the error code.
 **Return**:  
 - the new section is included into the sections field of the course. 
 	A message with the updated list of lessons is returned
+
+
+---------------------------------------
+**PUT /botbloq/v1/its/courses/update_lesson**
+---------------------------------------
+
+- Update a particular lesson of a course section
+
+**Parameters**
+It receives as the body of the request in JSON format
+the name of the course and the section where the lesson should be updated and 
+the name of the lesson to be updated and its information
+It verifies if section and course exist. 
+If lesson already exist, it updates the lesson
+If lesson doesn't exist previously, it sets an error
+Example: 
+{
+	"course":"Course1",
+	"section":"Section2",
+	"lesson":{  
+    		"name": "Lesson1.2.3",
+       		"resume": "Lesson1.2.3 resume",
+       		"los": [] 
+	  }
+}
+
+**Query Parameters**:
+
+**Permissions**:
+
+**Status Codes**:
+
+**Input**: 
+
+**Return**:
+The old value of the lesson is substituted by new value received
+
 
 ---------------------------------------------------------------------------------------------------------------------
 >>>>>>>>>>>>						SECTIONS
