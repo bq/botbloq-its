@@ -5,7 +5,6 @@ var Students = require('./students.model.js'),
    async = require('async'),
    _ = require('lodash');
    var fs = require('fs');
-   var merge = require('merge');
 
 //ALL STUDENTS
 /**
@@ -25,11 +24,12 @@ exports.create = function(req, res) {
     Students.create(req.body, function (err, student) {
         if (err) res.sendStatus(err.code);
         console.log('Student created!');
+		
 		var json_survey = require('../../res/learningstyle.json'); 
 		json_survey.id_student = student._id;
+		
 		res.json(json_survey);
     });
-               
 };
 
 /**
@@ -41,7 +41,6 @@ exports.destroy  = function(req, res){
         res.json(resp);
     });
 };
-
 
 //BY ID	
 /**
@@ -83,11 +82,8 @@ exports.deactivate = function (req, res) {
 	        console.log(err);
 	        res.status(err.code).send(err);
 	    } else {
-	        if (!student) {
-	            res.sendStatus(404);
-	        } else {
-	            res.json(student);
-	        }
+			if (!student) res.sendStatus(404);
+			else res.json(student);
 	    }
 	});
 };
@@ -96,9 +92,14 @@ exports.deactivate = function (req, res) {
  * Returns an student by id
  */
 exports.get = function (req, res) {
-    Students.find({active: true, _id: req.params.id}, function (err, student) {
-        if (err) res.sendStatus(err.code);
-		res.json(student);
+    Students.find({_id: req.params.id}, function (err, student) {
+        if (err){
+        	console.log(err);
+			res.sendStatus(err.code);
+        } 
+		if(student.active == true) res.json(student);
+		else res.end("The student with id: " + req.params.id + "is not activated");
+
     });
 };
 
@@ -107,22 +108,22 @@ exports.get = function (req, res) {
  */
 exports.update = function (req, res) {
 	async.waterfall([
-	    Students.findById.bind(Students,  req.params.id),
+	    Students.findById.bind(Students, req.params.id),
 	    function(student, next) {
-			if(student.active == true) student = _.extend(student, req.body);
-			student.save(next);
-	
+			if(student.active == true){
+				student = _.extend(student, req.body);
+				student.save(next);
+			} 
+			else res.end("The student with id: " + req.params.id + " is not activated");
 	    }
 	], function(err, student) {
 	    if (err) {
 	        console.log(err);
 	        res.status(err.code).send(err);
 	    } else {
-	        if (!student) {
-	            res.sendStatus(404);
-	        } else {
-	            res.json(student);
-	        }
+	        if (!student) res.sendStatus(404);
+	        else res.json(student);
+	        
 	    }
 	});
 };
@@ -155,7 +156,7 @@ exports.init = function (req, res) {
 					}
 				}
 			} else {
-				console.log("The student with id: " + req.params.id + "is not activated")
+				res.end("The student with id: " + req.params.id + "is not activated")
 			} 
 			student.save(next);
 	    }
@@ -164,11 +165,8 @@ exports.init = function (req, res) {
 	        console.log(err);
 	        res.status(err.code).send(err);
 	    } else {
-	        if (!student) {
-	            res.sendStatus(404);
-	        } else {
-	            res.json(student);
-	        }
+	        if (!student) res.sendStatus(404);
+	        else res.json(student);
 	    }
 	});
 };
@@ -382,11 +380,8 @@ exports.remove = function (req, res) {
 	        console.log(err);
 	        res.status(err.code).send(err);
 	    } else {
-	        if (!student) {
-	            res.sendStatus(404);
-	        } else {
-	            res.json(student);
-	        }
+	        if (!student) res.sendStatus(404);
+	        else res.json(student);
 	    }
 	});
 };
