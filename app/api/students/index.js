@@ -31,10 +31,13 @@ router.post('/:id/init', controller.init);
 ////////////////////////// LOCKs
 
  // activates a student
-router.unlock('/:id', controller.activate)
+router.unlock('/:id', controller.activate);
 
 // deactivates a student
-router.lock('/:id', controller.deactivate) 
+router.lock('/:id', controller.deactivate);
+
+// deactivates a course in a student
+router.lock('/:idstd/course/:idc', controller.unenrollment);
 
 
 

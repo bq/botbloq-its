@@ -3,10 +3,9 @@
 var Students = require('./students.model.js'),
    config = require('../../res/config.js'), 
    async = require('async'),
-   _ = require('lodash');
-   var fs = require('fs');
-
-   var functions = require('./students.functions.js');
+   _ = require('lodash'),
+   fs = require('fs'),
+   functions = require('./students.functions.js');
 
 //ALL STUDENTS
 /**
@@ -45,7 +44,7 @@ exports.destroy  = function(req, res){
 
 //BY ID	
 /**
- * Activates an student by ID
+ * Activates an student by id
  */
 exports.activate = function (req, res) {
 	async.waterfall([
@@ -60,7 +59,7 @@ exports.activate = function (req, res) {
 };
 
 /**
- * Deactivates an student by ID
+ * Deactivates an student by id
  */
 exports.deactivate = function (req, res) {
 	async.waterfall([
@@ -79,7 +78,12 @@ exports.deactivate = function (req, res) {
  */
 exports.get = function (req, res) {
     Students.findById(req.params.id, function(err, student) {
+		var arrayCourses = [];
 		if(functions.studentFound(student, req, res) == true){
+			student.course.find(function(element, index, array){
+				if(element.active == 1) arrayCourses.push(element);
+			});
+			student.course = arrayCourses;
 			res.json(student);
 		}
     });
@@ -159,7 +163,11 @@ exports.enrollment = function (req, res) {
 						var coursed = false;
 						student.course.find(function(element ,index , array){
 							if(element.idCourse == req.params.idc){
-								res.end('The student: ' + student._id + " is already enrolled in the course: " + req.params.idc);
+								if (element.active == 1) 
+									res.end('The student: ' + student._id + " is already enrolled in the course: " + req.params.idc);
+								else 
+									element.active = 1;
+								activity = element;
 								coursed = true;
 							}
 						});
@@ -178,12 +186,12 @@ exports.enrollment = function (req, res) {
 				            		}
 									else{
 										student.course.push({idCourse: req.params.idc, idLom: loms[0]._id, status: 0});
-										student.save(next);											
 										activity = loms[0];
 									}	
 								}
 							});	
 						}
+						student.save(next);											
 					}
 			    }
 			});	
@@ -192,6 +200,43 @@ exports.enrollment = function (req, res) {
 		functions.controlErrors(err, res, activity);
 	});
 };
+
+/**
+ * Enrollments a student by id in a course
+ */
+exports.unenrollment = function (req, res) {
+	var activity;
+	async.waterfall([
+	    Students.findById.bind(Students,  req.params.idstd),
+	    function(student, next) { 
+			//find a student by id
+			var Courses = require('../courses/courses.model.js');
+			Courses.find({_id: req.params.idc}, function(err, course){ 
+				// find a course by id
+			    if (err) {
+			        console.log(err);
+			        res.status(err.code).send(err);
+			    } else {
+					if(functions.studentFound(student, req, res) == true){
+						var coursed = false;
+						student.course.find(function(element ,index , array){
+							if(element.idCourse == req.params.idc){
+								coursed = true;
+								element.active = 0;
+								activity = element;
+								student.save(next);
+							}
+						});
+						if(!coursed) res.end('The student: ' + student._id 
+							+ " is not enrolled in the course: " + req.params.idc);
+					}
+			    }
+			});	
+	    }
+	], function(err, student) {
+		functions.controlErrors(err, res, activity);
+	});
+}
 
 /**
  * Updates the status of the lom for a student and a course
@@ -211,16 +256,19 @@ exports.updateActivity = function (req, res) {
 						var coursed = false;
 						student.course.find(function(element ,index , array){
 							if(element.idCourse == req.params.idc){
-								coursed = true;
-								if (element.idLom == req.params.idl){
+								if(element.active == 1){
+									coursed = true;
+									if (element.idLom == req.params.idl){
 									
-									if (req.params.status == "ok") element.status = 1;
-									else { if (req.params.status == "nok") element.status = -1;												
-									else res.end("the status: " + req.params.status + " is not correct"); }
+										if (req.params.status == "ok") element.status = 1;
+										else { if (req.params.status == "nok") element.status = -1;												
+										else res.end("the status: " + req.params.status + " is not correct"); }
 									
-									student.save(next);
+										student.save(next);
+									} else res.end("The student: " + student._id 
+										+ " does not have the lom: " + req.params.idl);
 								} else res.end("The student: " + student._id 
-									+ " does not have the lom: " + req.params.idl);
+										+ " is not activated in the course: " + req.params.idc);
 							}
 						});
 						
@@ -239,7 +287,10 @@ exports.updateActivity = function (req, res) {
  * Returns a new lom for a student and a course
  */
 exports.newActivity = function (req, res) {
-	var activity;
+	var activity, lomRet = 0,
+	coursed = false, bool = false,
+	LOMS = require('../loms/loms.model.js');
+	
 	async.waterfall([
 	    Students.findById.bind(Students,  req.params.idstd),
 	    function(student, next) { //find a student by id
@@ -251,31 +302,30 @@ exports.newActivity = function (req, res) {
 			        res.status(err.code).send(err);
 			    } else {
 					if(functions.studentFound(student, req, res) == true){
-						var coursed = false;
 						student.course.find(function(element ,index , array){
 							if(element.idCourse == req.params.idc){
-								coursed = true;
-								var LOMS = require('../loms/loms.model.js');
-								LOMS.find({}, function(err, loms) {
-								    if (err) {
-								        console.log(err);
-								        res.status(err.code).send(err);
-									} else {
-					            		if(!loms) res.end('There are no activities to assign the student: ' 
-											+ student._id);
-										var lomRet = 0;
-										var bool = false
-										loms.find(function(element1, index1, array1){
-											if(!bool && element1._id == element.idLom &&  array1.length > index1+1){
-												bool = true;
-												lomRet = index1+1;
-											}
-											element = {idCourse: req.params.idc, idLom: loms[lomRet]._id, status: 0};
-										});
-										student.save(next);					
-										activity = loms[lomRet];	
-									}
-								});						
+								if(element.active == 1){
+									coursed = true;
+									LOMS.find({}, function(err, loms) {
+									    if (err) {
+									        console.log(err);
+									        res.status(err.code).send(err);
+										} else {
+						            		if(!loms) res.end('There are no activities to assign the student: ' 
+												+ student._id);
+											loms.find(function(element1, index1, array1){
+												if(!bool && element1._id == element.idLom &&  array1.length > index1+1){
+													bool = true;
+													lomRet = index1+1;
+												}
+												element = {idCourse: req.params.idc, idLom: loms[lomRet]._id, status: 0};
+											});
+											student.save(next);					
+											activity = loms[lomRet];	
+										}
+									});	
+								} else 	res.end("The student: " + student._id 
+										+ " is not activated in the course: " + req.params.idc);			
 							}
 						});
 						if(!coursed) res.end("The student: " + student._id 

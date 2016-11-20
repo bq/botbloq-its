@@ -97,6 +97,11 @@ var courseSchema = new Schema({
 		type: Number,
 		required: false,
 		default: 0
+	},	
+	active: {
+		type : Number,
+		required: false,
+		default: 1
 	},
 	_id: false
 });

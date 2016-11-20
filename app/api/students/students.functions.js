@@ -1,6 +1,8 @@
 'use strict';
 
-
+/**
+ *  Controls callback errors and shows the solution
+ */
 exports.controlErrors = function (err, res, ret){
     if (err) {
         console.log(err);
@@ -9,6 +11,9 @@ exports.controlErrors = function (err, res, ret){
 	else res.json(ret);
 }
 
+/**
+ *	Check if the student exists and if it is activated	
+ */
 exports.studentFound = function (student, req, res){
 	var bool = false,
 	ret;

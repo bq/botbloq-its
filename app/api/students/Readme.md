@@ -28,35 +28,15 @@ Retrieve of all the students registered in the system.
 If successful, this action returns a JSON data block containing the information for each student.
 If this action is not successful, it returns the error code. 
 
-
-
-**POST /botbloq/v1/its/students**
+**GET /botbloq/v1/its/students/:idstd/course/:idc**
 -------------
 
-The service creates a new student with  the provided values.
+Returns a new activity for the enrolled course.
 
-**Parameters**: None
+**Parameters**: 
 
-**Query Parameters**:
-
-**Permissions**:
-
-**Status Codes**:
-200 OK - Action successfully attempted.
-400 Bad Request - The request contains bad syntax.
-**Input**: 
-A JSON student object.
-**Return**:  
-
-If successful, this action returns: "Added the student with id: " and the id of the new student.
-If this action is not successful, it returns the error code. 
-
-**DELETE /botbloq/v1/its/students**
--------------
-
-Delete all students of the repository
-
-**Parameters**: None
+- idstd: student ID
+- idc: course ID
 
 **Query Parameters**:
 
@@ -66,16 +46,12 @@ Delete all students of the repository
 200 OK - Action successfully attempted.
 400 Bad Request - The request contains bad syntax.
 404 Not Found - Resource not found.
-**Input**: 
+
+**Input**:
 
 **Return**:  
-
-Number of removed students (N) and the success of the operation (.ok)
-
-{
-” ok ” : 1 ,
-”n ” : 3
-}
+If successful, this action returns a JSON data block containing the information for the new activity.
+If this action is not successful, it returns the error code. 
 
 
 **GET /botbloq/v1/its/students/:id**
@@ -100,6 +76,29 @@ Retrieve the basic information of a student
 **Return**: 
 If successful, this action returns the corresponding JSON object student with id introduced.
 If this action is not successful, it returns the error code. 
+
+**POST /botbloq/v1/its/students**
+-------------
+
+The service creates a new student with  the provided values.
+
+**Parameters**: None
+
+**Query Parameters**:
+
+**Permissions**:
+
+**Status Codes**:
+200 OK - Action successfully attempted.
+400 Bad Request - The request contains bad syntax.
+**Input**: 
+A JSON student object.
+**Return**:  
+
+If successful, this action returns: "Added the student with id: " and the id of the new student.
+If this action is not successful, it returns the error code. 
+
+
 **PUT /botbloq/v1/its/students/:id**
 -------------
 
@@ -128,7 +127,6 @@ If this action is not successful, it returns the error code.
 
 Enrollments a student in a course.
 
-
 **Parameters**
 
 - idstd: Student ID
@@ -149,6 +147,58 @@ If successful, Returns the lom assigned to the student if it exists.
 If there are no loms, return the student's information.
 If this action is not successful, it returns the error code. 
 
+**PUT /botbloq/v1/its/students/:idstd/course/:idc/lom/:idl/:status **
+-------------
+
+Update the status of a student's course. 
+
+**Parameters**
+
+- idstd: Student ID
+- idc: Course ID
+- idl: Lom ID
+- status: ok or nok
+
+**Query Parameters**:
+
+**Permissions**:
+
+**Status Codes**:
+200 OK - Action successfully attempted.
+400 Bad Request - The request contains bad syntax.
+404 Not Found - Resource not found.
+
+**Input**: 
+
+**Return**:  
+If successful, returns updated student information.
+If this action is not successful, it returns the error code. 
+
+**DELETE /botbloq/v1/its/students**
+-------------
+
+Delete all students of the repository
+
+**Parameters**: None
+
+**Query Parameters**:
+
+**Permissions**:
+
+**Status Codes**:
+200 OK - Action successfully attempted.
+400 Bad Request - The request contains bad syntax.
+404 Not Found - Resource not found.
+**Input**: 
+
+**Return**:  
+
+Number of removed students (N) and the success of the operation (.ok)
+
+{
+” ok ” : 1 ,
+”n ” : 3
+}
 
 **DELETE /botbloq/v1/its/students/:id**
 -------------
@@ -178,7 +228,31 @@ Number of removed students (N) and the success of the operation (.ok)
 ”n ” : 1
 }
 
-**LOCK /botbloq/v1/its/students/:id**
+**LOCK /botbloq/v1/its/students/:idstc/course/:idc **
+-------------
+
+unenrollments a student in a course (logic deleted).
+
+**Parameters**
+
+- idstd: Student ID
+- idc: course ID
+
+**Query Parameters**:
+
+**Permissions**:
+
+**Status Codes**:
+200 OK - Action successfully attempted.
+400 Bad Request - The request contains bad syntax.
+404 Not Found - Resource not found.
+**Input**: 
+
+**Return**:  
+If successful, this action returns a JSON data block containing the information for each course.
+If this action is not successful, it returns the error code. 
+
+**LOCK /botbloq/v1/its/students/:id **
 -------------
 
 Deactivate the information of a student in  the repository (logic deleted).
