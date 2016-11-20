@@ -3,9 +3,9 @@
 var LOMS = require('./loms.model.js'),
     config = require('../../res/config.js'),
     async = require('async'),
-    _ = require('lodash');
-	var fs = require("fs");
-
+    _ = require('lodash'),
+	fs = require("fs"), 
+	functions = require('./loms.functions.js');
 
 //ALL LOMS
 	
@@ -51,7 +51,6 @@ exports.destroy  = function(req, res){
  * Returns a lom by id
  */
 exports.get = function (req, res) {
-    console.log(req.params.id)
     LOMS.findById(req.params.id, function (err, lom) {
        if (err) res.sendStatus(err.code);
         res.json(lom);
@@ -65,20 +64,15 @@ exports.update = function (req, res) {
 	async.waterfall([
 	    LOMS.findById.bind(LOMS, req.params.id),
 	    function(lom, next) {
-	        lom = _.extend(lom, req.body);
-	        lom.save(next);
+	        if(!lom) res.end("The lom with id: " 
+				+ req.params.id + " is not registrated");
+			else {
+				lom = _.extend(lom, req.body);
+	       		lom.save(next);
+			}
 	    }
 	], function(err, lom) {
-	    if (err) {
-	        console.log(err);
-	        res.status(err.code).send(err);
-	    } else {
-	        if (!lom) {
-	            res.sendStatus(404);
-	        } else {
-	            res.json(lom);
-	        }
-	    }
+	    functions.controlErrors(err, res, lom);
 	});
 };
 
@@ -86,26 +80,20 @@ exports.update = function (req, res) {
  * Removes a lom by id
  */
 exports.remove = function (req, res) {
-    console.log(req.params.id);
 	async.waterfall([
 	    LOMS.findById.bind(LOMS, req.params.id),
 	    function(lom, next) {
-		    LOMS.remove(lom, function (err, resp) {
-		        if (err) res.sendStatus(err.code);
-		        res.json(resp);
-		    });
+			if(!lom)
+				res.end("The lom with id: " + req.params.id + " is not registrated");
+		    else{
+				LOMS.remove(lom, function (err, resp) {
+			        if (err) res.sendStatus(err.code);
+			        res.json(resp);
+			    });
+			}
 	    }
 	], function(err, lom) {
-	    if (err) {
-	        console.log(err);
-	        res.status(err.code).send(err);
-	    } else {
-	        if (!lom) {
-	            res.sendStatus(404);
-	        } else {
-	            res.json(lom);
-	        }
-	    }
+	    functions.controlErrors(err, res, lom);
 	});
 };
 
@@ -113,7 +101,6 @@ exports.remove = function (req, res) {
  * Uploads a file in a lom
  */
 exports.uploadFile =  function (req, res) {
-	console.log(req.params.id);
 	fs.stat(__dirname + "/files/" + req.params.id, function(err, stats){
 		if(err) fs.mkdir(__dirname + "/files/" + req.params.id);
 	});
