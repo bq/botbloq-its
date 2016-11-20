@@ -119,9 +119,9 @@ var studentSchema = new Schema({
 		default: ''
 	},
 	active:{
-		type: Boolean,
+		type: Number,
 		required: false,
-		default: true
+		default: 1
 	},
     course: [courseSchema]
 });
