@@ -8,10 +8,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 ### Added
 
-
 **Module: Students**
 - Un-enrollment
-
+- Recommend an activity according to the advance
+- Update the situation within the course.
 
 **Module: Domain (Courses)**
 - Lesson Management.
@@ -31,14 +31,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Learning Objects: upload/download to the database
 - Error Control Added: No file is found for the request
 
-## [0.0.7] - 2016-11-17
+## [0.0.6] - 2016-11-17
 
 ### Added
 **Module: Students**
 - Lock and Unlock of Students (logical removal)
 - Initial Survey to establish the Knowledge Style.
 - Enrollment: Basic Management 
-- Activity: Basic Management
+- Activity: Basic Management (New Activity, Record Activity)
 
 **Module: Domain (Courses)**
 - Section Management.
@@ -56,7 +56,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Correct error in delete operations
 
 
-## [0.0.6] - 2016-11-03
+## [0.0.5] - 2016-11-03
 
 ### Added
 
@@ -69,7 +69,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 - Module students: Error Control 
 
-## [0.0.5] - 2016-10-17
+## [0.0.4] - 2016-10-17
 ### Added
 **Module: Students**
 - Basic Operations
