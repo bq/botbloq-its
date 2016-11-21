@@ -4,8 +4,17 @@ var express = require('express');
 var controller = require('./courses.controller.js');
 var section_ctrl = require('./sections.controller.js');
 var lesson_ctrl = require('./lessons.controller.js');
+var loms_ctrl = require('./loms.controller.js');
 
 var router = express.Router();
+
+/*
+**************LESSONS******************************
+*/
+
+// GETs 
+// list all loms from a lesson
+router.get('/course/:course_id/section/:section_id/lesson/:lesson_id', loms_ctrl.all_loms);
 
 /*
 **************LESSONS******************************
