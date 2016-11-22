@@ -64,3 +64,55 @@ exports.all_loms = function (req, res)
 			 else { res.status(NotFound404).send("Error: course does not exists "+courseId); }    
 	});
 };
+
+// Exporting function get_lom
+// lists the indicated lom from a lesson. 
+// If some of them i.e. course, section or lesson doesn't exist, it sends an error message
+
+exports.get_lom = function (req, res) 
+	{	
+	console.log("listing a particular loms");
+	var courseId = req.params.course_id;
+	var sectionId = req.params.section_id;
+	var lessonId = req.params.lesson_id;
+	var lomId = req.params.lom_id;
+	console.log("course_id",courseId);
+	console.log("section_id",sectionId);
+	console.log("lesson_id",lessonId);
+	console.log("lom_id",lomId);
+	Courses.findOne({"name" : courseId}, function(err, course) 
+		{
+        if (err) { res.status(ServerError500).send(err);} 
+		else if (course) 
+			{ // course exists
+				console.log("course found");
+				var inds = CoursesFunctions.find_section(sectionId,course.sections);
+				console.log("section position",inds);
+				if (inds < 0){
+					console.log("Error: section does not exists",sectionId);
+					res.status(NotFound404).send("Error: section does not exists "+sectionId);
+				}
+				else { // section exists
+					console.log("section exists");
+					var indl = CoursesFunctions.find_lesson(lessonId,course.sections[inds].lessons);
+					if (indl < 0) {
+						console.log("Error: lesson does not exists",lessonId);
+						res.status(NotFound404).send("Error: lesson does not exists "+lessonId);
+					}
+					else { // lesson exists					
+						console.log("lesson exists");
+						var lesson = course.sections[inds].lessons[indl];
+						var ind = CoursesFunctions.find_lom(lomId,lesson.los);
+						if (ind < 0) {
+						console.log("Error: lom does not exists",lomId);
+						res.status(NotFound404).send("Error: lom does not exists "+lomId);
+						}
+						else { //lom exists
+							res.status(OK200).send(lesson.los[ind]);
+						}
+					}			
+				} 			 
+			}
+			else { res.status(NotFound404).send("Error: course does not exists "+courseId); }    
+		});
+};

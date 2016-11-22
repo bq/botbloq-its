@@ -5,7 +5,7 @@ var mongoose = require('mongoose')
   , Schema = mongoose.Schema;
   										
 var Lo = new Schema( // { autoIndex: false },
-	{ lom_id: String }
+	{ lom_id: String } 
 	);
 
 var Lesson = new Schema( // { autoIndex: false },

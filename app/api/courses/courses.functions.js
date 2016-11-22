@@ -100,3 +100,26 @@ exports.find_lesson = function(lessonId,lessons){
 	return -1;
 }
 
+/*
+returns the index position of the lom identified by lomId
+in the list of loms. If it doesn't exists in the list returns -1
+*/
+
+exports.find_lom = function(lomId,loms){
+	console.log('find the lom index position. Otherwise -1',lomId);
+	console.log("loms\n",loms);
+	var len = loms.length;
+	for (var i = 0; i < len; i++) {		
+		var elem = loms[i];
+		console.log("elem ",i,"\n",elem);
+		console.log("elem.lom_id",elem.lom_id);
+		var cmp = lomId.localeCompare(elem.lom_id);
+		console.log('comparing',cmp);
+		if ( cmp === 0 ) 
+			{ 
+				console.log('string match');
+				return i;
+			}
+	}
+	return -1;
+}

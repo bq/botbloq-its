@@ -15,6 +15,8 @@ var router = express.Router();
 // GETs 
 // list all loms from a lesson
 router.get('/course/:course_id/section/:section_id/lesson/:lesson_id', loms_ctrl.all_loms);
+// list the indicated lom
+router.get('/course/:course_id/section/:section_id/lesson/:lesson_id/lom/:lom_id', loms_ctrl.get_lom); 
 
 /*
 **************LESSONS******************************
