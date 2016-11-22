@@ -6,6 +6,125 @@ Domain Model - Course Repository (basic management)
 
 
 ---------------------------------------------------------------------------------------------------------------------
+>>>>>>>>>>>>						LOMS
+---------------------------------------------------------------------------------------------------------------------
+
+---------------------------------------
+**GET /botbloq/v1/its/courses/course/:course_id/section/:section_id/lesson/:lesson_id**
+---------------------------------------
+
+- list all loms from the indicated lesson
+
+**Parameters**: 
+- course_id: name of the course to be listed
+- section_id: name of the section of the course to be listed
+- lesson_id: name of the lesson which contains the loms
+
+**Query Parameters**:
+
+**Permissions**:
+
+**Status Codes**:
+
+**Input**:
+
+**Return**:  
+If successful, this action returns a list with the information for each one of the loms 
+	contained into the lesson.
+If this action is not successful, it returns the error code. 
+
+
+---------------------------------------
+**GET /botbloq/v1/its/courses/course/:course_id/section/:section_id/lesson/:lesson_id/lom/:lom_id**
+---------------------------------------
+
+- list the indicated lom from the lesson
+
+**Parameters**: 
+- course_id: name of the course to be listed
+- section_id: name of the section of the course to be listed
+- lesson_id: name of the lesson which contains the loms
+- lom_id: name of the lom to be listed
+
+**Query Parameters**:
+
+**Permissions**:
+
+**Status Codes**:
+
+**Input**:
+
+**Return**:  
+If successful, this action returns the information of lom
+	contained into the lesson.
+If this action is not successful, it returns the error code. 
+
+---------------------------------------
+**DELETE /botbloq/v1/its/courses/delete_lom**
+---------------------------------------
+
+- delete the indicated lom from the lesson
+
+**Parameters**: 
+It receives as the body of the request in JSON format the name of the course, 
+section, lesson, and the lom to be deleted  
+It verifies if the course, section, lesson, and lom exist.
+If the course, section, or lesson does not exist, it sends an error message
+If lom does not exist, it considers the lom deleted (i.e. not an error) 
+Example: 
+{
+	"course":"Course1",
+	"section":"Section2",
+	"lesson":"Lesson1.2.3",
+	"lom_id": "lom1.2.3.1"
+}
+
+**Query Parameters**:
+
+**Permissions**:
+
+**Status Codes**:
+
+**Input**:
+
+**Return**:  
+If successful, this action deletes the lom contained into the lesson.
+If this action is not successful, it returns the error code. 
+
+---------------------------------------
+**PUT /botbloq/v1/its/courses/create_lom**
+---------------------------------------
+
+- create the indicated lom into the lesson
+
+**Parameters**: 
+It receives as the body of the request in JSON format
+the name of the course, section, and lesson where the new lom should be created  
+and the lom_id to be created 
+It verifies if the course, section, and lesson exist. 
+If lom already exist, it sets an error
+If lom doesn't exist previously, it creates the new lom
+Example: 
+{
+	"course":"Course1",
+	"section":"Section2",
+	"lesson":"Lesson1.2.3",
+	"lom_id": "lom1.2.3.1"
+}
+
+**Query Parameters**:
+
+**Permissions**:
+
+**Status Codes**:
+
+**Input**:
+
+**Return**:  
+If successful, this action creates the indicated lom into the lesson.
+If this action is not successful, it returns the error code. 
+
+---------------------------------------------------------------------------------------------------------------------
 >>>>>>>>>>>>						LESSONS
 ---------------------------------------------------------------------------------------------------------------------
 
