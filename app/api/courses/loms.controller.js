@@ -188,3 +188,73 @@ exports.create_lom = function(req, res) {
 		}
 	);
 }
+
+// Exporting delete_lom function
+// It receives as the body of the request in JSON format
+// the name of the course, section, lesson, and the lom to be deleted  
+// It verifies if the course, section, lesson, and lom exist.
+// If the course, section, or lesson does not exist, it sends an error message
+// If lom does not exist, it considers the lom deleted (i.e. not an error) 
+// Example: 
+// {
+	// "course":"Course1",
+	// "section":"Section2",
+	// "lesson":"Lesson1.2.3",
+	// "lom_id": "lom1.2.3.1"
+// }
+
+exports.delete_lom = function(req, res) {	
+	var courseId = req.body.course,
+		sectionId = req.body.section,
+		lessonId = req.body.lesson,
+		lom_id = req.body.lom_id;
+		
+	console.log('Creating lom ',lom_id,' in lesson ',lessonId,' of section ',sectionId,' of course ',courseId);	
+	
+	Courses.findOne({"name" : courseId}, 
+		function (err, course){
+			if (err) { res.status(ServerError500).send(err);} 
+			else if ( !course ) { res.status(NotFound404).send("Error: course does not exists "+courseId); }
+				else {
+					console.log('old course object',course);				
+					var inds = CoursesFunctions.find_section(sectionId,course.sections);
+					console.log("section position",inds);
+					if (inds < 0){
+						console.log("Error: section does not exists ",sectionId);
+						res.status(NotFound404).send("Error: section does not exists "+sectionId);
+					}
+					else {					
+						console.log("course section lessons",course.sections[inds].lessons);
+						var indl = CoursesFunctions.find_lesson(lessonId,course.sections[inds].lessons);
+						console.log("lesson position",indl);
+						if ( indl < 0 ){
+							console.error('error lesson does not exist ',lessonId);
+							res.end('error lesson does not exist '+lessonId);
+						}
+						else {
+							console.log('lesson exist ',lessonId);
+							var lessons = course.sections[inds].lessons;							
+							var ind = CoursesFunctions.find_lom(lom_id,lessons[indl].los);
+							if ( (ind < 0)){
+								console.error('error lom does not exists ',lom_id);
+								res.end('error lom does not exists '+lom_id);
+							}
+							else {
+								console.log('lom already exist ',lom_id);
+								var loms = lessons[indl].los;
+								loms.splice(ind,1);
+								console.log('new loms',loms);
+								console.log('calling update_course_field');
+								var err1 = controller.update_course_field(courseId,"sections",course.sections);
+								if (err1) {
+									console.error('error while updating '+err);
+									res.end('error while updating '+err)
+									}							
+								else res.status(OK200).send(course.sections[inds].lessons);
+							}
+						}
+					}	
+				}
+		}
+	);
+}
