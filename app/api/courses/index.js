@@ -9,7 +9,7 @@ var loms_ctrl = require('./loms.controller.js');
 var router = express.Router();
 
 /*
-**************LESSONS******************************
+**************LOMS******************************
 */
 
 // GETs 
@@ -17,6 +17,10 @@ var router = express.Router();
 router.get('/course/:course_id/section/:section_id/lesson/:lesson_id', loms_ctrl.all_loms);
 // list the indicated lom
 router.get('/course/:course_id/section/:section_id/lesson/:lesson_id/lom/:lom_id', loms_ctrl.get_lom); 
+
+// PUTs
+// create a particular lom of a lesson
+router.put('/create_lom', loms_ctrl.create_lom);
 
 /*
 **************LESSONS******************************
