@@ -182,7 +182,7 @@ exports.enrollment = function (req, res) {
 									// Returns the first lom tu the student
 				            		if(!loms){
 										res.sendStatus(404);
-				            			res.end('There are no courses to assign the student: ' + student._id);
+				            			res.end('There are no activities to assign the student: ' + student._id);
 				            		}
 									else{
 										student.course.push({idCourse: req.params.idc, idLom: loms[0]._id, status: 0});
