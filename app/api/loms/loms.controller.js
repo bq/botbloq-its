@@ -5,7 +5,7 @@ var LOMS = require('./loms.model.js'),
     async = require('async'),
     _ = require('lodash'),
 	fs = require("fs"), 
-	functions = require('./loms.functions.js');
+	functions = require('./loms.functions.js'); 
 
 //ALL LOMS
 	
@@ -101,24 +101,33 @@ exports.remove = function (req, res) {
  * Uploads a file in a lom
  */
 exports.uploadFile =  function (req, res) {
-	fs.stat(__dirname + "/files/" + req.params.id, function(err, stats){
-		if(err) fs.mkdir(__dirname + "/files/" + req.params.id);
-	});
-	var file = __dirname + "/files/" + req.params.id + "/" + req.file.originalname;
+	LOMS.findById(req.params.id, function(err, lom){
+		if(!lom) res.end('The lom with id: '+  req.params.id +' is not registrated');
+		else {
+			fs.stat(__dirname + "/../../res/files/" + req.params.id, function(err, stats){
+				if(err) fs.mkdir(__dirname + "/../../res/files/" + req.params.id);
+			});
+			var file = __dirname + "/../../res/files/" + req.params.id + "/" + req.file.originalname;
 	
-	fs.readFile( req.file.path, function (err, data) {
-		fs.writeFile(file, data, function (err) {
-			if( err ){
-				console.error( err );
-		        res.status(err.code).send(err);
-			    res.end('Sorry, the file: '+  req.file.originalname 
-				+' couldn\'t be uploaded in the lom with id: ' + req.params.id);
+			fs.readFile( req.file.path, function (err, data) {
+				if(!data) res.end('No data to upload');
+				else {
+					fs.writeFile(file, data, function (err) {
+						if( err ){
+							console.error( err );
+					        res.status(404).send(err);
+						    res.end('Sorry, the file: '+  req.file.originalname 
+							+' couldn\'t be uploaded in the lom with id: ' + req.params.id);
 
-			}else{
-			    res.end('File: '+  req.file.originalname 
-				+' uploaded successfully in the lom with id: ' + req.params.id);
-			}
-		});
+						}else{
+						    res.end('File: '+  req.file.originalname 
+							+' uploaded successfully in the lom with id: ' + req.params.id);
+						}
+					});
+				}
+			});
+		}
+			 
 	});
 };
 
@@ -127,19 +136,15 @@ exports.uploadFile =  function (req, res) {
  */
 exports.downloadFile = function(req, res, next){
   var file = req.params.file
-    , path = __dirname + "/files/" + req.params.id + '/' + file;
+    , path = __dirname + "/../../res/files/" + req.params.id + '/' + file;
 
   res.download(path, function(err){
 	  if(err){
 		  console.error( err );
-		  res.status(err.code).send(err);
+		  res.status(404).send(err);
 		  res.end('Sorry, the file: '+  file +' couldn\'t be downloaded');
 	  } else {
 		  res.end('File: '+  file +' download successfully');	
 	  }
   });
 };
-
-
-
-
