@@ -186,12 +186,14 @@ exports.enrollment = function (req, res) {
 				            		}
 									else{
 										student.course.push({idCourse: req.params.idc, idLom: loms[0]._id, status: 0});
-										activity = loms[0];
+										console.log("Updated Student");
+										activity = loms[0]; // no regresa nada, quizás sea lo mejor no regresar el lom hasta que se haga el get
+										student.save(next); // FRM esto está aquí que si no no funciona
 									}	
 								}
 							});	
 						}
-						student.save(next);											
+						student.save(next);
 					}
 			    }
 			});	
