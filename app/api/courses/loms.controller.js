@@ -162,16 +162,16 @@ exports.create_lom = function(req, res) {
 							res.end('error lesson does not exist '+lessonId);
 						}
 						else {
-							console.log('lesson exist ',lessonId);
 							var lessons = course.sections[inds].lessons;							
-							var ind = CoursesFunctions.find_lom(lom_id,lessons[indl].los);
+							console.log('lesson exist ', lessons);
+							var ind = CoursesFunctions.find_lom(lom_id,lessons[indl].loms);
 							if ( !(ind < 0)){
 								console.error('error lom already exist ',lom_id);
 								res.end('error lom already exist '+lom_id);
 							}
 							else {
 								console.log('lom does not exist ',lom_id);
-								var loms = lessons[indl].los;
+								var loms = lessons[indl].loms;
 								loms[loms.length] = {"lom_id":lom_id};
 								console.log('new loms',loms);
 								console.log('calling update_course_field');
