@@ -38,6 +38,16 @@ var Course = function() {
 		return lesson;
     };
 
+    this.generateAssignedLOM = function() {
+    	var assignLOM = {
+    		course : "",
+    		section : "section_1_1",
+    		lesson : "lesson_1_1",
+    		lom_id : ""
+    	};
+    	return assignLOM;
+    }
+
 }
 
 module.exports = Course;
