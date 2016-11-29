@@ -3,9 +3,10 @@ var chakram = require('chakram'),
     expect = chakram.expect,
     argv = require('yargs').argv;
 
+
 var Request = function() {
 
-    var host = "localhost:8000/botbloq/v1/its";
+    var host = "http://127.0.0.1:8000/botbloq/v1/its";
 
     this.postBackend =function(path,status,params,headers) {
       return chakram.post(host+path,params,headers).then(function(response) {
