@@ -89,6 +89,14 @@ var courseSchema = new Schema({
 		type: String,
 		required: false
 	},
+	idSection: {
+		type: String,
+		required: false
+	},
+	idLesson: {
+		type: String,
+		required: false
+	},
 	idLom: {
 		type: String,
 		required: false

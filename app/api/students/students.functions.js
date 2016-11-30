@@ -30,3 +30,7 @@ exports.studentFound = function (student, req, res){
 	}
 	return bool;
 }
+
+exports.nextActivity = function (student, course, section, lesson, lom){
+	
+}
