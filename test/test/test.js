@@ -108,13 +108,27 @@ describe("Chakram", function(){
 	it("Testing enroll a student in a Course" , function() {
 		return request.putBackend('/students/'+ idStudent + "/course/" + idCourse,200)
 		.then(function(response) {
-			//console.log(response.body); // undefined is error
-			return request.getBackend('/students/'+ idStudent + "/course/" + idCourse,200)
-			.then(function(response2) {
-				console.log(response2.body);
-				expect(response2.body).to.have.property("general");
-				chakram.wait();
+			// test ifthe student is already enrolled in the course
+			console.log(response.body); // undefined is error
+			return request.getBackend("/students/" + idStudent, 200).then(function (response1) {
+				expect(response1.body).to.have.property("course"); // temp
+				console.log(response1.body);
+ 	   	    	return request.getBackend('/students/'+ idStudent + "/course/" + idCourse,200)
+				.then(function(response2) {
+					console.log(response2.body);
+					expect(response2.body).to.have.property("general");
+					var lom = response2.body._id;
+					return request.putBackend("/students/"+idStudent+ "/course/" + idCourse+"/lom/" + lom + "/ok", 200)
+					.then(function (response3) {
+						console.log(response3.body) // testing
+						// update activity
+						chakram.wait();
+
+					});
+					
+				});
 			});
+			
 			
 		});
 
