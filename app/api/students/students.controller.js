@@ -270,7 +270,7 @@ exports.updateActivity = function (req, res) {
 	    function(student, next) { 
 			//find a student by id
 			var Courses = require('../courses/courses.model.js');
-			Courses.find({_id: req.params.idc}, function(err, course){ 
+			Courses.find({name: req.params.idc}, function(err, course){ 
 			    if (err) {
 			        console.log(err);
 			        res.status(err.code).send(err);
@@ -319,7 +319,7 @@ exports.newActivity = function (req, res) {
 	    function(student, next) { //find a student by id
 			var Courses = require('../courses/courses.model.js');
 			Courses.find({name: req.params.idc}, function(err, course){ 
-				// find a course by id
+				// find a course by name
 			    if (err) {
 			        console.log(err);
 			        res.status(err.code).send(err);
@@ -353,7 +353,7 @@ exports.newActivity = function (req, res) {
 																element.idLesson = course.sections[indexSection+1].lessons[0].name;
 																element.idLom = course.sections[indexSection+1].lessons[0].loms[0].lom_id;
 															} else {
-																res.end('The student has finished the course!!');
+																//res.end('The student has finished the course!!');
 															}
 														}
 													}
@@ -366,6 +366,7 @@ exports.newActivity = function (req, res) {
 										} else {
 											res.end('The course does not have any section in index: ' + indexSection);
 										}
+										console.log("***" + element.idLom);
 										LOMS.find({_id: element.idLom}, function(err, lom) {
 										    if (err) {
 										        console.log(err);
