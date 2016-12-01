@@ -366,7 +366,6 @@ exports.newActivity = function (req, res) {
 										} else {
 											res.end('The course does not have any section in index: ' + indexSection);
 										}
-										console.log("***" + element.idLom);
 										LOMS.find({_id: element.idLom}, function(err, lom) {
 										    if (err) {
 										        console.log(err);
