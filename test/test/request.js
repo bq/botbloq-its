@@ -6,7 +6,10 @@ var chakram = require('chakram'),
 
 var Request = function() {
 
-    var host = "http://127.0.0.1:8000/botbloq/v1/its";
+    
+    this.config = require('../../app/res/config/config.json');
+    var host = this.config.host; // 
+
 
     this.postBackend =function(path,status,params,headers) {
       return chakram.post(host+path,params,headers).then(function(response) {

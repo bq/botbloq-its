@@ -7,11 +7,10 @@ var chakram = require('chakram'),
 	LOM = require('./lom.js'),
 	lom = new LOM(),
     Request = require('./request.js'),
-    request = new Request(),
-    // TODO from environment or from config
-	host = "http://127.0.0.1:8000/botbloq/v1/its/students";
+    request = new Request();
 
-var idStudent, icCourse, idLOM; 
+
+var idStudent, idCourse, idLOM,nameCourse; 
 
 
 describe("Chakram", function(){
@@ -35,7 +34,7 @@ describe("Chakram", function(){
 	 	    		expect(response2.body.identification.name).to.equal(randomStudent.identification.name);
 	 	    		chakram.wait();
  	    
- 	    	});
+ 	    		});
 
 	    	});
 	    	
@@ -46,7 +45,7 @@ describe("Chakram", function(){
 
 	it("Testing to create a new lom", function () {
  	    var randomLOM = lom.generateRandomLOM();
-    
+    	
 	    return request.postBackend('/loms',200,randomLOM).then(function (response) {
 	    	var message = response.body;
 	    	idLOM = message.substring(message.lastIndexOf(" ") + 1);
@@ -62,66 +61,52 @@ describe("Chakram", function(){
 	// TODO be careful with the responses with lists. problems with asyn
 	it("Testing to create a new Course" , function() {
 		var randomCourse = course.generateRandomCourse();
-
+		nameCourse = randomCourse.name;
 		return request.postBackend("/courses", 200, randomCourse).then(function (response) { 
 			var message = response.body;
 	    	idCourse= message.substring(message.lastIndexOf(" ") + 1);
 			return request.getBackend("/courses/" + randomCourse.name, 200).then(function(response2) {
 				expect(response2.body[0].code).to.equal(randomCourse.code);
-				chakram.wait();
+				var defaultSection = course.generateDefaultSection();
+				defaultSection.course = nameCourse;
+				return request.putBackend("/courses/create_section", 200, defaultSection).then ( function (response3) {
+					var defaultLesson = course.generateDefaultLesson();
+					defaultLesson.course = nameCourse;
+					return request.putBackend("/courses/create_lesson", 200, defaultLesson).then(function () {
+						var reqLOM = course.generateAssignedLOM();
+						reqLOM.course = randomCourse.name;
+						reqLOM.lom_id = idLOM;
+						return request.putBackend("/courses/create_lom", 200, reqLOM).then ( function(response4) {
+							expect(response4.body[0].loms[0].lom_id).to.equal(idLOM);
+							chakram.wait();
+						}); 
+
+			
+					}); 
+
+				});
+				
 			});
 		});
-	});
-
-	it("Testing create Section ", function() {
-		var randomCourse = course.generateRandomCourse();
-		var defaultSection = course.generateDefaultSection();
-		defaultSection.course = randomCourse.name; 
-		return request.putBackend("/courses/create_section", 200, defaultSection).then ( function (response3) {
-			chakram.wait();
-		});
-
-	});
-
-	it("Testing create Lesson ", function() {
-		var randomCourse = course.generateRandomCourse();
-		var defaultLesson = course.generateDefaultLesson();
-		defaultLesson.course = randomCourse.name; 
-		
-		return request.putBackend("/courses/create_lesson", 200, defaultLesson).then(function () {
-				var reqLOM = course.generateAssignedLOM();
-				reqLOM.course = randomCourse.name;
-				reqLOM.lom_id = idLOM;
-				return request.putBackend("/courses/create_lom", 200, reqLOM).then ( function(response4) {
-					expect(response4.body[0].loms[0].lom_id).to.equal(idLOM);
-					chakram.wait();
-				}); 
-
-				
-			}); 
-
 	});
 
 
 
 			
 	it("Testing enroll a student in a Course" , function() {
-		return request.putBackend('/students/'+ idStudent + "/course/" + idCourse,200)
+		return request.putBackend('/students/'+ idStudent + "/course/" + nameCourse,200)
 		.then(function(response) {
 			// test ifthe student is already enrolled in the course
-			console.log(response.body); // undefined is error
+			expect(response.body).to.have.property("general"); // return a LOM temporary
 			return request.getBackend("/students/" + idStudent, 200).then(function (response1) {
 				expect(response1.body).to.have.property("course"); // temp
-				console.log(response1.body);
- 	   	    	return request.getBackend('/students/'+ idStudent + "/course/" + idCourse,200)
+ 	   	    	return request.getBackend('/students/'+ idStudent + "/course/" + nameCourse,200)
 				.then(function(response2) {
-					console.log(response2.body);
 					expect(response2.body).to.have.property("general");
 					var lom = response2.body._id;
-					return request.putBackend("/students/"+idStudent+ "/course/" + idCourse+"/lom/" + lom + "/ok", 200)
+					return request.putBackend("/students/"+idStudent+ "/course/" + nameCourse+"/lom/" + lom + "/ok", 200)
 					.then(function (response3) {
 						console.log(response3.body) // testing
-						// update activity
 						chakram.wait();
 
 					});
