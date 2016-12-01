@@ -150,7 +150,7 @@ exports.init = function (req, res) {
  */
 exports.enrollment = function (req, res) {
 	var activity;
-	var newCourse= {idCourse: "", idSection: "", idLesson: "", idLom: "", status: 0, active: 1};
+	var newCourse;
 	async.waterfall([
 	    Students.findById.bind(Students,  req.params.idstd),
 	    function(student, next) { 
@@ -164,14 +164,12 @@ exports.enrollment = function (req, res) {
 					if(course.length == 0){
 						res.end('The course: ' + req.params.idc + ' is not registrated');
 					} else {
-					// If the course exists and the student is active
-					// The course is assigned to the student
 						if(functions.studentFound(student, req, res) == true){
 							var coursed = false;
 							student.course.find(function(element ,index , array){
 								if(element.idCourse == req.params.idc){
 									if (element.active == 1) 
-										res.end('The student: ' + student._id + " is already enrolled in the course: " + req.params.idc);
+										activity = 'The student: ' + student._id + " is already enrolled in the course: " + req.params.idc;
 									else 
 										element.active = 1;
 									activity = element;
@@ -179,41 +177,11 @@ exports.enrollment = function (req, res) {
 								}
 							});
 							if(!coursed){ 
-								course = course[0];
-								if(course.sections.length <= 0){
-									res.end('There are no sections to assign the student: ' + student._id);
-								} else{
-									newCourse.idCourse = course.name;
-									newCourse.idSection = course.sections[0].name;
-									if(!course.sections[0].lessons[0]){
-										res.end('There are no lessons to assign the student: ' + student._id);
-									} else {
-										newCourse.idLesson = course.sections[0].lessons[0].name;
-										if(!course.sections[0].lessons[0].loms[0]){
-											res.end('There are no activities to assign the student: ' + student._id);
-										} else{
-											newCourse.idLom = course.sections[0].lessons[0].loms[0].lom_id;
-											student.course.push(newCourse);
-											LOMS.find({_id: newCourse.idLom}, function(err, lom) {
-												if(err){
-											        console.log(err);
-											        res.status(err.code).send(err);
-												} else{
-													if(lom.length == 0){
-														res.end('The lom: '+ newCourse.idLom + ' is not registrated');
-													}
-													 else {
-														 console.log("Updated Student");
-														 activity = lom[0];
-													}
-												}
-											});
-										}
-									}
-								}	
+								newCourse = {idCourse: course[0].name, idSection: "", idLesson: "", idLom: "", status: 0, active: -1};
+								student.course.push(newCourse);
+								activity = newCourse;
 							}
 							student.save(next);	 
-							
 						}
 					}
 				}
@@ -310,8 +278,8 @@ exports.updateActivity = function (req, res) {
  * Returns a new lom for a student and a course
  */
 exports.newActivity = function (req, res) {
-	var activity, lomRet = 0, indexLom = -1, indexLesson = -1, indexSection = -1,
-	coursed = false, bool = false, arrayLoms, arrayLessons;
+	var activity, lomRet = 0,
+	coursed = false, bool = false;
 	LOMS = require('../loms/loms.model.js');
 	
 	async.waterfall([
@@ -327,68 +295,50 @@ exports.newActivity = function (req, res) {
 					if(course.length == 0){
 						res.end('The course: ' + req.params.idc + ' is not registrated');
 					} else {
+						
 						if(functions.studentFound(student, req, res) == true){
+							course = course[0];
+							coursed = true;							
 							student.course.find(function(element ,index , array){
-								if(element.idCourse == req.params.idc){
-									if(element.active == 1){
+								if(element.idCourse == course.name){
+									
+									if(element.active == 1 || element.active == -1 ){
+										element.active = 1;
 										coursed = true;
-										course = course[0];
-										indexSection = functions2.find_section(element.idSection, course.sections);	
-										if(indexSection != -1){
-											arrayLessons = course.sections[indexSection].lessons;
-											indexLesson = functions2.find_lesson(element.idLesson, arrayLessons);
-											if(indexLesson != -1){
-												arrayLoms = course.sections[indexSection].lessons[indexLesson].loms;
-												indexLom = functions2.find_lom(element.idLom, arrayLoms);
-												if(indexLom != -1){
-													if(arrayLoms.length > indexLom + 1){
-														element.idLom = arrayLoms[indexLom + 1].lom_id;
-													} else {
-														if (arrayLessons.length > indexLesson + 1 && arrayLessons[indexLesson + 1].loms.length > 0){
-															element.idLesson = arrayLessons[indexLesson + 1].name;
-															element.idLom = arrayLessons[indexLesson + 1].loms[0].lom_id;
-														} else{
-															if (course.sections.length > indexSection + 1 && course.sections[indexSection+1].lessons[0].loms.length > 0 ){
-																element.idSection = course.sections[indexSection+1].name;
-																element.idLesson = course.sections[indexSection+1].lessons[0].name;
-																element.idLom = course.sections[indexSection+1].lessons[0].loms[0].lom_id;
-															} else {
-																//res.end('The student has finished the course!!');
-															}
-														}
-													}
-												} else {
-													res.end('The lesson does not have any lom in index: ' + indexLom);
-												}
-											} else {
-												res.end('The section does not have any lesson in index: ' + indexLesson);
-											}
+										
+										element = functions.nextActivity(element, course);	
+										console.log(element);
+										if(element == -1){
+											activity = 'error';
 										} else {
-											res.end('The course does not have any section in index: ' + indexSection);
-										}
-										LOMS.find({_id: element.idLom}, function(err, lom) {
-										    if (err) {
-										        console.log(err);
-										        res.status(404).send(err);
-											} else {
-							            		if(lom.length == 0) 
-													res.end('The lom: ' + element.idLom + ' is not registrated');
-												else {
-													activity = lom[0];
-													console.log('Student updated');
-													student.save(next);					
+											LOMS.find({_id: element.idLom}, function(err, lom) {
+											    if (err) {
+											        console.log(err);
+											        res.status(404).send(err);
+												} else {
+								            		if(lom.length == 0) 
+														res.end('The lom: ' + element.idLom + ' is not registrated');
+													else {
+														activity = lom[0];
+														console.log('Student updated');
+														student.save(next);
+									
+													}
 												}
-											}
-										});	
-									} else 	res.end("The student: " + student._id 
-											+ " is not activated in the course: " + req.params.idc);			
+											});	
+											
+										}
+									}
 								}
 							});
-							if(!coursed) res.end("The student: " + student._id 
-								+ " is not enrolled in the course: " + req.params.idc);
-						}
+	
+										
+							
+						} else 	res.end("The student: " + student._id 
+						+ " is not activated in the course: " + req.params.idc);			
 					}
-					
+					if(!coursed) res.end("The student: " + student._id 
+						+ " is not enrolled in the course: " + req.params.idc);
 				}
 			});	
 	    }
