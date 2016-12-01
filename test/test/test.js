@@ -96,10 +96,10 @@ describe("Chakram", function(){
 	it("Testing enroll a student in a Course" , function() {
 		return request.putBackend('/students/'+ idStudent + "/course/" + nameCourse,200)
 		.then(function(response) {
-			// test ifthe student is already enrolled in the course
-			expect(response.body).to.have.property("general"); // return a LOM temporary
+			// test if the student is already enrolled in the course
+			expect(response.body).to.have.property("idCourse"); // return a course enrolled
 			return request.getBackend("/students/" + idStudent, 200).then(function (response1) {
-				expect(response1.body).to.have.property("course"); // temp
+				expect(response1.body).to.have.property("course"); // the student has a course
  	   	    	return request.getBackend('/students/'+ idStudent + "/course/" + nameCourse,200)
 				.then(function(response2) {
 					expect(response2.body).to.have.property("general");
