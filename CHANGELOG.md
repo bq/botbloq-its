@@ -9,27 +9,42 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 
 **Module: Students**
-- Un-enrollment
-- Recommend an activity according to the advance
+- Recommend an activity according to the  learning path
 - Update the situation within the course.
 
 **Module: Domain (Courses)**
-- Lesson Management.
 - Learning Path Management
 
-**Module: Global**
-- Introduce unit tests.
 
 ### Changed
 
 **Module: Domain (Courses)**
+- Fix Errors. Clean Code. Improve searches.
+
 
 **Module: Students**
+- Fix error finishing course
 - Error Control Added: No LOMS found for course
 
 **Module: Learning Objects**
 - Learning Objects: upload/download to the database
 - Error Control Added: No file is found for the request
+
+## [0.0.7] - 2016-12-01
+
+### Added
+
+**Module: Students**
+- Un-enrollment
+- Recommend an activity according to the advance (sequentially)
+- Update the situation within the course.
+
+**Module: Domain (Courses)**
+- Lesson Management
+- Learning Object Assignement to the course
+
+**Module: Global**
+- Chakram Tests
 
 ## [0.0.6] - 2016-11-17
 
