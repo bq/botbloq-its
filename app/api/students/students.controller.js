@@ -233,6 +233,7 @@ exports.unenrollment = function (req, res) {
  * Updates the status of the lom for a student and a course
  */
 exports.updateActivity = function (req, res) {
+	var ret;
 	async.waterfall([
 	    Students.findById.bind(Students,  req.params.idstd),
 	    function(student, next) { 
@@ -251,26 +252,45 @@ exports.updateActivity = function (req, res) {
 									coursed = true;
 									if (element.idLom == req.params.idl){
 									
-										if (req.params.status == "ok") element.status = 1;
-										else { if (req.params.status == "nok") element.status = -1;												
-										else res.end("the status: " + req.params.status + " is not correct"); }
+										if (req.params.status == "ok"){
+											element.status = 1;
+											ret = student;
+											res.status(200);
+										} 
+										else {
+											 if (req.params.status == "nok"){
+											 	element.status = -1;
+												ret = student;
+												res.status(200);	
+											 } 											
+											 else {
+											 	ret = "the status: " + req.params.status + " is not correct";
+												res.status(400); 
+											 }
+										 }
 									
 										student.save(next);
-									} else res.end("The student: " + student._id 
-										+ " does not have the lom: " + req.params.idl);
-								} else res.end("The student: " + student._id 
-										+ " is not activated in the course: " + req.params.idc);
+									} else{
+										ret = "The student: " + student._id + " does not have the lom: " + req.params.idl;
+										res.status(404);
+									} 
+								} else{
+									ret = "The student: " + student._id + " is not activated in the course: " + req.params.idc;
+									res.status(403);
+								} 
 							}
 						});
 						
-						if(!coursed) res.end("The student: " + student._id 
-							+ " is not enrolled in the course: " + req.params.idc);
+						if(!coursed){
+							ret = "The student: " + student._id + " is not enrolled in the course: " + req.params.idc;
+							res.status(400);
+						} 
 					} 
 			    }
 			});	
 	    }
 	], function(err, student) {
-		functions.controlErrors(err, res, student);
+		functions.controlErrors(err, res, ret);
 	});
 };
 
@@ -278,7 +298,7 @@ exports.updateActivity = function (req, res) {
  * Returns a new lom for a student and a course
  */
 exports.newActivity = function (req, res) {
-	var activity, lomRet = 0,
+	var activity, ret = 0,
 	coursed = false, bool = false;
 	LOMS = require('../loms/loms.model.js');
 	
@@ -293,7 +313,8 @@ exports.newActivity = function (req, res) {
 			        res.status(err.code).send(err);
 			    } else {
 					if(course.length == 0){
-						res.end('The course: ' + req.params.idc + ' is not registrated');
+						activity = 'The course: ' + req.params.idc + ' is not registrated';
+						res.status(404);
 					} else {
 						
 						if(functions.studentFound(student, req, res) == true){
@@ -306,27 +327,44 @@ exports.newActivity = function (req, res) {
 										element.active = 1;
 										coursed = true;
 										
-										element = functions.nextActivity(element, course);	
-										console.log(element);
-										if(element == -1){
-											activity = 'error';
-										} else {
+										ret = functions.nextActivity(element, course);	
+										
+										switch (ret){
+										case -1:
+											activity = 'Course finished';
+											res.status(200);
+											break;
+										case -2:
+											activity = 'The lom: ' + element.idLom + ' is not registrated in the course';
+											res.status(404);
+											break;
+										case -3:
+											activity = 'The lesson: ' + element.idLesson + ' is not registrated in the course';											res.status(200);
+											res.status(404);
+											break;
+										case -4:
+											activity = 'The section: ' + element.idSection + ' is not registrated in the course';
+											res.status(404);
+											break;
+										default:
+											element = ret;
 											LOMS.find({_id: element.idLom}, function(err, lom) {
 											    if (err) {
 											        console.log(err);
 											        res.status(404).send(err);
 												} else {
-								            		if(lom.length == 0) 
-														res.end('The lom: ' + element.idLom + ' is not registrated');
-													else {
+								            		if(lom.length == 0){ 
+														res.status(404);
+														activity = 'The lom: ' + element.idLom + ' is not registrated';
+													} else {
 														activity = lom[0];
-														console.log('Student updated');
+														res.status(200);
 														student.save(next);
 									
 													}
 												}
 											});	
-											
+											break;
 										}
 									}
 								}
@@ -334,11 +372,17 @@ exports.newActivity = function (req, res) {
 	
 										
 							
-						} else 	res.end("The student: " + student._id 
-						+ " is not activated in the course: " + req.params.idc);			
+						} else{
+							res.status(403);
+							activity = "The student: " + student._id 
+							+ " is not activated in the course: " + req.params.idc;	
+						} 			
 					}
-					if(!coursed) res.end("The student: " + student._id 
-						+ " is not enrolled in the course: " + req.params.idc);
+					if(!coursed){
+						res.status(404);
+						activity = "The student: " + student._id 
+						+ " is not enrolled in the course: " + req.params.idc;
+					} 
 				}
 			});	
 	    }

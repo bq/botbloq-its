@@ -88,9 +88,9 @@ exports.nextActivity = function (element, course){
 					
 					ret = findActivities(element, course, i, j, k);
 					
-				} else ret = -1; // 'The lom: ' + element.idLom + ' is not registrated in the lesson: ' + arrayLessons[j].name;
-			} else ret =-1;  //'The lesson: ' + element.idLesson + ' is not registrated in the section: ' + arraySections[i].name;
-		} else ret =-1; //'The section: ' + element.idSection + ' is not registrated in the course: ' + course.name;
+				} else ret = -2;
+			} else ret =-3;
+		} else ret =-4;
 		
 	}
 			
