@@ -28,27 +28,20 @@ var CoursesFunctions = require('./courses.functions.js'),
 
 exports.all_loms = function (req, res) 
 	{	
-	console.log("listing all loms");
 	var courseId = req.params.course_id;
 	var sectionId = req.params.section_id;
 	var lessonId = req.params.lesson_id;
-	console.log("course_id",courseId);
-	console.log("section_id",sectionId);
-	console.log("lesson_id",lessonId);
 	Courses.findOne({"name" : courseId}, function(err, course) 
 		{
         if (err) { res.status(ServerError500).send(err);} 
 		else if (course) 
 			{ // course exists
-				console.log("course found");
 				var inds = CoursesFunctions.find_section(sectionId,course.sections);
-				console.log("section position",inds);
 				if (inds < 0){
 					console.log("Error: section does not exists",sectionId);
 					res.status(NotFound404).send("Error: section does not exists "+sectionId);
 				}
 				else { // section exists
-					console.log("section exists");
 					var indl = CoursesFunctions.find_section(lessonId,course.sections[inds].lessons);
 					if (indl < 0) {
 						console.log("Error: lesson does not exists",lessonId);
@@ -56,7 +49,6 @@ exports.all_loms = function (req, res)
 					}
 					else {
 						var lesson = course.sections[inds].lessons[indl];
-						console.log("lesson",lesson);
 						res.status(OK200).send(lesson.los);
 					}
 				}			
@@ -71,36 +63,27 @@ exports.all_loms = function (req, res)
 
 exports.get_lom = function (req, res) 
 	{	
-	console.log("listing a particular loms");
 	var courseId = req.params.course_id;
 	var sectionId = req.params.section_id;
 	var lessonId = req.params.lesson_id;
 	var lomId = req.params.lom_id;
-	console.log("course_id",courseId);
-	console.log("section_id",sectionId);
-	console.log("lesson_id",lessonId);
-	console.log("lom_id",lomId);
 	Courses.findOne({"name" : courseId}, function(err, course) 
 		{
         if (err) { res.status(ServerError500).send(err);} 
 		else if (course) 
 			{ // course exists
-				console.log("course found");
 				var inds = CoursesFunctions.find_section(sectionId,course.sections);
-				console.log("section position",inds);
 				if (inds < 0){
 					console.log("Error: section does not exists",sectionId);
 					res.status(NotFound404).send("Error: section does not exists "+sectionId);
 				}
 				else { // section exists
-					console.log("section exists");
 					var indl = CoursesFunctions.find_lesson(lessonId,course.sections[inds].lessons);
 					if (indl < 0) {
 						console.log("Error: lesson does not exists",lessonId);
 						res.status(NotFound404).send("Error: lesson does not exists "+lessonId);
 					}
 					else { // lesson exists					
-						console.log("lesson exists");
 						var lesson = course.sections[inds].lessons[indl];
 						var ind = CoursesFunctions.find_lom(lomId,lesson.los);
 						if (ind < 0) {
@@ -118,7 +101,7 @@ exports.get_lom = function (req, res)
 };
 
 
-// Exporting create_lom function
+// Exporting assign_lom function
 // It receives as the body of the request in JSON format
 // the name of the course, section, and lesson where the new lom should be created  
 // and the lom_id to be created 
@@ -133,48 +116,39 @@ exports.get_lom = function (req, res)
 	// "lom_id": "lom1.2.3.1"
 // }
 
-exports.create_lom = function(req, res) {	
+exports.assign_lom = function(req, res) {	
 	var courseId = req.body.course,
 		sectionId = req.body.section,
 		lessonId = req.body.lesson,
 		lom_id = req.body.lom_id;
 		
-	console.log('Creating lom ',lom_id,' in lesson ',lessonId,' of section ',sectionId,' of course ',courseId);	
 	
 	Courses.findOne({"name" : courseId}, 
 		function (err, course){
 			if (err) { res.status(ServerError500).send(err);} 
 			else if ( !course ) { res.status(NotFound404).send("Error: course does not exists "+courseId); }
 				else {
-					console.log('old course object',course);				
 					var inds = CoursesFunctions.find_section(sectionId,course.sections);
-					console.log("section position",inds);
 					if (inds < 0){
 						console.log("Error: section does not exists ",sectionId);
 						res.status(NotFound404).send("Error: section does not exists "+sectionId);
 					}
 					else {					
-						console.log("course section lessons",course.sections[inds].lessons);
 						var indl = CoursesFunctions.find_lesson(lessonId,course.sections[inds].lessons);
-						console.log("lesson position",indl);
 						if ( indl < 0 ){
 							console.error('error lesson does not exist ',lessonId);
 							res.end('error lesson does not exist '+lessonId);
 						}
 						else {
 							var lessons = course.sections[inds].lessons;							
-							console.log('lesson exist ', lessons);
 							var ind = CoursesFunctions.find_lom(lom_id,lessons[indl].loms);
 							if ( !(ind < 0)){
 								console.error('error lom already exist ',lom_id);
 								res.end('error lom already exist '+lom_id);
 							}
 							else {
-								console.log('lom does not exist ',lom_id);
 								var loms = lessons[indl].loms;
 								loms[loms.length] = {"lom_id":lom_id};
-								console.log('new loms',loms);
-								console.log('calling update_course_field');
 								var err1 = controller.update_course_field(courseId,"sections",course.sections);
 								if (err1) {
 									console.error('error while updating '+err);
@@ -209,30 +183,24 @@ exports.delete_lom = function(req, res) {
 		lessonId = req.body.lesson,
 		lom_id = req.body.lom_id;
 		
-	console.log('Creating lom ',lom_id,' in lesson ',lessonId,' of section ',sectionId,' of course ',courseId);	
 	
 	Courses.findOne({"name" : courseId}, 
 		function (err, course){
 			if (err) { res.status(ServerError500).send(err);} 
 			else if ( !course ) { res.status(NotFound404).send("Error: course does not exists "+courseId); }
 				else {
-					console.log('old course object',course);				
 					var inds = CoursesFunctions.find_section(sectionId,course.sections);
-					console.log("section position",inds);
 					if (inds < 0){
 						console.log("Error: section does not exists ",sectionId);
 						res.status(NotFound404).send("Error: section does not exists "+sectionId);
 					}
 					else {					
-						console.log("course section lessons",course.sections[inds].lessons);
 						var indl = CoursesFunctions.find_lesson(lessonId,course.sections[inds].lessons);
-						console.log("lesson position",indl);
 						if ( indl < 0 ){
 							console.error('error lesson does not exist ',lessonId);
 							res.end('error lesson does not exist '+lessonId);
 						}
 						else {
-							console.log('lesson exist ',lessonId);
 							var lessons = course.sections[inds].lessons;							
 							var ind = CoursesFunctions.find_lom(lom_id,lessons[indl].los);
 							if ( (ind < 0)){
@@ -240,11 +208,8 @@ exports.delete_lom = function(req, res) {
 								res.end('error lom does not exists '+lom_id);
 							}
 							else {
-								console.log('lom already exist ',lom_id);
 								var loms = lessons[indl].los;
 								loms.splice(ind,1);
-								console.log('new loms',loms);
-								console.log('calling update_course_field');
 								var err1 = controller.update_course_field(courseId,"sections",course.sections);
 								if (err1) {
 									console.error('error while updating '+err);

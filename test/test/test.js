@@ -76,7 +76,7 @@ describe("Chakram", function(){
 						var reqLOM = course.generateAssignedLOM();
 						reqLOM.course = randomCourse.name;
 						reqLOM.lom_id = idLOM;
-						return request.putBackend("/courses/create_lom", 200, reqLOM).then ( function(response4) {
+						return request.putBackend("/courses/assign_lom", 200, reqLOM).then ( function(response4) {
 							expect(response4.body[0].loms[0].lom_id).to.equal(idLOM);
 							chakram.wait();
 						}); 

@@ -30,13 +30,11 @@ var controller = require('./courses.controller.js');
 exports.all_sections = function (req, res) 
 	{	
 	var courseId = req.params.course_id;
-	console.log("course_id",courseId);
 	Courses.findOne({"name" : courseId}, function(err, course) 
 		{
         if (err) { res.status(500).send(err);} 
 		else if (course) 
 			{ 
-			console.log("course",course);
 			// console.log("course.sections",course["sections"]); //course.sections);
 			res.send(course.sections);
 			// res.status(200).json(course.sections); 
@@ -52,20 +50,15 @@ exports.get_section = function (req, res)
 	{		
 	var courseId = req.params.course_id;
 	var sectionId = req.params.section_id;
-	console.log("course",courseId);
-	console.log("section",sectionId);
 	
 	Courses.findOne({"name" : courseId}, function(err, course) 
 		{
         if (err) { res.status(500).send(err);} 
 		else if (course) 
 			{ 
-			console.log("course",course);
 			var sections = course["sections"];
-			console.log("sections",sections);
 			var len = sections.length;
 			for (var i = 0; i < len; i++) {
-					console.log("elem",sections[i]);
 					var elem = sections[i];
 					if (elem.name == sectionId)
 						{
@@ -79,15 +72,11 @@ exports.get_section = function (req, res)
 	}
 
 function exist_section(sectionId,sections){
-	console.log('verifying if already exists section',sectionId);
-	console.log("sections\n",sections);	
 	// verify that the 'new' section does not
 	// already exists. In this case, it is an ERROR			
 	var resp = sections.some(function(elem) 
 		{
-			console.log('elem.name, sectionId',elem.name, sectionId);
 			var cmp = sectionId.localeCompare(elem.name);
-			console.log('comparing',cmp);
 			if ( cmp === 0 ) { console.log('string match');
 				return true;
 				}
@@ -118,29 +107,23 @@ exports.create_section = function(req, res) {
 		new_sec = req.body.section,
 		sectionId = new_sec.name;
 		
-	console.log('Creating section ',sectionId,'in course ',courseId);	
-	console.log('section body',new_sec);	
 	
 	Courses.findOne({"name" : courseId}, 
 		function (err, course){
 			if (err) { res.status(500).send(err);} 
 			else {
-				console.log('old course object',course);
 				var sections = course["sections"];
 				if (exist_section(sectionId,sections)){
 					console.error('error section already exist');
 					res.end('error section already exist');
 				}
 				else {
-					console.log('section does not exist previously');
 					// if there were no sections before OR
 					// the new section does not already exists
 					// then we have to insert it in the array			
 					// push the new section at the end of the sections array					
 					// sections.push(new_sec);
 					sections[sections.length] = new_sec;
-					console.log('new sections',sections);
-					console.log('calling update_course_field');
 					var err1 = controller.update_course_field(courseId,"sections",sections);
 					if (err1) {
 						console.error('error while updating '+err);
@@ -173,15 +156,12 @@ exports.update_section = function(req, res) {
 	var courseId = req.body.course,
 		new_sec = req.body.section,
 		sectionId = new_sec.name;
-		
-	console.log('Updating section ',sectionId,'in course ',courseId);	
-	console.log('section body',new_sec);	
+
 	
 	Courses.findOne({"name" : courseId}, 
 		function (err, course){
 			if (err) { res.status(500).send(err);} 
 			else {
-				console.log('old course object',course);
 				var sections = course["sections"];
 				var ind = find_section(sectionId,sections);
 				if ( ind < 0 ){
@@ -189,11 +169,8 @@ exports.update_section = function(req, res) {
 					res.end('error section does not exist');
 				}
 				else {
-					console.log('section already exist');
 					course["sections"].splice(ind,1); //remove old section
 					sections[sections.length] = new_sec; //push the new one
-					console.log('new sections',sections);
-					console.log('calling update_course_field');
 					var err1 = controller.update_course_field(courseId,"sections",sections);
 					if (err1) {
 						console.error('error while updating '+err);
@@ -224,14 +201,10 @@ exports.update_section_field = function(req, res) {
 		field = req.body.field,
 		value = req.body.value;
 		
-	console.log('Updating section field',sectionId,'in course ',courseId);	
-	console.log('field, value',field,value);	
-	
 	Courses.findOne({"name" : courseId}, 
 		function (err, course){
 			if (err) { res.status(500).send(err);} 
 			else {
-				console.log('old course object',course);
 				var sections = course["sections"];
 				var ind = find_section(sectionId,sections);
 				if ( ind < 0 ){
@@ -239,13 +212,9 @@ exports.update_section_field = function(req, res) {
 					res.end('error section does not exist');
 				}
 				else {
-					console.log('section already exist in position',ind);
 					var sec = sections[ind];
-					console.log('old field value',sec[field]);
 					sec[field] = value;
-					console.log('new field value',sec[field]);
 					// console.log('new sections',sections);
-					console.log('calling update_course_field');
 					var err1 = controller.update_course_field(courseId,"sections",sections);
 					if (err1) {
 						console.error('error while updating '+err);
@@ -259,20 +228,15 @@ exports.update_section_field = function(req, res) {
 }
 
 function find_section(sectionId,sections){
-	console.log('find the section index position. Otherwise -1',sectionId);
-	console.log("sections\n",sections);	
+
 	// verify that the 'new' section does not
 	// already exists. In this case, it is an ERROR	
-	console.log("sections",sections);
 	var len = sections.length;
 	for (var i = 0; i < len; i++) {		
 		var elem = sections[i];
-		console.log("elem ",i,"\n",elem);
 		var cmp = sectionId.localeCompare(elem.name);
-		console.log('comparing',cmp);
 		if ( cmp === 0 ) 
 			{ 
-				console.log('string match');
 				return i;
 			}
 	}
@@ -287,20 +251,16 @@ exports.delete_section = function(req,res)
 	{		
 	var courseId = req.params.course_id;
 	var sectionId = req.params.section_id;
-	console.log("course",courseId);
-	console.log("section",sectionId);
+
 	// var courseId = req.params.id;
 	Courses.findOne({"name" : courseId}, function(err, course){
         if (err) { res.status(500).send(err);} 
 		else if (course) 
 			{ 
-				console.log("course",course);
 				var ind = find_section(sectionId,course["sections"]);
 				if (ind < 0) {res.send("course: "+courseId+" section: "+sectionId+" not found");}
 				else {
 					course["sections"].splice(ind,1);
-					console.log("new sections",course["sections"]);
-					console.log('calling update_course_field');
 					var err1 = controller.update_course_field(courseId,"sections",course["sections"]);
 					if (err1) {
 						console.error('error while updating '+err);

@@ -5,7 +5,8 @@ var mongoose = require('mongoose')
   , Schema = mongoose.Schema;
       										
 var LOM = new Schema( // { autoIndex: false },
-	{ lom_id: String } 
+	{ lom_id: String,
+	_id: false } 
 	);
 	
 var Objective = new Schema(
@@ -30,7 +31,7 @@ var Lesson = new Schema( // { autoIndex: false },
 	{ 
 	name: String, 
 	resume  : String,  
-	objetives: [Objective],
+	objectives: [Objective],
 	loms : [LOM] }
 	);
 
@@ -38,7 +39,7 @@ var Section = new Schema( // { autoIndex: false },
 	{ 
 	name: String, 
 	resume  : String, 
-	objetives: [Objective],
+	objectives: [Objective],
 	lessons  : [Lesson]}
 	);
 	
@@ -47,8 +48,7 @@ var CoursesSchema = new mongoose.Schema(
 	name: { type: String, trim: true, required: true },
 	code: { type: String, index: { unique: true } },
 	content: { type: String, trim: true },
-	objetives: [Objective],
-	bibliography: { type: String, trim: true },
+	objectives: [Objective],
 	sections  : [Section]
 	}, 
 	{ timestamps: true }

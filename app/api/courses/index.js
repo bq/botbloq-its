@@ -23,7 +23,7 @@ router.delete('/delete_lom', loms_ctrl.delete_lom);
 
 // PUTs
 // create a particular lom of a lesson
-router.put('/create_lom', loms_ctrl.create_lom);
+router.put('/assign_lom', loms_ctrl.assign_lom);
 
 /*
 **************LESSONS******************************

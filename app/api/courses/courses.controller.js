@@ -70,7 +70,6 @@ exports.remove = function(req,res)
 // Exporting create function
 // insert the course received as parameter
 exports.create = function(req, res) {
-	console.log('course body',req.body);
     Courses.create(req.body, 
 		function (err, course) {
 			if (err) res.sendStatus(err.code);
@@ -87,15 +86,11 @@ exports.create = function(req, res) {
 // the new course is received via the request body in JSON format
 exports.update = function(req, res) {
 	var courseId = req.params.id;
-	console.log('Updating course',courseId);	
-	console.log('course body',req.body);
 	Courses.findOne({"name" : courseId}, 
 		function (err, course) {			
 			course.content = req.body.content;
-			course.objetives = req.body.objetives;
-			course.bibliography = req.body.bibliography;
+			course.objectives = req.body.objectives;
 			// course = req.body
-			console.log('newcourse',course);
 			course.save(function (err) {
 				if(err) {
 					console.error('ERROR!');
@@ -108,12 +103,8 @@ exports.update = function(req, res) {
 };
 
 var update_field1 = function(courseId,field,value){
-	console.log('Updating course ',courseId);
-	console.log('courseId,field',courseId,field);
-	console.log('value\n',value);
 	Courses.findOne({"name" : courseId}, 
 		function (err, course) {
-			console.log('course object',course);
 			course[field] = value;
 			console.log('new course body',course);
 			course.save(function (err) {return err});
@@ -122,7 +113,6 @@ var update_field1 = function(courseId,field,value){
 }
 
 exports.update_course_field = function(courseId,field,value){
-	console.log('calling update_field1');
 	var err = update_field1(courseId,field,value);
 	return err;
 }
