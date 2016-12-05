@@ -37,14 +37,17 @@ exports.all = function (req, res)
 // If there are several courses with the same name
 // all of them will be showed
 // If there are none with this name, then it returns an empty list []
-exports.get = function (req, res) 
-	{
+exports.get = function (req, res){
 	var courseId = req.params.id;
-	Courses.find({"name" : courseId}, function(err, course) 
-		{
-        if (err) { res.status(500).send(err);} 
-		else if (course) { res.status(200).json(course); } 
-			 else { res.sendStatus(404);}    
+	Courses.find({"name" : courseId}, function(err, course) {
+        if (err) 
+			res.status(404).send(err);
+		else {
+			if (course.length > 0)
+				res.status(200).json(course); 
+			else 
+				res.status(404).send('The course with id: ' + courseId + ' is not registrated');  
+		} 
 	});
 };
 
@@ -52,61 +55,83 @@ exports.get = function (req, res)
 // delete the course received as parameter
 // If the course does not exist in the database, 
 // it considers the course removed anyway
-exports.remove = function(req,res) 
-	{	
-	var courseId = req.params.id;
-	Courses.remove({"name" : courseId}, function(err) {
-    if (!err) 
-		{ console.log('Course removed: ');
-		res.send('Course removed: ' + courseId)
-		}
-    else {
-		console.log('error while removing');
-		res.send('error while removing')
-		}	
+exports.remove = function(req,res) {
+	async.waterfall([
+	    Courses.findById.bind(Courses, req.params.id),
+	    function(course, next) {
+			if(!course)
+				res.status(404).send("The course with id: " + req.params.id + " is not registrated");
+		    else{
+				Courses.remove(course, function (err, resp) {
+			        if (err)
+						res.status(404).send(err);
+			        else 
+						res.json(resp);
+			    });
+			}
+	    }
+	], function(err, course) {
+	    if (err) {
+			console.log(err);
+	        res.status(404).send(err);
+	    } 
+		else res.json(course);
 	});
+};
+
+/**
+ * Destroys all elements
+ */
+exports.reset  = function(req, res){
+    Courses.remove({}, function (err, resp) {
+	    if (err)
+	        res.status(404).send(err);
+		else 
+			res.json(resp);
+    });
 };
 
 // Exporting create function
 // insert the course received as parameter
 exports.create = function(req, res) {
-    Courses.create(req.body, 
-		function (err, course) {
-			if (err) res.sendStatus(err.code);
-			console.log('Course created!');
-			var id = course._id;
-			res.writeHead(200, {'Content-Type': 'text/plain'});
-			res.end('Added the course with id: ' + id);
-		}
-	);
+    Courses.create(req.body, function (err, course) {
+		if (err) res.sendStatus(err.code);
+		console.log('Course created!');
+		var id = course._id;
+		res.writeHead(200, {
+			'Content-Type': 'text/plain'
+		});
+		res.end('Added the course with id: ' + id);
+	});
 };
 
 // Exporting update function
 // update the course received as parameter
 // the new course is received via the request body in JSON format
 exports.update = function(req, res) {
-	var courseId = req.params.id;
-	Courses.findOne({"name" : courseId}, 
-		function (err, course) {			
-			course.content = req.body.content;
-			course.objectives = req.body.objectives;
-			// course = req.body
-			course.save(function (err) {
-				if(err) {
-					console.error('ERROR!');
-					res.send('error while updating')
-				}
-			res.end('Updated the course with id: ' + courseId);
-			});
-		}
-	);		
+	async.waterfall([
+	    Courses.findById.bind(Courses, req.params.id),
+	    function(course, next) {
+	        if(!course)
+				res.status(404).send("The course with id: " + req.params.id + " is not registrated");
+			else {
+				course = _.extend(course, req.body);
+	       		course.save(next);
+			}
+	    }
+	], function(err, course) {
+	    if (err) {
+	        console.log(err);
+	        res.status(404).send(err);
+	    } 
+		else res.json(course);
+	});		
 };
 
 var update_field1 = function(courseId,field,value){
 	Courses.findOne({"name" : courseId}, 
 		function (err, course) {
 			course[field] = value;
-			console.log('new course body',course);
 			course.save(function (err) {return err});
 		}
 	);
@@ -124,10 +149,9 @@ exports.update_course_field = function(courseId,field,value){
 exports.update_field = function(req, res) {
 	var err = update_field1(req.body.name,req.body.field,req.body.value);	
 	if(err) {
-		console.error('ERROR!');
-		res.end('error while updating');
+		res.status(400).send('error while updating');
 	}	
-	res.end('Updated the course with id: ' + req.body.name);
+	else res.status(200).send('Updated the course with id: ' + req.body.name);
 			
 }
 

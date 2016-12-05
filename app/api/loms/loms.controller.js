@@ -64,8 +64,7 @@ exports.update = function (req, res) {
 	async.waterfall([
 	    LOMS.findById.bind(LOMS, req.params.id),
 	    function(lom, next) {
-	        if(!lom) res.end("The lom with id: " 
-				+ req.params.id + " is not registrated");
+	        if(!lom) res.status(404).send("The lom with id: " + req.params.id + " is not registrated");
 			else {
 				lom = _.extend(lom, req.body);
 	       		lom.save(next);

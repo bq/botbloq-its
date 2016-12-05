@@ -14,9 +14,9 @@ var router = express.Router();
 
 // GETs 
 // list all loms from a lesson
-router.get('/course/:course_id/section/:section_id/lesson/:lesson_id', loms_ctrl.all_loms);
+router.get('/:course_id/section/:section_id/lesson/:lesson_id/loms', loms_ctrl.all_loms);
 // list the indicated lom
-router.get('/course/:course_id/section/:section_id/lesson/:lesson_id/lom/:lom_id', loms_ctrl.get_lom); 
+router.get('/:course_id/section/:section_id/lesson/:lesson_id/lom/:lom_id', loms_ctrl.get_lom); 
 
 // DELETEs a particular lom of a lesson
 router.delete('/delete_lom', loms_ctrl.delete_lom);
@@ -31,12 +31,12 @@ router.put('/assign_lom', loms_ctrl.assign_lom);
 
 // GETs 
 // list all lessons from a course section
-router.get('/course/:course_id/section/:section_id/', lesson_ctrl.all_lessons); 
+router.get('/:course_id/section/:section_id/lessons', lesson_ctrl.all_lessons); 
 // list the indicated lesson
-router.get('/course/:course_id/section/:section_id/lesson/:lesson_id', lesson_ctrl.get_lesson); 
+router.get('/:course_id/section/:section_id/lesson/:lesson_id', lesson_ctrl.get_lesson); 
 
 // DELETEs a particular lesson of a section
-router.delete('/course/:course_id/section/:section_id/lesson/:lesson_id', lesson_ctrl.delete_lesson);
+router.delete('/:course_id/section/:section_id/lesson/:lesson_id', lesson_ctrl.delete_lesson);
 
 // PUTs
 // create a particular lesson of a course section
@@ -51,11 +51,11 @@ router.put('/update_lesson_field', lesson_ctrl.update_lesson_field);
 */
 
 // GETs
-router.get('/course/:course_id', section_ctrl.all_sections); // list all sections from course
-router.get('/course/:course_id/section/:section_id', section_ctrl.get_section); // list the indicated section
+router.get('/:course_id/sections', section_ctrl.all_sections); // list all sections from course
+router.get('/:course_id/section/:section_id', section_ctrl.get_section); // list the indicated section
 
 // DELETEs
-router.delete('/course/:course_id/section/:section_id', section_ctrl.delete_section);
+router.delete('/:course_id/section/:section_id', section_ctrl.delete_section);
 
 // PUTs
 router.put('/create_section', section_ctrl.create_section);
@@ -82,8 +82,10 @@ router.put('/update_field', controller.update_field); // update just one field o
 router.put('/:id', controller.update); // update the whole course 
 
 // DELETEs
+//deletes a course by id
 router.delete('/:id', controller.remove);
-
+//deletes all courses
+router.delete('/', controller.reset);
 
 module.exports = router;
 

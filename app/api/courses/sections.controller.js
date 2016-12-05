@@ -27,49 +27,47 @@ var controller = require('./courses.controller.js');
 	
 // Exporting function all_sections
 // list all sections from a course
-exports.all_sections = function (req, res) 
-	{	
+exports.all_sections = function (req, res) {	
 	var courseId = req.params.course_id;
-	Courses.findOne({"name" : courseId}, function(err, course) 
-		{
-        if (err) { res.status(500).send(err);} 
-		else if (course) 
-			{ 
-			// console.log("course.sections",course["sections"]); //course.sections);
-			res.send(course.sections);
-			// res.status(200).json(course.sections); 
-			} 
-			 else { res.sendStatus(404);}    
+	Courses.findOne({"name" : courseId}, function(err, course) {
+        if (err) 
+			res.status(500).send(err);
+		else{
+			if (!course) 
+				res.status(404).send("The course with id: " + req.params.id + " is not registrated");  
+			else 
+				res.status(200).send(course.sections);
+		}
 	});
 };
 
 // Exporting function get_section
 // list the indicated section from a course
 // If the section does not exists, prints a message
-exports.get_section = function (req, res) 
-	{		
+exports.get_section = function (req, res) {		
 	var courseId = req.params.course_id;
 	var sectionId = req.params.section_id;
 	
-	Courses.findOne({"name" : courseId}, function(err, course) 
-		{
-        if (err) { res.status(500).send(err);} 
-		else if (course) 
-			{ 
-			var sections = course["sections"];
-			var len = sections.length;
-			for (var i = 0; i < len; i++) {
+	Courses.findOne({"name" : courseId}, function(err, course) {
+        if (err)
+			res.status(500).send(err);
+		else{
+			if (!course) 
+				res.status(404).send("The course with id: " + courseId + " is not registrated");   
+			else{
+				var sections = course["sections"];
+				var len = sections.length;
+				for (var i = 0; i < len; i++) {
 					var elem = sections[i];
 					if (elem.name == sectionId)
-						{
-						res.send("course: "+courseId+"\nsection:\n"+JSON.stringify(elem));
-						};
-			}			
-			res.send("course: "+courseId+" section: "+sectionId+" not found");			
-			} 
-			else { res.sendStatus(404);}    
+						res.status(200).send("course: "+courseId+"\nsection:\n"+JSON.stringify(elem));
+				}			
+				res.status(404).send("The section with id : " + sectionId +
+				" has not been found un the course with id: " + courseId);	
+			}
+		} 
 	});	
-	}
+};
 
 function exist_section(sectionId,sections){
 	// verify that the 'new' section does not
@@ -77,12 +75,11 @@ function exist_section(sectionId,sections){
 	var resp = sections.some(function(elem) 
 		{
 			var cmp = sectionId.localeCompare(elem.name);
-			if ( cmp === 0 ) { console.log('string match');
+			if ( cmp === 0 ) {
 				return true;
 				}
 		}
 	);
-	console.log('forEach end ',resp);
 	return resp;
 }
 
@@ -108,32 +105,29 @@ exports.create_section = function(req, res) {
 		sectionId = new_sec.name;
 		
 	
-	Courses.findOne({"name" : courseId}, 
-		function (err, course){
-			if (err) { res.status(500).send(err);} 
+	Courses.findOne({"name" : courseId}, function (err, course){
+		if (err)
+			res.status(500).send(err); 
+		else {
+			var sections = course["sections"];
+			if (exist_section(sectionId,sections)){
+				res.status(400).send('Error section already exist');
+			}
 			else {
-				var sections = course["sections"];
-				if (exist_section(sectionId,sections)){
-					console.error('error section already exist');
-					res.end('error section already exist');
-				}
-				else {
-					// if there were no sections before OR
-					// the new section does not already exists
-					// then we have to insert it in the array			
-					// push the new section at the end of the sections array					
-					// sections.push(new_sec);
-					sections[sections.length] = new_sec;
-					var err1 = controller.update_course_field(courseId,"sections",sections);
-					if (err1) {
-						console.error('error while updating '+err);
-						res.end('error while updating '+err)
-						}
-						else res.end('Updated the course with id: ' + JSON.stringify(course));
-					}
+				// if there were no sections before OR
+				// the new section does not already exists
+				// then we have to insert it in the array			
+				// push the new section at the end of the sections array					
+				// sections.push(new_sec);
+				sections[sections.length] = new_sec;
+				var err1 = controller.update_course_field(courseId,"sections",sections);
+				if (err1)
+					res.status(400).send('error while updating '+err);
+				else
+					res.status(200).send(new_sec);
 			}
 		}
-	);
+	});
 }
 
 // Exporting update_section function
@@ -156,32 +150,27 @@ exports.update_section = function(req, res) {
 	var courseId = req.body.course,
 		new_sec = req.body.section,
 		sectionId = new_sec.name;
-
 	
-	Courses.findOne({"name" : courseId}, 
-		function (err, course){
-			if (err) { res.status(500).send(err);} 
+	Courses.findOne({"name" : courseId}, function (err, course){
+		if (err)
+			res.status(500).send(err);
+		else {
+			var sections = course["sections"];
+			var ind = find_section(sectionId,sections);
+			if (ind < 0)
+				res.statu(404).send('Error section does not exist');
 			else {
-				var sections = course["sections"];
-				var ind = find_section(sectionId,sections);
-				if ( ind < 0 ){
-					console.error('error section does not exist');
-					res.end('error section does not exist');
-				}
-				else {
-					course["sections"].splice(ind,1); //remove old section
-					sections[sections.length] = new_sec; //push the new one
-					var err1 = controller.update_course_field(courseId,"sections",sections);
-					if (err1) {
-						console.error('error while updating '+err);
-						res.end('error while updating '+err)
-						}
-						else res.end('Updated the course with id: ' + JSON.stringify(course));
-					}
+				course["sections"].splice(ind,1); //remove old section
+				sections[sections.length] = new_sec; //push the new one
+				var err1 = controller.update_course_field(courseId,"sections",sections);
+				if (err1) 
+					res.status(400).send('error while updating '+err);
+				else
+					res.staus(200).send('Updated the course with id: ' + JSON.stringify(course));
 			}
 		}
-	);
-}
+	});
+};
 
 // Exporting update_section_field function
 // It receives as the body of the request in JSON format
@@ -201,30 +190,25 @@ exports.update_section_field = function(req, res) {
 		field = req.body.field,
 		value = req.body.value;
 		
-	Courses.findOne({"name" : courseId}, 
-		function (err, course){
-			if (err) { res.status(500).send(err);} 
+	Courses.findOne({"name" : courseId}, function (err, course){
+		if (err)
+			res.status(500).send(err);
+		else {
+			var sections = course["sections"];
+			var ind = find_section(sectionId,sections);
+			if ( ind < 0 )
+				res.status(404).send('Error section does not exist');
 			else {
-				var sections = course["sections"];
-				var ind = find_section(sectionId,sections);
-				if ( ind < 0 ){
-					console.error('error section does not exist');
-					res.end('error section does not exist');
-				}
-				else {
-					var sec = sections[ind];
-					sec[field] = value;
-					// console.log('new sections',sections);
-					var err1 = controller.update_course_field(courseId,"sections",sections);
-					if (err1) {
-						console.error('error while updating '+err);
-						res.end('error while updating '+err)
-						}
-						else res.end('Updated the course with id: ' + JSON.stringify(course));
-					}
+				var sec = sections[ind];
+				sec[field] = value;
+				var err1 = controller.update_course_field(courseId,"sections",sections);
+				if (err1)
+					res.status(400).send('Error while updating ' + err)
+				else
+					res.status(200).send('Updated the course with id: ' + JSON.stringify(course));
 			}
 		}
-	);
+	});
 }
 
 function find_section(sectionId,sections){
@@ -235,10 +219,8 @@ function find_section(sectionId,sections){
 	for (var i = 0; i < len; i++) {		
 		var elem = sections[i];
 		var cmp = sectionId.localeCompare(elem.name);
-		if ( cmp === 0 ) 
-			{ 
-				return i;
-			}
+		if ( cmp === 0 )  
+			return i;
 	}
 	return -1;
 }
@@ -247,29 +229,32 @@ function find_section(sectionId,sections){
 // delete the section indicated for the course received as parameter
 // If either the course or the section does not exist,
 // it considers it removed anyway
-exports.delete_section = function(req,res) 
-	{		
+exports.delete_section = function(req,res) {		
 	var courseId = req.params.course_id;
 	var sectionId = req.params.section_id;
 
 	// var courseId = req.params.id;
 	Courses.findOne({"name" : courseId}, function(err, course){
-        if (err) { res.status(500).send(err);} 
-		else if (course) 
-			{ 
+        if (err)
+			res.status(500).send(err);
+		else{
+			if (!course)
+				res.sendStatus(404).send('The course with id: ' + courseId + ' is not rgistrated');  
+			else{
 				var ind = find_section(sectionId,course["sections"]);
-				if (ind < 0) {res.send("course: "+courseId+" section: "+sectionId+" not found");}
+				if (ind < 0)
+					res.status(404).send("The section with id : " + sectionId +
+					" has not been found un the course with id: " + courseId);
 				else {
 					course["sections"].splice(ind,1);
 					var err1 = controller.update_course_field(courseId,"sections",course["sections"]);
-					if (err1) {
-						console.error('error while updating '+err);
-						res.end('error while updating '+err)
-						}
-						else res.end('Updated the course with id: ' + JSON.stringify(course));
+					if (err1) 
+						res.status(400).send('error while updating '+err)
+					else 
+						res.status(200).send('Updated the course with id: ' + JSON.stringify(course));
 				}						
 			} 
-			else { res.sendStatus(404);}    
+		} 
 	});	
 };
 	
