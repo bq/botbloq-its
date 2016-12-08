@@ -32,44 +32,98 @@ exports.studentFound = function (student, req, res){
 	return bool;
 }
 
-exports.nextActivity = function (element, course){
-	var ret = 0, indexMyLesson = 0, myLesson;
-		
-	if(course.sections.length > 0 ){
-		element.idSection = course.sections[0].name;
-	
-		if(element.status > 0 || element.status < 0){ 
-			indexMyLesson = functions2.find_lesson(element.idLesson, course.sections[0].lessons);
-			myLesson = course.sections[0].lessons[indexMyLesson];
-			if(myLesson.learning_path.ok.length > 0){
-				if(myLesson.learning_path.ok[0] == indexMyLesson){
-					ret = -1;
-				} else {
-					if(element.status == 1) indexMyLesson = myLesson.learning_path.ok[0];
-					else indexMyLesson = myLesson.learning_path.nok[0];
-				}
-			} else {
-				if (course.sections[0].lessons.length > indexMyLesson + 1){
-					if(element.status == 1) 
-						indexMyLesson = indexMyLesson + 1;
-					
-				} else ret = -1;
-			}
-		
-		} else indexMyLesson = 0;
-		
-		if(ret != -1){
-			if(course.sections[0].lessons.length > indexMyLesson){				
-				element.idLesson = course.sections[0].lessons[indexMyLesson].name;
-				if (course.sections[0].lessons[indexMyLesson].loms.length > 0){
-					element.idLom = course.sections[0].lessons[indexMyLesson].loms[0].lom_id;
-					ret = element;
-			
-				}else ret = -2;
-		
-			} else ret = -3;
-		}
-	} else ret = -4; 
 
+exports.findActivities = function (element, course, i, j, k){
+	var arraySections, arrayLessons, arrayLoms, bool, ret;
+	arraySections = course.sections;
+	do {
+		if(arraySections.length > i){
+			arrayLessons = arraySections[i].lessons;
+			if(arrayLessons.length > j){
+				arrayLoms = arrayLessons[j].loms;
+				if(arrayLoms.length > k){
+					element.idSection = arraySections[i].name;
+					element.idLesson = arrayLessons[j].name;
+					element.idLom = arrayLoms[k].lom_id;
+					element.status = -1;
+					ret = element;
+					bool = true;
+				} else{
+					++j;
+					k = 0;
+				} 
+			} else{
+				++i;
+				j = 0;
+				k = 0;
+			}
+		} else{
+			ret = -1;
+			bool = true;
+		} 
+	} while(!bool);
+	
 	return ret;
 }
+
+exports.nextActivity = function (element, course){
+	var ret = 0, coursed = false, arraySections, arrayLessons,
+	arrayLoms, i = 0, j = 0, k = 0;
+	
+	arraySections = course.sections;
+	if (element.idSection == "") {
+		
+		ret = this.findActivities(element, course, i, j, k);
+		
+	} else {
+		
+		i = functions2.find_section(element.idSection, arraySections);
+		if(i != -1){
+			arrayLessons = arraySections[i].lessons;
+			j = functions2.find_lesson(element.idLesson, arrayLessons);
+			if (j != -1){
+				arrayLoms = arrayLessons[j].loms;
+				k = functions2.find_lom(element.idLom, arrayLoms);
+				if (k != -1){
+					
+					ret = findActivities(element, course, i, j, k);
+					
+				} else ret = -2;
+			} else ret =-3;
+		} else ret =-4;
+		
+	}
+			
+	
+	
+	return ret;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

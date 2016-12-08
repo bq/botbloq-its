@@ -312,7 +312,7 @@ exports.newActivity = function (req, res) {
 			        console.log(err);
 			        res.status(err.code).send(err);
 			    } else {
-					if(!course){
+					if(course.length == 0){
 						activity = 'The course: ' + req.params.idc + ' is not registrated';
 						res.status(404);
 					} else {
@@ -328,49 +328,50 @@ exports.newActivity = function (req, res) {
 										coursed = true;
 										
 										ret = functions.nextActivity(element, course);	
+										
 										switch (ret){
 										case -1:
 											activity = 'Course finished';
 											res.status(200);
 											break;
 										case -2:
-											activity = 'There is a lesson without loms';
+											activity = 'The lom: ' + element.idLom + ' is not registrated in the course';
 											res.status(404);
 											break;
 										case -3:
-											activity = 'There is a section without lessons';											
+											activity = 'The lesson: ' + element.idLesson + ' is not registrated in the course';											res.status(200);
 											res.status(404);
 											break;
 										case -4:
-											activity = 'There is a course without sections';
+											activity = 'The section: ' + element.idSection + ' is not registrated in the course';
 											res.status(404);
 											break;
-										default:	
+										default:
 											element = ret;
-											LOMS.findOne({_id: element.idLom}, function(err, lom) {
-												
+											LOMS.find({_id: element.idLom}, function(err, lom) {
 											    if (err) {
 											        console.log(err);
 											        res.status(404).send(err);
 												} else {
-								            		if(!lom){ 														
+								            		if(lom.length == 0){ 
 														res.status(404);
 														activity = 'The lom: ' + element.idLom + ' is not registrated';
 													} else {
-														if(lom.length > 0) activity = lom[0];
-														else activity = lom;
-														
+														activity = lom[0];
 														res.status(200);
+														student.save(next);
 									
 													}
 												}
 											});	
 											break;
 										}
-										student.save(next);
 									}
 								}
-							});							
+							});
+	
+										
+							
 						} else{
 							res.status(403);
 							activity = "The student: " + student._id 
