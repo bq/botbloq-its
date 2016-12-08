@@ -298,6 +298,7 @@ exports.updateActivity = function (req, res) {
  * Returns a new lom for a student and a course
  */
 exports.newActivity = function (req, res) {
+	
 	var activity, ret = 0,
 	coursed = false, bool = false;
 	LOMS = require('../loms/loms.model.js');
@@ -328,26 +329,31 @@ exports.newActivity = function (req, res) {
 										coursed = true;
 										
 										ret = functions.nextActivity(element, course);	
+										console.log("devuelve: " + ret);
 										switch (ret){
 										case -1:
 											activity = 'Course finished';
 											res.status(200);
+											student.save(next);
 											break;
 										case -2:
 											activity = 'There is a lesson without loms';
 											res.status(404);
+											student.save(next);
 											break;
 										case -3:
 											activity = 'There is a section without lessons';											
 											res.status(404);
+											student.save(next);
 											break;
 										case -4:
 											activity = 'There is a course without sections';
 											res.status(404);
+											student.save(next);
 											break;
 										default:	
 											element = ret;
-											LOMS.findOne({_id: element.idLom}, function(err, lom) {
+											LOMS.find({_id: element.idLom}, function(err, lom) {
 												
 											    if (err) {
 											        console.log(err);
@@ -359,15 +365,12 @@ exports.newActivity = function (req, res) {
 													} else {
 														if(lom.length > 0) activity = lom[0];
 														else activity = lom;
-														
-														res.status(200);
-									
+														student.save(next);
 													}
 												}
 											});	
 											break;
 										}
-										student.save(next);
 									}
 								}
 							});							
@@ -386,6 +389,8 @@ exports.newActivity = function (req, res) {
 			});	
 	    }
 	], function(err, student) {
+		console.log(activity);
+		
 		functions.controlErrors(err, res, activity);
 	});
 };

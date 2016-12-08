@@ -70,6 +70,5 @@ exports.nextActivity = function (element, course){
 			} else ret = -3;
 		}
 	} else ret = -4; 
-
 	return ret;
 }
