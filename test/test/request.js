@@ -38,6 +38,13 @@ var Request = function() {
         return response;
       });
     };
+	
+    this.deleteBackend = function(path,status,params,headers) {
+      return chakram.delete(host+path,params,headers).then(function(response) {
+        expect(response).to.have.status(status);
+        return response;
+      });
+    };
 /*
     this.postCompiler =function(path,status,params,headers) {
       return chakram.post(this.config.env[argv.env].compiler+path,params,headers).then(function(response) {

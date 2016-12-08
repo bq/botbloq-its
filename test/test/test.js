@@ -10,7 +10,7 @@ var chakram = require('chakram'),
     request = new Request();
 
 
-var idStudent, idCourse, idLOM,nameCourse; 
+var idStudent, idCourse, idLOM, nameCourse; 
 
 
 describe("Chakram", function(){
@@ -44,7 +44,7 @@ describe("Chakram", function(){
 
 
 	it("Testing to create a new lom", function () {
- 	    var randomLOM = lom.generateRandomLOM();
+ 	    var randomLOM = lom.generateRandomLOM("Zowie charla con Gato","https://www.youtube.com/watch?v=hprno1wRpHc");
     	
 	    return request.postBackend('/loms',200,randomLOM).then(function (response) {
 	    	var message = response.body;
@@ -106,7 +106,7 @@ describe("Chakram", function(){
 					var lom = response2.body._id;
 					return request.putBackend("/students/"+idStudent+ "/course/" + nameCourse+"/lom/" + lom + "/ok", 200)
 					.then(function (response3) {
-						console.log(response3.body) // testing
+						//console.log(response3.body) // testing
 						chakram.wait();
 
 					});
@@ -118,6 +118,95 @@ describe("Chakram", function(){
 		});
 
 	});
- 
+	
+	
+	it("Testing a student complete a Course", function(){
+		var idCourse, idLoms = [], message;
+		var loms = lom.generate3LOMS();
+		
+		// creating 3 loms
+	    return request.postBackend('/loms',200,loms[0]).then(function (response) {
+	    	message = response.body;
+	    	idLoms.push(message.substring(message.lastIndexOf(" ") + 1));
+		    return request.postBackend('/loms',200,loms[1]).then(function (response) {
+		    	message = response.body;
+		    	idLoms.push(message.substring(message.lastIndexOf(" ") + 1));
+			    return request.postBackend('/loms',200,loms[2]).then(function (response) {
+			    	message = response.body;			
+			    	idLoms.push(message.substring(message.lastIndexOf(" ") + 1));
+					
+					// creating a course with 3 lessons and one lom in each lesson
+					var completeCourse = course.generateCompleteCourse(idLoms);
+					return request.postBackend("/courses", 200, completeCourse).then(function (response) { 
+						message = response.body;
+				    	idCourse= message.substring(message.lastIndexOf(" ") + 1);
+						
+						// Testing if the course is in the database
+						return request.getBackend("/courses/" + completeCourse.name, 200).then(function(response2) {
+							expect(response2.body[0].code).to.equal(completeCourse.code);
+							
+							// enrolling the student in the course
+							return request.putBackend('/students/'+ idStudent + "/course/" + completeCourse.name,200)
+							.then(function(response3) {
+								
+								// testing if the student is already enrolled in the course
+								expect(response3.body).to.have.property("idCourse", completeCourse.name);
+					   	    	return request.getBackend('/students/'+ idStudent + "/course/" + completeCourse.name,200)
+								.then(function(response4) {
+									
+									// testing if the system returns the first activity of the course
+									expect(response4.body.general).to.have.property("title", "lom0");
+									var lom = response4.body._id;
+									return request.putBackend("/students/"+idStudent+ "/course/" + completeCourse.name +"/lom/" + lom + "/ok", 200)
+									.then(function (response5) {
+										expect(response5.body.course[1]).to.have.property("status", 1);
+							   	    	return request.getBackend('/students/'+ idStudent + "/course/" + completeCourse.name,200)
+										.then(function(response6) {
+											
+											// testing if the system returns the third activity of the course
+											expect(response6.body.general).to.have.property("title", "lom2");
+											lom = response6.body._id;
+											return request.putBackend("/students/"+idStudent+ "/course/" + completeCourse.name +"/lom/" + lom + "/ok", 200)
+											.then(function (response7) { 
+								   	    		return request.getBackend('/students/'+ idStudent + "/course/" + completeCourse.name,200)
+												.then(function(response8) {
+													
+													// testing if the system recognizes if el student has completed the course
+													expect(response8.body).to.equal('Course finished');
+													chakram.wait();
+												});
+											});
+										});
+									});
+								});
+				
+							});
+						});
+					});
+				});
+			});
+		});
+	});
+	
+	it("Testing to reset the database", function(){
+		return request.deleteBackend('/loms',200).then(function (response) {
+			return request.getBackend('/loms',200).then(function (response1) {
+				expect(response1.body).to.be.empty;
+				
+				return request.deleteBackend('/courses',200).then(function (response2) {
+					return request.getBackend('/courses',200).then(function (response3) {
+					expect(response3.body).to.be.empty;
+					
+						return request.deleteBackend('/students',200).then(function (response4) {
+							return request.getBackend('/students',200).then(function (response5) {		
+							expect(response5.body).to.be.empty;
+							chakram.wait();
+							});
+						});
+					});
+				});
+			});
+		});	
+	});
  	// TODO test reset all
 });
