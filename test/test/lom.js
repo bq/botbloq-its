@@ -1,5 +1,8 @@
 'use strict';
-var mongoose = require('mongoose');
+var mongoose = require('mongoose'),
+lomModel = require('../../app/api/loms/loms.model.js'),
+fs = require('fs');
+
 
 var LOM = function() {
     this.generateRandomLOM = function(titleLOM, urlVideo) {
@@ -47,8 +50,23 @@ var LOM = function() {
 		loms.push(this.generateRandomLOM("sesion10", "https://youtu.be/kV_5hH8IUDQ?list=PL_AaWt7YXUYgKKAeIDcUmSj0f8Z5FwCeu"));
 		
 		return loms;
-	}
-	
+	};
+		
+	this.generateBitbloqLOMS = function(path) {
+		var files = fs.readdirSync(path), loms = [], ret = [];
+		
+		for (var i = 0; i < files.length; i++){
+			var file = files[i];
+			if(file != '.DS_Store'){
+				var index = parseInt(file.split('.', 1)) - 1;
+				loms[index] = new lomModel(require(path + file));
+			}
+		}
+		for(var i = 0; i <= loms.length; i++){
+			if(loms[i] != undefined) ret.push(loms[i]);
+		}
+		return ret;
+	};
 };
 
 module.exports = LOM;
