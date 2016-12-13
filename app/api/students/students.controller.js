@@ -329,7 +329,7 @@ exports.newActivity = function (req, res) {
 										coursed = true;
 										
 										ret = functions.nextActivity(element, course);	
-										console.log("devuelve: " + ret);
+										
 										switch (ret){
 										case -1:
 											activity = 'Course finished';
@@ -365,6 +365,7 @@ exports.newActivity = function (req, res) {
 													} else {
 														if(lom.length > 0) activity = lom[0];
 														else activity = lom;
+														
 														student.save(next);
 													}
 												}
@@ -386,10 +387,10 @@ exports.newActivity = function (req, res) {
 						+ " is not enrolled in the course: " + req.params.idc;
 					} 
 				}
+				course.save();
 			});	
 	    }
-	], function(err, student) {
-		console.log(activity);
+	], function(err, student) {		
 		
 		functions.controlErrors(err, res, activity);
 	});
