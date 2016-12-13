@@ -32,6 +32,11 @@ var Lesson = new Schema({
 			ok: [Number],
 			nok: [Number]
 		},
+		type: {
+			type: String,
+			enum: ["Reinforcement", "Essential", "Extension"],
+			default: "Essential" 
+		},
 		loms : [LOM],
 		_id: false
 });
@@ -49,7 +54,8 @@ var CoursesSchema = new mongoose.Schema({
 	code: { type: String, index: { unique: true } },
 	content: { type: String, trim: true },
 	objectives: [Objective],
-	sections  : [Section]
+	sections  : [Section],
+	history: [String]
 	}, 
 	{ timestamps: true }
 	);
