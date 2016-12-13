@@ -134,16 +134,19 @@ describe("Chakram", function(){
 			    return request.postBackend('/loms',200,loms[2]).then(function (response) {
 			    	message = response.body;			
 			    	idLoms.push(message.substring(message.lastIndexOf(" ") + 1));
+					console.log("Created 3 LOMS");
 					
 					// creating a course with 3 lessons and one lom in each lesson
 					var completeCourse = course.generateCompleteCourse(idLoms);
 					return request.postBackend("/courses", 200, completeCourse).then(function (response) { 
 						message = response.body;
 				    	idCourse= message.substring(message.lastIndexOf(" ") + 1);
+						console.log("Created a course with 3 LOMS");
 						
 						// Testing if the course is in the database
 						return request.getBackend("/courses/" + completeCourse.name, 200).then(function(response2) {
 							expect(response2.body[0].code).to.equal(completeCourse.code);
+							console.log("Tested that the course is in the database");
 							
 							// enrolling the student in the course
 							return request.putBackend('/students/'+ idStudent + "/course/" + completeCourse.name,200)
@@ -151,11 +154,15 @@ describe("Chakram", function(){
 								
 								// testing if the student is already enrolled in the course
 								expect(response3.body).to.have.property("idCourse", completeCourse.name);
+								console.log("Student enrolled in the course");
+								
 					   	    	return request.getBackend('/students/'+ idStudent + "/course/" + completeCourse.name,200)
 								.then(function(response4) {
+									
 									// testing if the system returns the first activity of the course
 									expect(response4.body.general).to.have.property("title", "lom0");
 									var lom = response4.body._id;
+									console.log("The system returns the first activity of the course");
 									
 									return request.putBackend("/students/"+idStudent+ "/course/" + completeCourse.name +"/lom/" + lom + "/ok", 200)
 									.then(function (response5) {
@@ -166,6 +173,8 @@ describe("Chakram", function(){
 											// testing if the system returns the third activity of the course
 											expect(response6.body.general).to.have.property("title", "lom2");
 											lom = response6.body._id;
+											console.log("The system returns the third activity of the course because the first activity completed successfully");
+											
 											return request.putBackend("/students/"+idStudent+ "/course/" + completeCourse.name +"/lom/" + lom + "/ok", 200)
 											.then(function (response7) { 
 								   	    		return request.getBackend('/students/'+ idStudent + "/course/" + completeCourse.name,200)
@@ -173,6 +182,8 @@ describe("Chakram", function(){
 													
 													// testing if the system recognizes if el student has completed the course
 													expect(response8.body).to.equal('Course finished');
+													console.log("The system returns: Course finished");
+													
 													chakram.wait();
 												});
 											});
