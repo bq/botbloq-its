@@ -1,0 +1,33 @@
+{
+	"general": {
+		"id_catalog": "botbloq",	
+		"id_entry": 0,
+		"title": "¡Aprende a pensar como un robot! Los algoritmos",
+		"language": "es",
+		"structure": "atomic",
+		"aggregation_level": 1
+	},
+	"lifecycle": {
+		"version": 1,
+		"state": "final",
+		"contribution_type": "web page",
+		"contribution_entity": "BQ"
+	},
+	"metadata": {
+		"contribution_type": "web page",
+		"contribution_entity": "BQ"
+	},
+	"technical": {
+		"format": "web page",
+		"url": "http://diwo.bq.com/aprende-a-pensar-como-un-robot-los-algoritmos/"
+	},
+	"use": {		
+		"language": "es"		
+	}
+}
+
+
+
+
+
+

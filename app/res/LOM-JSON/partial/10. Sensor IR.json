@@ -1,0 +1,35 @@
+{
+	"general": {
+		"id_catalog": "botbloq",	
+		"id_entry": 0,
+		"title": "O blanco o negro. El sensor infrarrojo.",
+		"language": "es",
+		"structure": "atomic",
+		"aggregation_level": 1
+	},
+	"lifecycle": {
+		"version": 1,
+		"state": "final",
+		"contribution_type": "web page",
+		"contribution_entity": "BQ"
+	},
+	"metadata": {
+		"contribution_type": "web page",
+		"contribution_entity": "BQ"
+	},
+	"technical": {
+		"format": "web page",
+		"url": "http://diwo.bq.com/o-blanco-o-negro-el-sensor-infrarrojo/"
+	},
+	"use": {		
+		"language": "es"		
+	}
+}
+
+
+
+
+
+
+
+

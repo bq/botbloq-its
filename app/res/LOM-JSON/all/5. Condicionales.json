@@ -1,0 +1,36 @@
+{
+	"general": {
+		"id_catalog": "botbloq",	
+		"id_entry": 0,
+		"title": "Si tú me dices ven… lo dejo todo, o no. Las sentencias condicionales y el pulsador.",
+		"language": "es",
+		"structure": "atomic",
+		"aggregation_level": 1
+	},
+	"lifecycle": {
+		"version": 1,
+		"state": "final",
+		"contribution_type": "web page",
+		"contribution_entity": "BQ",
+		"contribution_date": "Date.now"
+	},
+	"metadata": {
+		"contribution_type": "web page",
+		"contribution_entity": "BQ",
+		"contribution_date": "Date.now"
+	},
+	"technical": {
+		"format": "web page",
+		"url": "http://diwo.bq.com/si-tu-me-dices-ven-sentencias-condicionales-y-el-pulsador/"
+	},
+	"use": {		
+		"language": "es"		
+	}
+}
+
+
+
+
+
+
+

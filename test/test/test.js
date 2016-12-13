@@ -153,10 +153,10 @@ describe("Chakram", function(){
 								expect(response3.body).to.have.property("idCourse", completeCourse.name);
 					   	    	return request.getBackend('/students/'+ idStudent + "/course/" + completeCourse.name,200)
 								.then(function(response4) {
-									
 									// testing if the system returns the first activity of the course
 									expect(response4.body.general).to.have.property("title", "lom0");
 									var lom = response4.body._id;
+									
 									return request.putBackend("/students/"+idStudent+ "/course/" + completeCourse.name +"/lom/" + lom + "/ok", 200)
 									.then(function (response5) {
 										expect(response5.body.course[1]).to.have.property("status", 1);

@@ -1,0 +1,32 @@
+{
+	"general": {
+		"id_catalog": "botbloq",	
+		"id_entry": 0,
+		"title": "La potencia sin control… el miniservo",
+		"language": "es",
+		"structure": "atomic",
+		"aggregation_level": 1
+	},
+	"lifecycle": {
+		"version": 1,
+		"state": "final",
+		"contribution_type": "web page",
+		"contribution_entity": "BQ",
+		"contribution_date": "Date.now"
+	},
+	"metadata": {
+		"contribution_type": "web page",
+		"contribution_entity": "BQ",
+		"contribution_date": "Date.now"
+	},
+	"technical": {
+		"format": "web page",
+		"url": "http://diwo.bq.com/la-potencia-sin-control-el-miniservo/"
+	},
+	"use": {		
+		"language": "es"		
+	}
+}
+
+
+
