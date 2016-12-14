@@ -36,7 +36,7 @@ exports.studentFound = function (student, req, res){
 exports.findTypeLesson = function(lessons, type, course){
 	var ret = [], option;
 	for(var i = 0; i <= lessons.length; i++){
-		
+				
 		if(course.sections[0].lessons[lessons[i]] != undefined && course.sections[0].lessons[lessons[i]].type == type){
 			ret.push(course.sections[0].lessons[lessons[i]]);
 		}
