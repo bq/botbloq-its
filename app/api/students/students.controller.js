@@ -230,7 +230,8 @@ exports.unenrollment = function (req, res) {
 }
 
 /**
- * Updates the status of the lom for a student and a course
+ *  According receives an "ok" or "nok" activity will be
+ *  correct or incorrectly completed, respectively.
  */
 exports.updateActivity = function (req, res) {
 	var ret;
@@ -295,7 +296,9 @@ exports.updateActivity = function (req, res) {
 };
 
 /**
- * Returns a new lom for a student and a course
+ *  This function returns the next activity of the course in which
+ *  the student is enrolled, depending on their previous activity
+ *  and the result of the same.
  */
 exports.newActivity = function (req, res) {
 	
@@ -328,6 +331,11 @@ exports.newActivity = function (req, res) {
 										element.active = 1;
 										coursed = true;
 										
+										/** 
+										 *  By "next Activity" function calculate the next activity,
+										 *  this function is explained in "students.functions.js".
+										 */
+										
 										ret = functions.nextActivity(element, course);	
 										
 										switch (ret){
@@ -353,6 +361,12 @@ exports.newActivity = function (req, res) {
 											break;
 										default:	
 											element = ret;
+											
+											/**
+											 *  Once the following activity is obtained, the function 
+											 *  returns the LOM information corresponding to that activity.
+											 */
+											
 											LOMS.find({_id: element.idLom}, function(err, lom) {
 												
 											    if (err) {
