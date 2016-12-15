@@ -24,10 +24,10 @@ exports.studentFound = function (student, req, res){
 	else ret = req.params.id;
 	
 	if(!student)
-		res.end("The student with id: " + ret + " is not registrated");
+		res.end('The student with id: ' + ret + ' is not registrated');
 	else {
 		if(student.active == 0)
-			res.end("The student with id: " + ret + " is not activated");
+			res.end('The student with id: ' + ret + ' is not activated');
 		else bool = true;
 	}
 	return bool;
@@ -38,7 +38,7 @@ exports.studentFound = function (student, req, res){
  *  and a course, and returns a list with the lessons included in the received 
  *  array and which are of the indicated type.
  * 
- *  The type of lesson can be "Essential", "Reinforcement" and "Extension", depending on their content.
+ *  The type of lesson can be 'Essential', 'Reinforcement' and 'Extension', depending on their content.
  */
 
 exports.findTypeLesson = function(lessons, type, course){
@@ -63,23 +63,23 @@ exports.selectActivity = function(myLesson, course, status){
 	switch(myLesson.type){
 		
 	/**
-	 *  If the activity is of type "Essential":
-	 *   - with "ok" status: first returns the activity of type "Reinforcement", 
-	 *     and if there is no, returns the following "Essential".
+	 *  If the activity is of type 'Essential':
+	 *   - with 'ok' status: first returns the activity of type 'Reinforcement', 
+	 *     and if there is no, returns the following 'Essential'.
 	 *
-	 *   - with status "nok": first returns the activity of type "Reinforcement", 
-	 * 	   and if there is no, returns the same "Essential" activity.
+	 *   - with status 'nok': first returns the activity of type 'Reinforcement', 
+	 * 	   and if there is no, returns the same 'Essential' activity.
 	 */
 		
-	case "Essential":
-		posibilities = this.findTypeLesson(myLesson.learning_path, "Reinforcement", course);
+	case 'Essential':
+		posibilities = this.findTypeLesson(myLesson.learning_path, 'Reinforcement', course);
 		if (posibilities.length > 0){
 			random = Math.floor(Math.random() * posibilities.length);
 			ret = posibilities[random];
 		} else {
 			if(status == -1) ret = myLesson;
 			else {
-				posibilities = this.findTypeLesson(myLesson.learning_path, "Essential", course);
+				posibilities = this.findTypeLesson(myLesson.learning_path, 'Essential', course);
 				if (posibilities.length > 0){
 					random = Math.floor(Math.random() * posibilities.length);
 					ret = posibilities[random];
@@ -89,34 +89,34 @@ exports.selectActivity = function(myLesson, course, status){
 		break;
 		
 	/**
-	 *  If the activity is of type "Reinforcement":
-	 *   - with "ok" status: first returns the activity of type "Extension", 
-	 *     and if there is no, returns the following "Essential".
+	 *  If the activity is of type 'Reinforcement':
+	 *   - with 'ok' status: first returns the activity of type 'Extension', 
+	 *     and if there is no, returns the following 'Essential'.
 	 *
-     *   - with status "nok": first returns the activity of type "Reinforcement", 
-	 * 	   and if there is no, returns the activity of type "Essential" above.
+     *   - with status 'nok': first returns the activity of type 'Reinforcement', 
+	 * 	   and if there is no, returns the activity of type 'Essential' above.
 	 */
 		
-	case "Reinforcement":
+	case 'Reinforcement':
 		if(status == 1){
-			posibilities = this.findTypeLesson(myLesson.learning_path, "Extension", course);
+			posibilities = this.findTypeLesson(myLesson.learning_path, 'Extension', course);
 			if (posibilities.length > 0){
 				random = Math.floor(Math.random() * posibilities.length);
 				ret = posibilities[random];
 			} else {
-				posibilities = this.findTypeLesson(myLesson.learning_path, "Essential", course);
+				posibilities = this.findTypeLesson(myLesson.learning_path, 'Essential', course);
 				if (posibilities.length > 0){
 					random = Math.floor(Math.random() * posibilities.length);
 					ret = posibilities[random];
 				} else ret = -1;
 			}
 		} else {
-			posibilities = this.findTypeLesson(myLesson.learning_path, "Reinforcement", course);
+			posibilities = this.findTypeLesson(myLesson.learning_path, 'Reinforcement', course);
 			if (posibilities.length > 0){
 				random = Math.floor(Math.random() * posibilities.length);
 				ret = posibilities[random];
 			} else {
-				posibilities = this.findTypeLesson(course.history, "Essential", course);
+				posibilities = this.findTypeLesson(course.history, 'Essential', course);
 				if (posibilities.length > 0)
 					ret = posibilities[posibilities.length-1];
 				else ret = -1;
@@ -125,12 +125,12 @@ exports.selectActivity = function(myLesson, course, status){
 		break;
 		
    	/**
-   	 *  If the activity is of type "Extension":
-   	 *  Both ok and nok returns the following "Essential" activity. 
+   	 *  If the activity is of type 'Extension':
+   	 *  Both ok and nok returns the following 'Essential' activity. 
    	 */
 		
-	case "Extension":
-		posibilities = this.findTypeLesson(myLesson.learning_path, "Essential", course);
+	case 'Extension':
+		posibilities = this.findTypeLesson(myLesson.learning_path, 'Essential', course);
 		if (posibilities.length > 0){
 			random = Math.floor(Math.random() * posibilities.length);
 			ret = posibilities[random];
@@ -186,7 +186,7 @@ exports.nextActivity = function (element, course){
 				
 				/**
 				 *  If the course is sequential only the following activity is returned if 
-				 *  the previous one was done correctly and the state is "ok", if not, 
+				 *  the previous one was done correctly and the state is 'ok', if not, 
 				 *  the same activity will be returned.
 				 */
 				

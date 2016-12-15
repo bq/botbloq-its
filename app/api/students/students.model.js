@@ -23,9 +23,9 @@ var identificationSchema = new Schema({
         type: String,
 		required: false,
 		enum: [
-			"beginner",
-			"medium",
-			"advanced"
+			'beginner',
+			'medium',
+			'advanced'
 		]
     },
 	_id: false
@@ -40,32 +40,32 @@ var learningStyleSchema = new Schema({
         type: String,
 		required: false,
 		enum:[
-			"sequential",
-			"global"
+			'sequential',
+			'global'
 		]
     },
     input: {
         type: String,
 		required: false,
 		enum:[
-			"visual",
-			"verbal"
+			'visual',
+			'verbal'
 		]
     },
     perception: {
         type: String,
 		required: false,
 		enum: [
-			"sensing",
-			"intuitive"
+			'sensing',
+			'intuitive'
 		]
     },
     processing: {
         type: String,
 		required: false,
 		enum: [
-			"active",
-			"reflexive"
+			'active',
+			'reflexive'
 		]
     },
 	_id: false

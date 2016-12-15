@@ -4,7 +4,7 @@ var LOMS = require('./loms.model.js'),
     config = require('../../res/config.js'),
     async = require('async'),
     _ = require('lodash'),
-	fs = require("fs"), 
+	fs = require('fs'), 
 	functions = require('./loms.functions.js'); 
 
 //ALL LOMS
@@ -64,7 +64,7 @@ exports.update = function (req, res) {
 	async.waterfall([
 	    LOMS.findById.bind(LOMS, req.params.id),
 	    function(lom, next) {
-	        if(!lom) res.status(404).send("The lom with id: " + req.params.id + " is not registrated");
+	        if(!lom) res.status(404).send('The lom with id: ' + req.params.id + ' is not registrated');
 			else {
 				lom = _.extend(lom, req.body);
 	       		lom.save(next);
@@ -83,7 +83,7 @@ exports.remove = function (req, res) {
 	    LOMS.findById.bind(LOMS, req.params.id),
 	    function(lom, next) {
 			if(!lom)
-				res.end("The lom with id: " + req.params.id + " is not registrated");
+				res.end('The lom with id: ' + req.params.id + ' is not registrated');
 		    else{
 				LOMS.remove(lom, function (err, resp) {
 			        if (err) res.sendStatus(err.code);
@@ -103,10 +103,10 @@ exports.uploadFile =  function (req, res) {
 	LOMS.findById(req.params.id, function(err, lom){
 		if(!lom) res.end('The lom with id: '+  req.params.id +' is not registrated');
 		else {
-			fs.stat(__dirname + "/../../res/files/" + req.params.id, function(err, stats){
-				if(err) fs.mkdir(__dirname + "/../../res/files/" + req.params.id);
+			fs.stat(__dirname + '/../../res/files/' + req.params.id, function(err, stats){
+				if(err) fs.mkdir(__dirname + '/../../res/files/' + req.params.id);
 			});
-			var file = __dirname + "/../../res/files/" + req.params.id + "/" + req.file.originalname;
+			var file = __dirname + '/../../res/files/' + req.params.id + '/' + req.file.originalname;
 	
 			fs.readFile( req.file.path, function (err, data) {
 				if(!data) res.end('No data to upload');
@@ -134,14 +134,13 @@ exports.uploadFile =  function (req, res) {
  * Downloads a file of a lom
  */
 exports.downloadFile = function(req, res, next){
-  var file = req.params.file
-    , path = __dirname + "/../../res/files/" + req.params.id + '/' + file;
+	var file = req.params.file;
+	var path = __dirname + '/../../res/files/' + req.params.id + '/' + file;
 
   res.download(path, function(err){
 	  if(err){
 		  console.error( err );
-		  res.status(404).send(err);
-		  res.end('Sorry, the file: '+  file +' couldn\'t be downloaded');
+		  res.status(404).send('Sorry, the file: '+  file +' couldn\'t be downloaded');
 	  } else {
 		  res.end('File: '+  file +' download successfully');	
 	  }

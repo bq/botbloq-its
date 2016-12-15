@@ -121,20 +121,20 @@ exports.init = function (req, res) {
 				var answers = req.body.answers;
 				for (var i = 0; i < answers.length; i++) { 
 					switch(answers[i].id_question) {
-					case "ls_comp":
+					case 'ls_comp':
 		    			student.learningStyle.comprehension = answers[i].value;
 		        		break;
-		    		case "ls_input":
+		    		case 'ls_input':
 		   				student.learningStyle.input = answers[i].value;
 		     			break;
-		    		case "ls_per":
+		    		case 'ls_per':
 		    			student.learningStyle.perception = answers[i].value;
 		   			 break;
-		   			case "ls_proc":
+		   			case 'ls_proc':
 		   				student.learningStyle.processing = answers[i].value;
 		    			break;
 		   			default:
-		   			 	res.end("The id_question: " + answers[i].id_question + " is not correct")
+		   			 	res.end('The id_question: ' + answers[i].id_question + ' is not correct')
 					}
 				}
 				student.save(next);
@@ -169,7 +169,7 @@ exports.enrollment = function (req, res) {
 							student.course.find(function(element ,index , array){
 								if(element.idCourse == req.params.idc){
 									if (element.active == 1) 
-										activity = 'The student: ' + student._id + " is already enrolled in the course: " + req.params.idc;
+										activity = 'The student: ' + student._id + ' is already enrolled in the course: ' + req.params.idc;
 									else 
 										element.active = 1;
 									activity = element;
@@ -177,7 +177,7 @@ exports.enrollment = function (req, res) {
 								}
 							});
 							if(!coursed){ 
-								newCourse = {idCourse: course[0].name, idSection: "", idLesson: "", idLom: "", status: 0, active: -1};
+								newCourse = {idCourse: course[0].name, idSection: '', idLesson: '', idLom: '', status: 0, active: -1};
 								student.course.push(newCourse);
 								activity = newCourse;
 							}
@@ -219,7 +219,7 @@ exports.unenrollment = function (req, res) {
 							}
 						});
 						if(!coursed) res.end('The student: ' + student._id 
-							+ " is not enrolled in the course: " + req.params.idc);
+							+ ' is not enrolled in the course: ' + req.params.idc);
 					}
 			    }
 			});	
@@ -230,7 +230,7 @@ exports.unenrollment = function (req, res) {
 }
 
 /**
- *  According receives an "ok" or "nok" activity will be
+ *  According receives an 'ok' or 'nok' activity will be
  *  correct or incorrectly completed, respectively.
  */
 exports.updateActivity = function (req, res) {
@@ -253,19 +253,19 @@ exports.updateActivity = function (req, res) {
 									coursed = true;
 									if (element.idLom == req.params.idl){
 									
-										if (req.params.status == "ok"){
+										if (req.params.status == 'ok'){
 											element.status = 1;
 											ret = student;
 											res.status(200);
 										} 
 										else {
-											 if (req.params.status == "nok"){
+											 if (req.params.status == 'nok'){
 											 	element.status = -1;
 												ret = student;
 												res.status(200);	
 											 } 											
 											 else {
-											 	ret = "the status: " + req.params.status + " is not correct";
+											 	ret = 'the status: ' + req.params.status + ' is not correct';
 												res.status(400); 
 											 }
 										 }
@@ -296,18 +296,18 @@ exports.updateActivity = function (req, res) {
 										 console.log(student.activity_log[lengthAct-1]); 									
 										student.save(next);
 									} else{
-										ret = "The student: " + student._id + " does not have the lom: " + req.params.idl;
+										ret = 'The student: ' + student._id + ' does not have the lom: ' + req.params.idl;
 										res.status(404);
 									} 
 								} else{
-									ret = "The student: " + student._id + " is not activated in the course: " + req.params.idc;
+									ret = 'The student: ' + student._id + ' is not activated in the course: ' + req.params.idc;
 									res.status(403);
 								} 
 							}
 						});
 						
 						if(!coursed){
-							ret = "The student: " + student._id + " is not enrolled in the course: " + req.params.idc;
+							ret = 'The student: ' + student._id + ' is not enrolled in the course: ' + req.params.idc;
 							res.status(400);
 						} 
 					} 
@@ -356,8 +356,8 @@ exports.newActivity = function (req, res) {
 										coursed = true;
 										
 										/** 
-										 *  By "next Activity" function calculate the next activity,
-										 *  this function is explained in "students.functions.js".
+										 *  By 'next Activity' function calculate the next activity,
+										 *  this function is explained in 'students.functions.js'.
 										 */
 										
 										ret = functions.nextActivity(element, course);	
@@ -415,14 +415,14 @@ exports.newActivity = function (req, res) {
 							});							
 						} else{
 							res.status(403);
-							activity = "The student: " + student._id 
-							+ " is not activated in the course: " + req.params.idc;	
+							activity = 'The student: ' + student._id 
+							+ ' is not activated in the course: ' + req.params.idc;	
 						} 			
 					}
 					if(!coursed){
 						res.status(404);
-						activity = "The student: " + student._id 
-						+ " is not enrolled in the course: " + req.params.idc;
+						activity = 'The student: ' + student._id 
+						+ ' is not enrolled in the course: ' + req.params.idc;
 					} 
 				}
 				course.save();
@@ -443,7 +443,7 @@ exports.remove = function (req, res) {
 	    Students.findById.bind(Students, req.params.id),
 	    function(student, next) {
 			if(!student)
-				res.end("The student with id: " + req.params.id + " is not registrated");
+				res.end('The student with id: ' + req.params.id + ' is not registrated');
 			else{
 			    Students.remove(student, function (err, resp) {
 			        if (err) res.sendStatus(err.code);

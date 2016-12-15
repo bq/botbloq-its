@@ -25,22 +25,22 @@ exports.all_loms = function (req, res) {
 	var courseId = req.params.course_id;
 	var sectionId = req.params.section_id;
 	var lessonId = req.params.lesson_id;
-	Courses.findOne({"name" : courseId}, function(err, course) {
+	Courses.findOne({'name' : courseId}, function(err, course) {
         if (err)
 			res.status(500).send(err);
 		else{
 			if (!course)
-				res.status(404).send("The course with id: " + courseId + " is not registrated"); 
+				res.status(404).send('The course with id: ' + courseId + ' is not registrated'); 
 			else{
 				var inds = CoursesFunctions.find_section(sectionId,course.sections);
 				if (inds < 0)
-					res.status(404).send("The section with id : " + sectionId +
-					" has not been found un the course with id: " + courseId);
+					res.status(404).send('The section with id : ' + sectionId +
+					' has not been found un the course with id: ' + courseId);
 				else { // section exists
 					var indl = CoursesFunctions.find_section(lessonId,course.sections[inds].lessons);
 					if (indl < 0) 
-						res.status(404).send("The lesson with id : " + lessonId +
-						" has not been found un the section with id: " + sectionId);
+						res.status(404).send('The lesson with id : ' + lessonId +
+						' has not been found un the section with id: ' + sectionId);
 					else {
 						var lesson = course.sections[inds].lessons[indl];
 						res.status(200).send(lesson.loms);
@@ -61,28 +61,28 @@ exports.get_lom = function (req, res) {
 	var lessonId = req.params.lesson_id;
 	var lomId = req.params.lom_id;
 	
-	Courses.findOne({"name" : courseId}, function(err, course) {
+	Courses.findOne({'name' : courseId}, function(err, course) {
         if (err)
 			res.status(500).send(err); 
 		else{
 			if (!course) 
-				res.status(404).send("The course with id: " + courseId + " is not registrated"); 
+				res.status(404).send('The course with id: ' + courseId + ' is not registrated'); 
 			else { // course exists
 				var inds = CoursesFunctions.find_section(sectionId,course.sections);
 				if (inds < 0)
-					res.status(404).send("The section with id : " + sectionId +
-					" has not been found un the course with id: " + courseId);
+					res.status(404).send('The section with id : ' + sectionId +
+					' has not been found un the course with id: ' + courseId);
 				else { // section exists
 					var indl = CoursesFunctions.find_lesson(lessonId,course.sections[inds].lessons);
 					if (indl < 0)
-						res.status(404).send("The lesson with id : " + lessonId +
-						" has not been found un the section with id: " + sectionId);
+						res.status(404).send('The lesson with id : ' + lessonId +
+						' has not been found un the section with id: ' + sectionId);
 					else { // lesson exists					
 						var lesson = course.sections[inds].lessons[indl];
 						var ind = CoursesFunctions.find_lom(lomId,lesson.los);
 						if (ind < 0)
-							res.status(404).send("The lom with id : " + lomId +
-							" has not been found un the lesson with id: " + lessonId);
+							res.status(404).send('The lom with id : ' + lomId +
+							' has not been found un the lesson with id: ' + lessonId);
 						else //lom exists
 							res.status(200).send(lesson.los[ind]);
 					}			
@@ -102,10 +102,10 @@ exports.get_lom = function (req, res) {
 // If lom doesn't exist previously, it creates the new lom
 // Example: 
 // {
-	// "course":"Course1",
-	// "section":"Section2",
-	// "lesson":"Lesson1.2.3",
-	// "lom_id": "lom1.2.3.1"
+	// 'course':'Course1',
+	// 'section':'Section2',
+	// 'lesson':'Lesson1.2.3',
+	// 'lom_id': 'lom1.2.3.1'
 // }
 
 exports.assign_lom = function(req, res) {	
@@ -114,22 +114,22 @@ exports.assign_lom = function(req, res) {
 		lessonId = req.body.lesson,
 		lomId = req.body.lom_id;
 		
-	Courses.findOne({"name" : courseId}, function (err, course){
+	Courses.findOne({'name' : courseId}, function (err, course){
 		if (err)
 			res.status(500).send(err);
 		else{
 			if (!course)
-				res.status(404).send("The course with id: " + courseId + " is not registrated");
+				res.status(404).send('The course with id: ' + courseId + ' is not registrated');
 			else {
 				var inds = CoursesFunctions.find_section(sectionId,course.sections);
 				if (inds < 0)
-					res.status(404).send("The section with id : " + sectionId +
-					" has not been found un the course with id: " + courseId);
+					res.status(404).send('The section with id : ' + sectionId +
+					' has not been found un the course with id: ' + courseId);
 				else {					
 					var indl = CoursesFunctions.find_lesson(lessonId,course.sections[inds].lessons);
 					if ( indl < 0 )
-						res.status(404).send("The lesson with id : " + lessonId +
-						" has not been found un the section with id: " + sectionId);
+						res.status(404).send('The lesson with id : ' + lessonId +
+						' has not been found un the section with id: ' + sectionId);
 					else {
 						var lessons = course.sections[inds].lessons;							
 						var ind = CoursesFunctions.find_lom(lomId,lessons[indl].loms);
@@ -144,8 +144,8 @@ exports.assign_lom = function(req, res) {
 										res.sendStatus(404).send('The lom with id: ' + lomId + ' is not registrated');
 									else {
 										var loms = lessons[indl].loms;
-										loms[loms.length] = {"lom_id":lomId};
-										var err1 = controller.update_course_field(courseId,"sections",course.sections);
+										loms[loms.length] = {'lom_id':lomId};
+										var err1 = controller.update_course_field(courseId,'sections',course.sections);
 										if (err1)
 											res.status(400).send('error while updating '+err);							
 										else
@@ -169,10 +169,10 @@ exports.assign_lom = function(req, res) {
 // If lom does not exist, it considers the lom deleted (i.e. not an error) 
 // Example: 
 // {
-	// "course":"Course1",
-	// "section":"Section2",
-	// "lesson":"Lesson1.2.3",
-	// "lom_id": "lom1.2.3.1"
+	// 'course':'Course1',
+	// 'section':'Section2',
+	// 'lesson':'Lesson1.2.3',
+	// 'lom_id': 'lom1.2.3.1'
 // }
 
 exports.delete_lom = function(req, res) {	
@@ -181,32 +181,32 @@ exports.delete_lom = function(req, res) {
 		lessonId = req.body.lesson,
 		lomId = req.body.lom_id;
 		
-	Courses.findOne({"name" : courseId}, function (err, course){
+	Courses.findOne({'name' : courseId}, function (err, course){
 		if (err)
 			res.status(500).send(err);
 		else{
 			if (!course)
-				res.status(404).send("The course with id: " + courseId + " is not registrated");
+				res.status(404).send('The course with id: ' + courseId + ' is not registrated');
 			else {
 				var inds = CoursesFunctions.find_section(sectionId,course.sections);
 				if (inds < 0)
-					res.status(404).send("The section with id : " + sectionId +
-					" has not been found un the course with id: " + courseId);
+					res.status(404).send('The section with id : ' + sectionId +
+					' has not been found un the course with id: ' + courseId);
 				else {					
 					var indl = CoursesFunctions.find_lesson(lessonId,course.sections[inds].lessons);
 					if (indl < 0)
-						res.status(404).send("The lesson with id : " + lessonId +
-						" has not been found un the section with id: " + sectionId);
+						res.status(404).send('The lesson with id : ' + lessonId +
+						' has not been found un the section with id: ' + sectionId);
 					else {
 						var lessons = course.sections[inds].lessons;							
 						var ind = CoursesFunctions.find_lom(lomId,lessons[indl].los);
 						if (ind < 0)
-							res.status(404).send("The lom with id : " + lomId +
-							" has not been found un the lesson with id: " + lessonId);
+							res.status(404).send('The lom with id : ' + lomId +
+							' has not been found un the lesson with id: ' + lessonId);
 						else {
 							var loms = lessons[indl].loms;
 							loms.splice(ind,1);
-							var err1 = controller.update_course_field(courseId,"sections",course.sections);
+							var err1 = controller.update_course_field(courseId,'sections',course.sections);
 							if (err1)
 								res.status(400).send('error while updating '+err);							
 							else 

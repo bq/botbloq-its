@@ -39,7 +39,7 @@ exports.all = function (req, res)
 // If there are none with this name, then it returns an empty list []
 exports.get = function (req, res){
 	var courseId = req.params.id;
-	Courses.find({"name" : courseId}, function(err, course) {
+	Courses.find({'name' : courseId}, function(err, course) {
         if (err) 
 			res.status(404).send(err);
 		else {
@@ -60,7 +60,7 @@ exports.remove = function(req,res) {
 	    Courses.findById.bind(Courses, req.params.id),
 	    function(course, next) {
 			if(!course)
-				res.status(404).send("The course with id: " + req.params.id + " is not registrated");
+				res.status(404).send('The course with id: ' + req.params.id + ' is not registrated');
 		    else{
 				Courses.remove(course, function (err, resp) {
 			        if (err)
@@ -113,7 +113,7 @@ exports.update = function(req, res) {
 	    Courses.findById.bind(Courses, req.params.id),
 	    function(course, next) {
 	        if(!course)
-				res.status(404).send("The course with id: " + req.params.id + " is not registrated");
+				res.status(404).send('The course with id: ' + req.params.id + ' is not registrated');
 			else {
 				course = _.extend(course, req.body);
 	       		course.save(next);
@@ -129,7 +129,7 @@ exports.update = function(req, res) {
 };
 
 var update_field1 = function(courseId,field,value){
-	Courses.findOne({"name" : courseId}, 
+	Courses.findOne({'name' : courseId}, 
 		function (err, course) {
 			course[field] = value;
 			course.save(function (err) {return err});

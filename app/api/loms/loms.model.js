@@ -17,15 +17,15 @@ var generalSchema = new Schema({
 	language: {
 		type: String,
 		enum: [
-			"es",
-			"en"
+			'es',
+			'en'
 		]
 	},
 	structure: {
 		type: String,
 		enum: [
-			"atomic",
-			"complex"
+			'atomic',
+			'complex'
 		]
 	},
 	aggregation_level: {
@@ -58,10 +58,10 @@ var lifecycleSchema = new Schema({
 	state: {
 		type: String,
 		enum: [
-			"draft",
-			"final"
+			'draft',
+			'final'
 		],
-		default: "final"
+		default: 'final'
 	},
 	contribution_type: {
 		type: String

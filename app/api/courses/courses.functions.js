@@ -35,7 +35,7 @@ Find the first course with the name indicated. Then
 update the indicated field with the value 
 */
 exports.update_field1 = function(courseId,field,value){
-	Courses.findOne({"name" : courseId}, 
+	Courses.findOne({'name' : courseId}, 
 		function (err, course) {
 			course[field] = value;
 			course.save(function (err) {return err});

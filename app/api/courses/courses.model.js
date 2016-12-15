@@ -11,15 +11,15 @@ var Objective = new Schema({
 	description: String,
 	bloom_domain: {
 		type:String,
-		enum:["cognitive", "affective", "psychomotor"]
+		enum:['cognitive', 'affective', 'psychomotor']
 	},		
 	domain: {
 		type:String,
 		enum:[
-		"Applying", "Analyzing", "Synthesizing", "Evaluating",
-		"Receiving", "Responding", "Valuing", "Organizing", "Characterizing",
-		"Perception", "Set", "Guided response", "Mechanism", "Complex overt response", 
-				"Adaptation", "Origination"
+		'Applying', 'Analyzing', 'Synthesizing', 'Evaluating',
+		'Receiving', 'Responding', 'Valuing', 'Organizing', 'Characterizing',
+		'Perception', 'Set', 'Guided response', 'Mechanism', 'Complex overt response', 
+				'Adaptation', 'Origination'
 		]
 	}
 });
@@ -31,8 +31,8 @@ var Lesson = new Schema({
 		learning_path: [Number],
 		type: {
 			type: String,
-			enum: ["Reinforcement", "Essential", "Extension"],
-			default: "Essential" 
+			enum: ['Reinforcement', 'Essential', 'Extension'],
+			default: 'Essential' 
 		},
 		loms : [LOM],
 		_id: false

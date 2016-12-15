@@ -15,19 +15,19 @@ var idStudent, idCourse, idLOM, nameCourse, idLoms = [], bitbloqCourse;
 
 
 	
-describe("Chakram", function(){
+describe('Chakram', function(){
 
-	it("Testing to create a new student", function () {
+	it('Testing to create a new student', function () {
  	    var randomStudent = student.generateRandomStudent();
     	// create student
 	    return request.postBackend('/students',200,randomStudent).then(function (response) {
 	    	idStudent = response.body.id_student;
 	    	var answer = student.generateAnswer();
 	    	// update learning style
-	    	return request.postBackend("/students/" + idStudent + "/init", 200,answer ).then(function (response1) {
+	    	return request.postBackend('/students/' + idStudent + '/init', 200,answer ).then(function (response1) {
 				// data verification
-		    	return request.getBackend("/students/" + idStudent, 200).then(function (response2) {
-		    		expect(response2.body.learningStyle.processing).to.equal("active");
+		    	return request.getBackend('/students/' + idStudent, 200).then(function (response2) {
+		    		expect(response2.body.learningStyle.processing).to.equal('active');
 	 	    		expect(response2.body.identification.name).to.equal(randomStudent.identification.name);
 	 	    		chakram.wait();
  	    
@@ -38,42 +38,42 @@ describe("Chakram", function(){
  	    });
 	 });
 	 
-  	it("Testing to create the bitbloq2 LOMS ", function(){
-  		var message, path = "../../app/res/LOM-JSON/partial/";
+  	it('Testing to create the bitbloq2 LOMS ', function(){
+  		var message, path = '../../app/res/LOM-JSON/partial/';
   		var loms = lom.generateBitbloqLOMS(path);
 	    return request.postBackend('/loms',200,loms[0]).then(function (response) {
   	    	message = response.body;
-  	    	idLoms.push(message.substring(message.lastIndexOf(" ") + 1));
+  	    	idLoms.push(message.substring(message.lastIndexOf(' ') + 1));
  		    return request.postBackend('/loms',200,loms[1]).then(function (response) {
  	 	    	message = response.body;
- 	 	    	idLoms.push(message.substring(message.lastIndexOf(" ") + 1));
+ 	 	    	idLoms.push(message.substring(message.lastIndexOf(' ') + 1));
  			    return request.postBackend('/loms',200,loms[2]).then(function (response) {
  		 	    	message = response.body;
- 		 	    	idLoms.push(message.substring(message.lastIndexOf(" ") + 1));
+ 		 	    	idLoms.push(message.substring(message.lastIndexOf(' ') + 1));
  				    return request.postBackend('/loms',200,loms[3]).then(function (response) {
  			 	    	message = response.body;
- 			 	    	idLoms.push(message.substring(message.lastIndexOf(" ") + 1));
+ 			 	    	idLoms.push(message.substring(message.lastIndexOf(' ') + 1));
  					    return request.postBackend('/loms',200,loms[4]).then(function (response) {
  				 	    	message = response.body;
- 				 	    	idLoms.push(message.substring(message.lastIndexOf(" ") + 1));
+ 				 	    	idLoms.push(message.substring(message.lastIndexOf(' ') + 1));
  						    return request.postBackend('/loms',200,loms[5]).then(function (response) {
  					 	    	message = response.body;
- 					 	    	idLoms.push(message.substring(message.lastIndexOf(" ") + 1));
+ 					 	    	idLoms.push(message.substring(message.lastIndexOf(' ') + 1));
  							    return request.postBackend('/loms',200,loms[6]).then(function (response) {
  						 	    	message = response.body;
- 						 	    	idLoms.push(message.substring(message.lastIndexOf(" ") + 1));
+ 						 	    	idLoms.push(message.substring(message.lastIndexOf(' ') + 1));
  								    return request.postBackend('/loms',200,loms[7]).then(function (response) {
  							 	    	message = response.body;
- 							 	    	idLoms.push(message.substring(message.lastIndexOf(" ") + 1));
+ 							 	    	idLoms.push(message.substring(message.lastIndexOf(' ') + 1));
  									    return request.postBackend('/loms',200,loms[8]).then(function (response) {
  								 	    	message = response.body;											
- 								 	    	idLoms.push(message.substring(message.lastIndexOf(" ") + 1));
+ 								 	    	idLoms.push(message.substring(message.lastIndexOf(' ') + 1));
  										    return request.postBackend('/loms',200,loms[9]).then(function (response) {
  									 	    	message = response.body;
- 									 	    	idLoms.push(message.substring(message.lastIndexOf(" ") + 1));
+ 									 	    	idLoms.push(message.substring(message.lastIndexOf(' ') + 1));
  											    return request.postBackend('/loms',200,loms[10]).then(function (response) {
  										 	    	message = response.body;
- 										 	    	idLoms.push(message.substring(message.lastIndexOf(" ") + 1));
+ 										 	    	idLoms.push(message.substring(message.lastIndexOf(' ') + 1));
 													chakram.wait();
  												});
  											});
@@ -88,124 +88,124 @@ describe("Chakram", function(){
  		});
  	});
 	
- 	it("Testing to create Bitbloq course and enroll a student", function() {
+ 	it('Testing to create Bitbloq course and enroll a student', function() {
  		var message;		
  		bitbloqCourse = course.generateBitbloqCourse(idLoms);
- 		return request.postBackend("/courses", 200, bitbloqCourse).then(function (response) { 
+ 		return request.postBackend('/courses', 200, bitbloqCourse).then(function (response) { 
  			message = response.body;
- 	    	idCourse= message.substring(message.lastIndexOf(" ") + 1);
+ 	    	idCourse= message.substring(message.lastIndexOf(' ') + 1);
 			
  			// Testing if the course is in the database
- 			return request.getBackend("/courses/" + bitbloqCourse.name, 200).then(function(response2) {
+ 			return request.getBackend('/courses/' + bitbloqCourse.name, 200).then(function(response2) {
  				expect(response2.body[0].code).to.equal(bitbloqCourse.code);
 				
  				// enrolling the student in the course
- 				return request.putBackend('/students/'+ idStudent + "/course/" + bitbloqCourse.name,200)
+ 				return request.putBackend('/students/'+ idStudent + '/course/' + bitbloqCourse.name,200)
  				.then(function(response3) {
 		
  					// testing if the student is already enrolled in the course
- 					expect(response3.body).to.have.property("idCourse", bitbloqCourse.name);
+ 					expect(response3.body).to.have.property('idCourse', bitbloqCourse.name);
  					chakram.wait();
  				});
  			});
  		});
  	});
 	
-	it("Testing the sequential operation of the Bitbloq course", function() {
+	it('Testing the sequential operation of the Bitbloq course', function() {
 		var lom;
-    	return request.getBackend('/students/'+ idStudent + "/course/" + bitbloqCourse.name,200)
+    	return request.getBackend('/students/'+ idStudent + '/course/' + bitbloqCourse.name,200)
 		.then(function(response) {
-			expect(response.body.general).to.have.property("title", "Antes de empezar con Bitbloq 2");
+			expect(response.body.general).to.have.property('title', 'Antes de empezar con Bitbloq 2');
 			lom = response.body._id;
-			console.log("The system returns the first lesson of the course: 1. Antes de empezar");
-			return request.putBackend("/students/"+idStudent+ "/course/" + bitbloqCourse.name +"/lom/" + lom + "/ok", 200)
+			console.log('The system returns the first lesson of the course: 1. Antes de empezar');
+			return request.putBackend('/students/'+idStudent+ '/course/' + bitbloqCourse.name +'/lom/' + lom + '/ok', 200)
 			.then(function (response2) {
-				expect(response2.body.course[0]).to.have.property("status", 1);
-		    	return request.getBackend('/students/'+ idStudent + "/course/" + bitbloqCourse.name,200)
+				expect(response2.body.course[0]).to.have.property('status', 1);
+		    	return request.getBackend('/students/'+ idStudent + '/course/' + bitbloqCourse.name,200)
 				.then(function(response) {
-					expect(response.body.general).to.have.property("title", "Conociendo bitbloq 2");
+					expect(response.body.general).to.have.property('title', 'Conociendo bitbloq 2');
 					lom = response.body._id;
-					console.log("The system returns the second lesson of the course: 2. Conociendo el entorno");
+					console.log('The system returns the second lesson of the course: 2. Conociendo el entorno');
 					
-					return request.putBackend("/students/"+idStudent+ "/course/" + bitbloqCourse.name +"/lom/" + lom + "/nok", 200)
+					return request.putBackend('/students/'+idStudent+ '/course/' + bitbloqCourse.name +'/lom/' + lom + '/nok', 200)
 					.then(function (response2) {
-						expect(response2.body.course[0]).to.have.property("status", -1);
-				    	return request.getBackend('/students/'+ idStudent + "/course/" + bitbloqCourse.name,200)
+						expect(response2.body.course[0]).to.have.property('status', -1);
+				    	return request.getBackend('/students/'+ idStudent + '/course/' + bitbloqCourse.name,200)
 						.then(function(response) {
-							expect(response.body.general).to.have.property("title", "Conociendo bitbloq 2");
+							expect(response.body.general).to.have.property('title', 'Conociendo bitbloq 2');
 							lom = response.body._id;
-							console.log("The system returns the same lesson because it did not finish correctly ");
+							console.log('The system returns the same lesson because it did not finish correctly ');
 							
-							return request.putBackend("/students/"+idStudent+ "/course/" + bitbloqCourse.name +"/lom/" + lom + "/ok", 200)
+							return request.putBackend('/students/'+idStudent+ '/course/' + bitbloqCourse.name +'/lom/' + lom + '/ok', 200)
 							.then(function (response2) {
-								expect(response2.body.course[0]).to.have.property("status", 1);
-						    	return request.getBackend('/students/'+ idStudent + "/course/" + bitbloqCourse.name,200)
+								expect(response2.body.course[0]).to.have.property('status', 1);
+						    	return request.getBackend('/students/'+ idStudent + '/course/' + bitbloqCourse.name,200)
 								.then(function(response) {
-									expect(response.body.general).to.have.property("title", "¿Que es un robot? Conociendo sensores y actuadores");
+									expect(response.body.general).to.have.property('title', '¿Que es un robot? Conociendo sensores y actuadores');
 									lom = response.body._id;
-									console.log("The system returns the third lesson of the course: 3. Que es un robot");
+									console.log('The system returns the third lesson of the course: 3. Que es un robot');
 									
-									return request.putBackend("/students/"+idStudent+ "/course/" + bitbloqCourse.name +"/lom/" + lom + "/ok", 200)
+									return request.putBackend('/students/'+idStudent+ '/course/' + bitbloqCourse.name +'/lom/' + lom + '/ok', 200)
 									.then(function (response2) {
-										expect(response2.body.course[0]).to.have.property("status", 1);
-								    	return request.getBackend('/students/'+ idStudent + "/course/" + bitbloqCourse.name,200)
+										expect(response2.body.course[0]).to.have.property('status', 1);
+								    	return request.getBackend('/students/'+ idStudent + '/course/' + bitbloqCourse.name,200)
 										.then(function(response) {
-											expect(response.body.general).to.have.property("title", "¡Aprende a pensar como un robot! Los algoritmos");
+											expect(response.body.general).to.have.property('title', '¡Aprende a pensar como un robot! Los algoritmos');
 											lom = response.body._id;
-											console.log("The system returns the eighth lesson of the course: 8. Algoritmos");
+											console.log('The system returns the eighth lesson of the course: 8. Algoritmos');
 											
-											return request.putBackend("/students/"+idStudent+ "/course/" + bitbloqCourse.name +"/lom/" + lom + "/ok", 200)
+											return request.putBackend('/students/'+idStudent+ '/course/' + bitbloqCourse.name +'/lom/' + lom + '/ok', 200)
 											.then(function (response2) {
-												expect(response2.body.course[0]).to.have.property("status", 1);
-										    	return request.getBackend('/students/'+ idStudent + "/course/" + bitbloqCourse.name,200)
+												expect(response2.body.course[0]).to.have.property('status', 1);
+										    	return request.getBackend('/students/'+ idStudent + '/course/' + bitbloqCourse.name,200)
 												.then(function(response) {
-													expect(response.body.general).to.have.property("title", "Y la luz se hizo: programando los LED en bitbloq 2");
+													expect(response.body.general).to.have.property('title', 'Y la luz se hizo: programando los LED en bitbloq 2');
 													lom = response.body._id;
-													console.log("The system returns the fourth lesson of the course: 4. LED");
+													console.log('The system returns the fourth lesson of the course: 4. LED');
 													
-													return request.putBackend("/students/"+idStudent+ "/course/" + bitbloqCourse.name +"/lom/" + lom + "/nok", 200)
+													return request.putBackend('/students/'+idStudent+ '/course/' + bitbloqCourse.name +'/lom/' + lom + '/nok', 200)
 													.then(function (response2) {
-														expect(response2.body.course[0]).to.have.property("status", -1);
-												    	return request.getBackend('/students/'+ idStudent + "/course/" + bitbloqCourse.name,200)
+														expect(response2.body.course[0]).to.have.property('status', -1);
+												    	return request.getBackend('/students/'+ idStudent + '/course/' + bitbloqCourse.name,200)
 														.then(function(response) {
-															expect(response.body.general).to.have.property("title", "¡Muévete! El servo de rotación continua");
+															expect(response.body.general).to.have.property('title', '¡Muévete! El servo de rotación continua');
 															lom = response.body._id;
-															console.log("The system returns the fifteenth lesson of the course: 15. El servo de rotacion continua");
+															console.log('The system returns the fifteenth lesson of the course: 15. El servo de rotacion continua');
 															
-															return request.putBackend("/students/"+idStudent+ "/course/" + bitbloqCourse.name +"/lom/" + lom + "/ok", 200)
+															return request.putBackend('/students/'+idStudent+ '/course/' + bitbloqCourse.name +'/lom/' + lom + '/ok', 200)
 															.then(function (response2) {
-																expect(response2.body.course[0]).to.have.property("status", 1);
-														    	return request.getBackend('/students/'+ idStudent + "/course/" + bitbloqCourse.name,200)
+																expect(response2.body.course[0]).to.have.property('status', 1);
+														    	return request.getBackend('/students/'+ idStudent + '/course/' + bitbloqCourse.name,200)
 																.then(function(response) {
-																	expect(response.body.general).to.have.property("title", "Si tú me dices ven… lo dejo todo, o no. Las sentencias condicionales y el pulsador.");
+																	expect(response.body.general).to.have.property('title', 'Si tú me dices ven… lo dejo todo, o no. Las sentencias condicionales y el pulsador.');
 																	lom = response.body._id;
-																	console.log("The system returns the fifth lesson of the course: 5. Condicionales");
+																	console.log('The system returns the fifth lesson of the course: 5. Condicionales');
 																	
-																	return request.putBackend("/students/"+idStudent+ "/course/" + bitbloqCourse.name +"/lom/" + lom + "/nok", 200)
+																	return request.putBackend('/students/'+idStudent+ '/course/' + bitbloqCourse.name +'/lom/' + lom + '/nok', 200)
 																	.then(function (response2) {
-																		expect(response2.body.course[0]).to.have.property("status", -1);
-																    	return request.getBackend('/students/'+ idStudent + "/course/" + bitbloqCourse.name,200)
+																		expect(response2.body.course[0]).to.have.property('status', -1);
+																    	return request.getBackend('/students/'+ idStudent + '/course/' + bitbloqCourse.name,200)
 																		.then(function(response) {
-																			expect(response.body.general).to.have.property("title", "Piruru piii… Programando el zumbador");
+																			expect(response.body.general).to.have.property('title', 'Piruru piii… Programando el zumbador');
 																			lom = response.body._id;
-																			console.log("The system returns the ninth lesson of the course: 9. El zumbador");
+																			console.log('The system returns the ninth lesson of the course: 9. El zumbador');
 																			
-																			return request.putBackend("/students/"+idStudent+ "/course/" + bitbloqCourse.name +"/lom/" + lom + "/ok", 200)
+																			return request.putBackend('/students/'+idStudent+ '/course/' + bitbloqCourse.name +'/lom/' + lom + '/ok', 200)
 																			.then(function (response2) {
-																				expect(response2.body.course[0]).to.have.property("status", 1);
-																		    	return request.getBackend('/students/'+ idStudent + "/course/" + bitbloqCourse.name,200)
+																				expect(response2.body.course[0]).to.have.property('status', 1);
+																		    	return request.getBackend('/students/'+ idStudent + '/course/' + bitbloqCourse.name,200)
 																				.then(function(response) {
-																					expect(response.body.general).to.have.property("title", "¡Elemental, querido Watson! La lógica booleana");
+																					expect(response.body.general).to.have.property('title', '¡Elemental, querido Watson! La lógica booleana');
 																					lom = response.body._id;
-																					console.log("The system returns the twentieth lesson of the course: 20. Logica booleana");
+																					console.log('The system returns the twentieth lesson of the course: 20. Logica booleana');
 																					
-																					return request.putBackend("/students/"+idStudent+ "/course/" + bitbloqCourse.name +"/lom/" + lom + "/ok", 200)
+																					return request.putBackend('/students/'+idStudent+ '/course/' + bitbloqCourse.name +'/lom/' + lom + '/ok', 200)
 																					.then(function (response2) {
-																						expect(response2.body.course[0]).to.have.property("status", 1);
-																				    	return request.getBackend('/students/'+ idStudent + "/course/" + bitbloqCourse.name,200)
+																						expect(response2.body.course[0]).to.have.property('status', 1);
+																				    	return request.getBackend('/students/'+ idStudent + '/course/' + bitbloqCourse.name,200)
 																						.then(function(response) {
 																							expect(response.body).to.equal('Course finished');
-																							console.log("The system returns: Course finished");
+																							console.log('The system returns: Course finished');
 																							
 																							chakram.wait();
 																						});
