@@ -28,10 +28,7 @@ var Lesson = new Schema({
 		name: String, 
 		resume: String,  
 		objectives: [Objective],
-		learning_path: {
-			ok: [Number],
-			nok: [Number]
-		},
+		learning_path: [Number],
 		type: {
 			type: String,
 			enum: ["Reinforcement", "Essential", "Extension"],

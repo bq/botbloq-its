@@ -72,14 +72,14 @@ exports.selectActivity = function(myLesson, course, status){
 	 */
 		
 	case "Essential":
-		posibilities = this.findTypeLesson(myLesson.learning_path.ok, "Reinforcement", course);
+		posibilities = this.findTypeLesson(myLesson.learning_path, "Reinforcement", course);
 		if (posibilities.length > 0){
 			random = Math.floor(Math.random() * posibilities.length);
 			ret = posibilities[random];
 		} else {
 			if(status == -1) ret = myLesson;
 			else {
-				posibilities = this.findTypeLesson(myLesson.learning_path.ok, "Essential", course);
+				posibilities = this.findTypeLesson(myLesson.learning_path, "Essential", course);
 				if (posibilities.length > 0){
 					random = Math.floor(Math.random() * posibilities.length);
 					ret = posibilities[random];
@@ -99,19 +99,19 @@ exports.selectActivity = function(myLesson, course, status){
 		
 	case "Reinforcement":
 		if(status == 1){
-			posibilities = this.findTypeLesson(myLesson.learning_path.ok, "Extension", course);
+			posibilities = this.findTypeLesson(myLesson.learning_path, "Extension", course);
 			if (posibilities.length > 0){
 				random = Math.floor(Math.random() * posibilities.length);
 				ret = posibilities[random];
 			} else {
-				posibilities = this.findTypeLesson(myLesson.learning_path.ok, "Essential", course);
+				posibilities = this.findTypeLesson(myLesson.learning_path, "Essential", course);
 				if (posibilities.length > 0){
 					random = Math.floor(Math.random() * posibilities.length);
 					ret = posibilities[random];
 				} else ret = -1;
 			}
 		} else {
-			posibilities = this.findTypeLesson(myLesson.learning_path.ok, "Reinforcement", course);
+			posibilities = this.findTypeLesson(myLesson.learning_path, "Reinforcement", course);
 			if (posibilities.length > 0){
 				random = Math.floor(Math.random() * posibilities.length);
 				ret = posibilities[random];
@@ -130,7 +130,7 @@ exports.selectActivity = function(myLesson, course, status){
    	 */
 		
 	case "Extension":
-		posibilities = this.findTypeLesson(myLesson.learning_path.ok, "Essential", course);
+		posibilities = this.findTypeLesson(myLesson.learning_path, "Essential", course);
 		if (posibilities.length > 0){
 			random = Math.floor(Math.random() * posibilities.length);
 			ret = posibilities[random];
@@ -168,7 +168,7 @@ exports.nextActivity = function (element, course){
 			 *  the next activity of the course in sequential order.
 			 */
 			
-			if(myLesson.learning_path.ok.length > 0){
+			if(myLesson.learning_path.length > 0){
 				
 				/**
 				 *  If the course is not sequential and the value of the learning_path is
@@ -176,7 +176,7 @@ exports.nextActivity = function (element, course){
 				 *  the course because we are in the last activity.
 				 */
 				
-				if(myLesson.learning_path.ok[0] == indexMyLesson){
+				if(myLesson.learning_path[0] == indexMyLesson){
 					ret = -1;
 				} else {
 					indexMyLesson = this.selectActivity(myLesson, course, element.status);

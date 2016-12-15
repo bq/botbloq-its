@@ -61,30 +61,21 @@ var Course = function() {
 						{
 							name: "Lesson_1",
 							resume: "Default lesson 1",
-							learning_path: {
-								ok: [2,1],
-								nok: [2,1]
-							},
+							learning_path: [2,1],
 							type: "Essential",
 							loms: [{lom_id: loms[0]}]
 						},
 						{
 							name: "Lesson_2",
 							resume: "Default lesson 2",
-							learning_path: {
-								ok: [2],
-								nok: [2]
-							},
+							learning_path: [2],
 							type: "Extension",
 							loms: [{lom_id: loms[1]}]
 						},
 						{
 							name: "Lesson_3",
 							resume: "Default lesson 3",
-							learning_path: {
-								ok: [2],
-								nok: []
-							},
+							learning_path: [2],
 							type: "Reinforcement",
 							loms: [{lom_id: loms[2]}]
 						}
@@ -108,102 +99,69 @@ var Course = function() {
 						{
 							name: "Lesson_0_0",
 							resume: "initial lesson",
-							learning_path: {
-								ok: [],
-								nok: []
-							},
+							learning_path: [],
 							loms: [{lom_id: loms[0]}]
 						},
 						{
 							name: "Lesson_0_1",
 							resume: "Zowi charla con gato",
-							learning_path: {
-								ok: [],
-								nok: []
-							},
+							learning_path: [],
 							loms: [{lom_id: loms[1]}]
 						},
 						{
 							name: "Lesson_0_2",
 							resume: "Zowi camina por la lluvia",
-							learning_path: {
-								ok: [],
-								nok: []
-							},
+							learning_path: [],
 							loms: [{lom_id: loms[2]}]
 						},
 						
 						{
 							name: "Lesson_0_3",
 							resume: "Moviendo a Zowi",
-							learning_path: {
-								ok: [],
-								nok: []
-							},
+							learning_path: [],
 							loms: [{lom_id: loms[3]}]
 						},
 						{
 							name: "Lesson_0_4",
 							resume: "Un murcielago persigue a Zowi",
-							learning_path: {
-								ok: [],
-								nok: []
-							},
+							learning_path: [],
 							loms: [{lom_id: loms[4]}]
 						},
 						{
 							name: "Lesson_0_5",
 							resume: "Zowi se alimenta",
-							learning_path: {
-								ok: [],
-								nok: []
-							},
+							learning_path: [],
 							loms: [{lom_id: loms[5]}]
 						},
 						
 						{
 							name: "Lesson_0_6",
 							resume: "¿Cuantas manzanas te has comido Zowi?",
-							learning_path: {
-								ok: [],
-								nok: []
-							},
+							learning_path: [],
 							loms: [{lom_id: loms[6]}]
 						},
 						{
 							name: "Lesson_0_7",
 							resume: "¡¡Lueve!!",
-							learning_path: {
-								ok: [],
-								nok: []
-							},
+							learning_path: [],
 							loms: [{lom_id: loms[7]}]
 						},
 						{
 							name: "Lesson_0_8",
 							resume: "Zowi pesca",
-							learning_path: {
-								ok: [],
-								nok: []
-							},
+							learning_path: [],
 							loms: [{lom_id: loms[8]}]
 						},
 						{
 							name: "Lesson_0_9",
 							resume: "Zowi enciende la luz",
-							learning_path: {
-								ok: [],
-								nok: []
-							},
+							learning_path: [],
 							loms: [{lom_id: loms[9]}]
 						},
 						{
 							name: "Lesson_1_0",
 							resume: "Zowi se ha vuelto un listillo",
-							learning_path: {
-								ok: [],
-								nok: []
-							},
+							learning_path: [],
 							loms: [{lom_id: loms[10]}]
 						}
 					]
@@ -227,109 +185,76 @@ var Course = function() {
 						{
 							name: "Lesson_1",
 							resume: "Antes de empezar",
-							learning_path: {
-								ok: [1],
-								nok: [1]
-							},
+							learning_path: [1],
 							type: "Essential",
 							loms: [{lom_id: loms[0]}]
 						},
 						{
 							name: "Lesson_2",
 							resume: "Conociendo el entorno",
-							learning_path: {
-								ok: [2],
-								nok: [2]
-							},
+							learning_path: [2],
 							type: "Essential",
 							loms: [{lom_id: loms[1]}]
 						},
 						{
 							name: "Lesson_3",
 							resume: "¿Que es un robot?",
-							learning_path: {
-								ok: [5],
-								nok: [5]
-							},
+							learning_path: [5],
 							type: "Essential",
 							loms: [{lom_id: loms[2]}]
 						},
 						{
 							name: "Lesson_4",
 							resume: "LED",
-							learning_path: {
-								ok: [9, 4],
-								nok: [9, 4]
-							},
+							learning_path: [9, 4],
 							type: "Reinforcement",
 							loms: [{lom_id: loms[3]}]
 						},
 						{
 							name: "Lesson_5",
 							resume: "Condicionales",
-							learning_path: {
-								ok: [6, 10],
-								nok: [6, 10]
-							},
+							learning_path: [6, 10],
 							type: "Essential",
 							loms: [{lom_id: loms[4]}]
 						},
 						{
 							name: "Lesson_8",
 							resume: "Algoritmos",
-							learning_path: {
-								ok: [3, 4],
-								nok: [3, 4]
-							},
+							learning_path: [3, 4],
 							type: "Essential",
 							loms: [{lom_id: loms[5]}]
 						},
 						{
 							name: "Lesson_9",
 							resume: "Zumbador",
-							learning_path: {
-								ok: [7, 10],
-								nok: [7, 10]
-							},
+							learning_path: [7, 10],
 							type: "Reinforcement",
 							loms: [{lom_id: loms[6]}]
 						},
 						{
 							name: "Lesson_10",
 							resume: "Sensor IR",
-							learning_path: {
-								ok: [8, 10],
-								nok: [8, 10]
-							},
+							learning_path: [8, 10],
 							type: "Reinforcement",
 							loms: [{lom_id: loms[7]}]
 						},
 						{
 							name: "Lesson_12",
 							resume: "Sensor luz",
-							learning_path: {
-								ok: [10],
-								nok: [10]
-							},
+							learning_path: [10],
 							loms: [{lom_id: loms[8]}]
 						},
 						{
 							name: "Lesson_15",
 							resume: "Servo rotacion continua",
-							learning_path: {
-								ok: [4],
-								nok: [4]
-							},
+							learning_path: [4],
 							type: "Reinforcement",
 							loms: [{lom_id: loms[9]}]
 						},
 						{
 							name: "Lesson_20",
 							resume: "Logica booleana",
-							learning_path: {
-								ok: [10],
-								nok: [10]
-							},
+							learning_path: [10],
 							type: "Extension",
 							loms: [{lom_id: loms[10]}]
 						}
