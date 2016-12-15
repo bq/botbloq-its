@@ -27,6 +27,8 @@ Create base config.json file in app/res/config/config.json:
             }
         }
     },
+   "host": "http://127.0.0.1:8000/botbloq/v1/its",
+
 
     "myNumber": 2
 }
