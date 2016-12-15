@@ -111,7 +111,50 @@ var courseSchema = new Schema({
 		required: false,
 		default: 1
 	},
+	created_at: {
+		type: Date,
+		default: Date.now
+	},
 	_id: false
+});
+
+var activitySchema = new Schema({
+	idCourse: {
+		type: String,
+		required: false
+	},
+	idSection: {
+		type: String,
+		required: false
+	},
+	idLesson: {
+		type: String,
+		required: false
+	},
+	idLom: {
+		type: String,
+		required: false
+	},
+	status: {
+		type: Number,
+		required: false
+	},
+	duration: {
+		type: Number,
+		required: false
+	},
+	hints: {
+		type: Number,
+		default: 0
+	},
+	attemps: {
+		type: Number,
+		required: false
+	},
+	created_at: {
+		type: Date,
+		default: Date.now
+	}
 });
 
 
@@ -136,7 +179,8 @@ var studentSchema = new Schema({
 		required: false,
 		default: 1
 	},
-    course: [courseSchema]
+    course: [courseSchema],
+	activity_log: [activitySchema]
 });
 
 // the schema is useless so far

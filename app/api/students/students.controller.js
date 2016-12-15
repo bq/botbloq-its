@@ -269,7 +269,31 @@ exports.updateActivity = function (req, res) {
 												res.status(400); 
 											 }
 										 }
-									
+										 student.activity_log.push(
+											 {
+												 idCourse: element.idCourse,
+												 idSection: element.idSection,
+												 idLesson: element.idLesson,
+												 idLom: element.idLom,
+												 status: element.status
+											 }
+										 );
+										 
+										 /**
+										  *  To calculate the duration of the activity the created_at of the activity is subtracted 
+										  *  with the created_at of the previous activity, or the created_at of the course if it is the first activity.
+										  */
+										 
+										 var lengthAct = student.activity_log.length;
+										 if(lengthAct > 1){											 
+										 	student.activity_log[lengthAct-1].duration = 
+											 		student.activity_log[lengthAct-1].created_at - student.activity_log[lengthAct-2].created_at;
+										 } else {
+										 	student.activity_log[lengthAct-1].duration = 
+											 		student.activity_log[lengthAct-1].created_at - element.created_at;
+										 }
+										
+										 console.log(student.activity_log[lengthAct-1]); 									
 										student.save(next);
 									} else{
 										ret = "The student: " + student._id + " does not have the lom: " + req.params.idl;
