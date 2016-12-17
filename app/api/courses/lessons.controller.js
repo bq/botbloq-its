@@ -150,7 +150,7 @@ exports.create_lesson = function(req, res) {
 					' has not been found un the course with id: ' + courseId);
 				} else {					
 					var indl = CoursesFunctions.find_lesson(lessonId,course.sections[inds].lessons);
-					if ( !(indl < 0) ){
+					if ( indl >= 0 ){
 						res.status(400).send('error lesson already exist');
 					} else {
 						var lessons = course.sections[inds].lessons;

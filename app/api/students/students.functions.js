@@ -42,7 +42,7 @@ exports.studentFound = function (student, req, res){
  */
 
 exports.findTypeLesson = function(lessons, type, course){
-	var ret = [], option;
+	var ret = [];
 	for(var i = 0; i <= lessons.length; i++){
 				
 		if(course.sections[0].lessons[lessons[i]] !== undefined && course.sections[0].lessons[lessons[i]].type === type){
@@ -180,7 +180,7 @@ exports.nextActivity = function (element, course){
 					ret = -1;
 				} else {
 					indexMyLesson = this.selectActivity(myLesson, course, element.status);
-					if(indexMyLesson === -1) ret = -1;
+					if(indexMyLesson === -1) { ret = -1;}
 				}
 			} else {
 				
@@ -194,7 +194,7 @@ exports.nextActivity = function (element, course){
 					if(element.status === 1) {
 						indexMyLesson = indexMyLesson + 1;
 					}
-				} else ret = -1;
+				} else { ret = -1; }
 			}
 		
 		} else { indexMyLesson = 0;}
@@ -214,11 +214,11 @@ exports.nextActivity = function (element, course){
 					course.history.push(indexMyLesson);
 					ret = element;
 			
-				}else ret = -2;
+				}else { ret = -2; }
 		
-			} else ret = -3;
+			} else { ret = -3; }
 		}
-	} else ret = -4; 
+	} else { ret = -4; }
 	
 	return ret;
 }

@@ -1,6 +1,6 @@
 'use strict';
-var mongoose = require('mongoose')
-  , Schema = mongoose.Schema;
+var mongoose = require('mongoose'), 
+	Schema = mongoose.Schema;
       										
 var LOM = new Schema({ 
 	lom_id: String,

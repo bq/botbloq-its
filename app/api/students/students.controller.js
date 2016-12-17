@@ -4,9 +4,7 @@ var Students = require('./students.model.js'),
    config = require('../../res/config.js'), 
    async = require('async'),
    _ = require('lodash'),
-   fs = require('fs'),
    functions = require('./students.functions.js'), 
-functions2 = require('../courses/courses.functions.js'),
 Courses = require('../courses/courses.model.js'),
 LOMS = require('../loms/loms.model.js');
 
@@ -168,10 +166,10 @@ exports.enrollment = function (req, res) {
 					if(course.length === 0){
 						res.end('The course: ' + req.params.idc + ' is not registrated');
 					} else {
-						if(functions.studentFound(student, req, res) == true){
+						if(functions.studentFound(student, req, res) === true){
 							var coursed = false;
 							student.course.find(function(element ,index , array){
-								if(element.idCourse == req.params.idc){
+								if(element.idCourse === req.params.idc){
 									if (element.active === 1){ 
 										activity = 'The student: ' + student._id + ' is already enrolled in the course: ' + req.params.idc;
 									} else { 
@@ -223,8 +221,8 @@ exports.unenrollment = function (req, res) {
 								student.save(next);
 							}
 						});
-						if(!coursed){ res.end('The student: ' + student._id 
-							+ ' is not enrolled in the course: ' + req.params.idc); }
+						if(!coursed){ res.end('The student: ' + student._id +
+							 ' is not enrolled in the course: ' + req.params.idc); }
 					}
 			    }
 			});	
@@ -332,7 +330,7 @@ exports.updateActivity = function (req, res) {
 exports.newActivity = function (req, res) {
 	
 	var activity, ret = 0,
-	coursed = false, bool = false;
+	coursed = false;
 	LOMS = require('../loms/loms.model.js');
 	
 	async.waterfall([
@@ -426,8 +424,8 @@ exports.newActivity = function (req, res) {
 					}
 					if(!coursed){
 						res.status(404);
-						activity = 'The student: ' + student._id 
-						+ ' is not enrolled in the course: ' + req.params.idc;
+						activity = 'The student: ' + student._id + 
+						' is not enrolled in the course: ' + req.params.idc;
 					} 
 				}
 				course.save();

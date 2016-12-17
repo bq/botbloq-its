@@ -56,11 +56,11 @@ exports.get_section = function (req, res) {
 			if (!course) {
 				res.status(404).send('The course with id: ' + courseId + ' is not registrated');   
 			} else {
-				var sections = course['sections'];
+				var sections = course.sections;
 				var len = sections.length;
 				for (var i = 0; i < len; i++) {
 					var elem = sections[i];
-					if (elem.name == sectionId){
+					if (elem.name === sectionId){
 						res.status(200).send('course: '+courseId+'\nsection:\n'+JSON.stringify(elem));
 					}
 				}			
@@ -111,7 +111,7 @@ exports.create_section = function(req, res) {
 		if (err){
 			res.status(500).send(err); 
 		} else {
-			var sections = course['sections'];
+			var sections = course.sections;
 			if (exist_section(sectionId,sections)){
 				res.status(400).send('Error section already exist');
 			}
@@ -158,12 +158,12 @@ exports.update_section = function(req, res) {
 		if (err){
 			res.status(500).send(err);
 		} else {
-			var sections = course['sections'];
+			var sections = course.sections;
 			var ind = find_section(sectionId,sections);
 			if (ind < 0){
 				res.statu(404).send('Error section does not exist');
 			 } else {
-				course['sections'].splice(ind,1); //remove old section
+				course.sections.splice(ind,1); //remove old section
 				sections[sections.length] = new_sec; //push the new one
 				var err1 = controller.update_course_field(courseId,'sections',sections);
 				if (err1) {
@@ -198,7 +198,7 @@ exports.update_section_field = function(req, res) {
 		if (err) {
 			res.status(500).send(err);
 		} else {
-			var sections = course['sections'];
+			var sections = course.sections;
 			var ind = find_section(sectionId,sections);
 			if ( ind < 0 ) {
 				res.status(404).send('Error section does not exist');
@@ -247,13 +247,13 @@ exports.delete_section = function(req,res) {
 			if (!course) {
 				res.sendStatus(404).send('The course with id: ' + courseId + ' is not rgistrated');  
 			} else{
-				var ind = find_section(sectionId,course['sections']);
+				var ind = find_section(sectionId,course.sections);
 				if (ind < 0){
 					res.status(404).send('The section with id : ' + sectionId +
 					' has not been found un the course with id: ' + courseId);
 				} else {
-					course['sections'].splice(ind,1);
-					var err1 = controller.update_course_field(courseId,'sections',course['sections']);
+					course.sections.splice(ind,1);
+					var err1 = controller.update_course_field(courseId,'sections',course.sections);
 					if (err1) {
 						res.status(400).send('error while updating '+err)
 					} else { 

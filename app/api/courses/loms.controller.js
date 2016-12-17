@@ -134,14 +134,14 @@ exports.assign_lom = function(req, res) {
 					} else {
 						var lessons = course.sections[inds].lessons;							
 						var ind = CoursesFunctions.find_lom(lomId,lessons[indl].loms);
-						if ( !(ind < 0)){
+						if ( ind >= 0){
 							res.status(400).send('error lom already exist '+lomId);
 						} else {
 							LOMS.find({_id: lomId}, function(err, lom){
 								if(err){
 									res.senStatus(err.code).send(err);
 								}else {
-									if(lom.length = 0){
+									if(lom.length === 0){
 										res.sendStatus(404).send('The lom with id: ' + lomId + ' is not registrated');
 									} else {
 										var loms = lessons[indl].loms;

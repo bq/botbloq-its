@@ -115,12 +115,12 @@ exports.uploadFile =  function (req, res) {
 						if( err ){
 							console.error( err );
 					        res.status(404).send(err);
-						    res.end('Sorry, the file: '+  req.file.originalname 
-							+' couldn\'t be uploaded in the lom with id: ' + req.params.id);
+						    res.end('Sorry, the file: '+  req.file.originalname + 
+							' couldn\'t be uploaded in the lom with id: ' + req.params.id);
 
 						}else{
-						    res.end('File: '+  req.file.originalname 
-							+' uploaded successfully in the lom with id: ' + req.params.id);
+						    res.end('File: '+  req.file.originalname + 
+							' uploaded successfully in the lom with id: ' + req.params.id);
 						}
 					});
 				}
