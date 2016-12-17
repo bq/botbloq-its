@@ -248,4 +248,24 @@ describe('Chakram', function(){
 			});
 		});
 	});
+	it('Testing to reset the database', function(){
+		return request.deleteBackend('/loms',200).then(function (response) {
+			return request.getBackend('/loms',200).then(function (response1) {
+				expect(response1.body).to.be.empty;
+			
+				return request.deleteBackend('/courses',200).then(function (response2) {
+					return request.getBackend('/courses',200).then(function (response3) {
+					expect(response3.body).to.be.empty;
+				
+						return request.deleteBackend('/students',200).then(function (response4) {
+							return request.getBackend('/students',200).then(function (response5) {		
+							expect(response5.body).to.be.empty;
+							chakram.wait();
+							});
+						});
+					});
+				});
+			});
+		});	
+	});
 });
