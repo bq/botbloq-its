@@ -26,17 +26,29 @@ exports.all = function (req, res) {
  * Creates a new element
  */
 exports.create = function(req, res) {
-    Students.create(req.body, function (err, student) {
-        if (err){
-        	res.sendStatus(err.code);
-        } 
-        console.log('Student created!');
+	if (req.body.identification.email !== undefined){
+		Students.find({identification: { email: req.body.identification.email } }, function(err, student1) {
+			if(student1.length === 0){
+			    Students.create(req.body, function (err, student) {
+			        if (err){
+			        	res.sendStatus(err.code);
+			        } 
+			        console.log('Student created!');
 		
-		var json_survey = require('../../res/learningstyle.json'); 
-		json_survey.id_student = student._id;
+					var json_survey = require('../../res/learningstyle.json'); 
+					json_survey.id_student = student._id;
 		
-		res.json(json_survey);
-    });
+					res.json(json_survey);
+			    });
+			} else {
+				res.status(403).send("A student with the same email already exists");
+			}
+		});
+	} else {
+		res.status(400).send("Student email is required");
+	}
+	
+
 };
 
 /**
@@ -103,8 +115,21 @@ exports.update = function (req, res) {
 	    Students.findById.bind(Students, req.params.id),
 	    function(student, next) {
 			if(functions.studentFound(student, req, res) === true) {
-				student = _.extend(student, req.body);
-				student.save(next);	
+				if(req.body.identification.email !== undefined){
+					Students.find({identification: { email: req.body.identification.email } }, function(err, student1) {
+						if(student1.length > 0 && student1 === student){
+							student = _.extend(student, req.body);
+							student.save(next);	
+						} else {
+							res.status(403).send("A student with the same email already exists");
+						}
+					
+					});
+				} else {
+					student = _.extend(student, req.body);
+					student.save(next);	
+				}
+
 			}
 		}	
 	], function(err, student) {
@@ -418,8 +443,8 @@ exports.newActivity = function (req, res) {
 							});							
 						} else{
 							res.status(403);
-							activity = 'The student: ' + student._id 
-							+ ' is not activated in the course: ' + req.params.idc;	
+							activity = 'The student: ' + student._id + 
+							' is not activated in the course: ' + req.params.idc;	
 						} 			
 					}
 					if(!coursed){

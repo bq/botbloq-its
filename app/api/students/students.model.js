@@ -10,6 +10,7 @@ var identificationSchema = new Schema({
     email: {
         type: String,
 		required: false,
+		unique : true
     },
     address: {
         type: String,
