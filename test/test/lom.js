@@ -57,13 +57,13 @@ var LOM = function() {
 		
 		for (var i = 0; i < files.length; i++){
 			var file = files[i];
-			if(file != '.DS_Store'){
+			if(file !== '.DS_Store'){
 				var index = parseInt(file.split('.', 1)) - 1;
 				loms[index] = new lomModel(require(path + file));
 			}
 		}
 		for(var i = 0; i <= loms.length; i++){
-			if(loms[i] != undefined) ret.push(loms[i]);
+			if(loms[i] !== undefined) {ret.push(loms[i]);}
 		}
 		return ret;
 	};

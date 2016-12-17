@@ -10,7 +10,7 @@ exports.controlErrors = function (err, res, ret){
         console.log(err);
         res.status(404).send(err);
     } 
-	else res.json(ret);
+	else{ res.json(ret); }
 }
 
 /**
@@ -20,15 +20,15 @@ exports.controlErrors = function (err, res, ret){
 exports.studentFound = function (student, req, res){
 	var bool = false, ret;
 	
-	if (req.params.idstd != null) ret = req.params.idstd;
-	else ret = req.params.id;
+	if (req.params.idstd !== null){ ret = req.params.idstd; }
+	else{ ret = req.params.id;}
 	
-	if(!student)
+	if(!student){
 		res.end('The student with id: ' + ret + ' is not registrated');
-	else {
-		if(student.active == 0)
+	} else {
+		if(student.active === 0){
 			res.end('The student with id: ' + ret + ' is not activated');
-		else bool = true;
+		} else { bool = true; }
 	}
 	return bool;
 }
@@ -45,7 +45,7 @@ exports.findTypeLesson = function(lessons, type, course){
 	var ret = [], option;
 	for(var i = 0; i <= lessons.length; i++){
 				
-		if(course.sections[0].lessons[lessons[i]] != undefined && course.sections[0].lessons[lessons[i]].type == type){
+		if(course.sections[0].lessons[lessons[i]] !== undefined && course.sections[0].lessons[lessons[i]].type === type){
 			ret.push(course.sections[0].lessons[lessons[i]]);
 		}
 	}
@@ -77,13 +77,13 @@ exports.selectActivity = function(myLesson, course, status){
 			random = Math.floor(Math.random() * posibilities.length);
 			ret = posibilities[random];
 		} else {
-			if(status == -1) ret = myLesson;
+			if(status === -1){ ret = myLesson; }
 			else {
 				posibilities = this.findTypeLesson(myLesson.learning_path, 'Essential', course);
 				if (posibilities.length > 0){
 					random = Math.floor(Math.random() * posibilities.length);
 					ret = posibilities[random];
-				} else ret = -1;	
+				} else {ret = -1; }
 			}
 		}
 		break;
@@ -98,7 +98,7 @@ exports.selectActivity = function(myLesson, course, status){
 	 */
 		
 	case 'Reinforcement':
-		if(status == 1){
+		if(status === 1){
 			posibilities = this.findTypeLesson(myLesson.learning_path, 'Extension', course);
 			if (posibilities.length > 0){
 				random = Math.floor(Math.random() * posibilities.length);
@@ -108,7 +108,7 @@ exports.selectActivity = function(myLesson, course, status){
 				if (posibilities.length > 0){
 					random = Math.floor(Math.random() * posibilities.length);
 					ret = posibilities[random];
-				} else ret = -1;
+				} else { ret = -1; }
 			}
 		} else {
 			posibilities = this.findTypeLesson(myLesson.learning_path, 'Reinforcement', course);
@@ -117,9 +117,9 @@ exports.selectActivity = function(myLesson, course, status){
 				ret = posibilities[random];
 			} else {
 				posibilities = this.findTypeLesson(course.history, 'Essential', course);
-				if (posibilities.length > 0)
+				if (posibilities.length > 0) {
 					ret = posibilities[posibilities.length-1];
-				else ret = -1;
+				} else { ret = -1; }
 			}
 		}
 		break;
@@ -134,11 +134,11 @@ exports.selectActivity = function(myLesson, course, status){
 		if (posibilities.length > 0){
 			random = Math.floor(Math.random() * posibilities.length);
 			ret = posibilities[random];
-		} else ret = -1;
+		} else { ret = -1; }
 		break;
 	}
 	
-	if (ret != -1) ret = functions2.find_lesson(ret.name, course.sections[0].lessons);
+	if (ret !== -1) { ret = functions2.find_lesson(ret.name, course.sections[0].lessons); }
 	return ret;
 }
 
@@ -158,7 +158,7 @@ exports.nextActivity = function (element, course){
 		 *  if it is, the first activity in the list of lessons is returned.
 		 */
 	
-		if(element.status != 0){ 
+		if(element.status !== 0){ 
 			indexMyLesson = functions2.find_lesson(element.idLesson, course.sections[0].lessons);
 			myLesson = course.sections[0].lessons[indexMyLesson];
 			
@@ -176,11 +176,11 @@ exports.nextActivity = function (element, course){
 				 *  the course because we are in the last activity.
 				 */
 				
-				if(myLesson.learning_path[0] == indexMyLesson){
+				if(myLesson.learning_path[0] === indexMyLesson){
 					ret = -1;
 				} else {
 					indexMyLesson = this.selectActivity(myLesson, course, element.status);
-					if(indexMyLesson == -1) ret = -1;
+					if(indexMyLesson === -1) ret = -1;
 				}
 			} else {
 				
@@ -191,13 +191,13 @@ exports.nextActivity = function (element, course){
 				 */
 				
 				if (course.sections[0].lessons.length > indexMyLesson + 1){
-					if(element.status == 1) 
+					if(element.status === 1) {
 						indexMyLesson = indexMyLesson + 1;
-					
+					}
 				} else ret = -1;
 			}
 		
-		} else indexMyLesson = 0;
+		} else { indexMyLesson = 0;}
 		
 		/**
 		 *  Finally returns the next activity that corresponds or a negative number depending on
@@ -206,7 +206,7 @@ exports.nextActivity = function (element, course){
 		 *  the activities that the student has been doing.
 		 */
 		
-		if(ret != -1){
+		if(ret !== -1){
 			if(course.sections[0].lessons.length > indexMyLesson){
 				element.idLesson = course.sections[0].lessons[indexMyLesson].name;
 				if (course.sections[0].lessons[indexMyLesson].loms.length > 0){
@@ -222,22 +222,3 @@ exports.nextActivity = function (element, course){
 	
 	return ret;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

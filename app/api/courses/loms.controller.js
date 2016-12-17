@@ -26,22 +26,22 @@ exports.all_loms = function (req, res) {
 	var sectionId = req.params.section_id;
 	var lessonId = req.params.lesson_id;
 	Courses.findOne({'name' : courseId}, function(err, course) {
-        if (err)
+        if (err){
 			res.status(500).send(err);
-		else{
-			if (!course)
+		} else{
+			if (!course){
 				res.status(404).send('The course with id: ' + courseId + ' is not registrated'); 
-			else{
+			}else{
 				var inds = CoursesFunctions.find_section(sectionId,course.sections);
-				if (inds < 0)
+				if (inds < 0){
 					res.status(404).send('The section with id : ' + sectionId +
 					' has not been found un the course with id: ' + courseId);
-				else { // section exists
+				}else { // section exists
 					var indl = CoursesFunctions.find_section(lessonId,course.sections[inds].lessons);
-					if (indl < 0) 
+					if (indl < 0) {
 						res.status(404).send('The lesson with id : ' + lessonId +
 						' has not been found un the section with id: ' + sectionId);
-					else {
+					} else {
 						var lesson = course.sections[inds].lessons[indl];
 						res.status(200).send(lesson.loms);
 					}
@@ -62,29 +62,30 @@ exports.get_lom = function (req, res) {
 	var lomId = req.params.lom_id;
 	
 	Courses.findOne({'name' : courseId}, function(err, course) {
-        if (err)
+        if (err){
 			res.status(500).send(err); 
-		else{
-			if (!course) 
+		} else{
+			if (!course) {
 				res.status(404).send('The course with id: ' + courseId + ' is not registrated'); 
-			else { // course exists
+			} else { // course exists
 				var inds = CoursesFunctions.find_section(sectionId,course.sections);
-				if (inds < 0)
+				if (inds < 0){
 					res.status(404).send('The section with id : ' + sectionId +
 					' has not been found un the course with id: ' + courseId);
-				else { // section exists
+				} else { // section exists
 					var indl = CoursesFunctions.find_lesson(lessonId,course.sections[inds].lessons);
-					if (indl < 0)
+					if (indl < 0){
 						res.status(404).send('The lesson with id : ' + lessonId +
 						' has not been found un the section with id: ' + sectionId);
-					else { // lesson exists					
+					} else { // lesson exists					
 						var lesson = course.sections[inds].lessons[indl];
 						var ind = CoursesFunctions.find_lom(lomId,lesson.los);
-						if (ind < 0)
+						if (ind < 0){
 							res.status(404).send('The lom with id : ' + lomId +
 							' has not been found un the lesson with id: ' + lessonId);
-						else //lom exists
+						} else {//lom exists
 							res.status(200).send(lesson.los[ind]);
+						}
 					}			
 				} 			 
 			}
@@ -115,41 +116,42 @@ exports.assign_lom = function(req, res) {
 		lomId = req.body.lom_id;
 		
 	Courses.findOne({'name' : courseId}, function (err, course){
-		if (err)
+		if (err){
 			res.status(500).send(err);
-		else{
-			if (!course)
+		} else{
+			if (!course) {
 				res.status(404).send('The course with id: ' + courseId + ' is not registrated');
-			else {
+			} else {
 				var inds = CoursesFunctions.find_section(sectionId,course.sections);
-				if (inds < 0)
+				if (inds < 0){
 					res.status(404).send('The section with id : ' + sectionId +
 					' has not been found un the course with id: ' + courseId);
-				else {					
+				} else {					
 					var indl = CoursesFunctions.find_lesson(lessonId,course.sections[inds].lessons);
-					if ( indl < 0 )
+					if ( indl < 0 ){
 						res.status(404).send('The lesson with id : ' + lessonId +
 						' has not been found un the section with id: ' + sectionId);
-					else {
+					} else {
 						var lessons = course.sections[inds].lessons;							
 						var ind = CoursesFunctions.find_lom(lomId,lessons[indl].loms);
-						if ( !(ind < 0))
+						if ( !(ind < 0)){
 							res.status(400).send('error lom already exist '+lomId);
-						else {
+						} else {
 							LOMS.find({_id: lomId}, function(err, lom){
-								if(err)
+								if(err){
 									res.senStatus(err.code).send(err);
-								else {
-									if(lom.length = 0)
+								}else {
+									if(lom.length = 0){
 										res.sendStatus(404).send('The lom with id: ' + lomId + ' is not registrated');
-									else {
+									} else {
 										var loms = lessons[indl].loms;
 										loms[loms.length] = {'lom_id':lomId};
 										var err1 = controller.update_course_field(courseId,'sections',course.sections);
-										if (err1)
+										if (err1){
 											res.status(400).send('error while updating '+err);							
-										else
+										} else {
 											res.status(200).send(course.sections[inds].lessons);
+										}
 									}
 								}	
 							});
@@ -182,35 +184,36 @@ exports.delete_lom = function(req, res) {
 		lomId = req.body.lom_id;
 		
 	Courses.findOne({'name' : courseId}, function (err, course){
-		if (err)
+		if (err){
 			res.status(500).send(err);
-		else{
-			if (!course)
+		} else{
+			if (!course){ 
 				res.status(404).send('The course with id: ' + courseId + ' is not registrated');
-			else {
+			} else {
 				var inds = CoursesFunctions.find_section(sectionId,course.sections);
-				if (inds < 0)
+				if (inds < 0){
 					res.status(404).send('The section with id : ' + sectionId +
 					' has not been found un the course with id: ' + courseId);
-				else {					
+				} else {					
 					var indl = CoursesFunctions.find_lesson(lessonId,course.sections[inds].lessons);
-					if (indl < 0)
+					if (indl < 0){
 						res.status(404).send('The lesson with id : ' + lessonId +
 						' has not been found un the section with id: ' + sectionId);
-					else {
+					} else {
 						var lessons = course.sections[inds].lessons;							
 						var ind = CoursesFunctions.find_lom(lomId,lessons[indl].los);
-						if (ind < 0)
+						if (ind < 0){
 							res.status(404).send('The lom with id : ' + lomId +
 							' has not been found un the lesson with id: ' + lessonId);
-						else {
+						} else {
 							var loms = lessons[indl].loms;
 							loms.splice(ind,1);
 							var err1 = controller.update_course_field(courseId,'sections',course.sections);
-							if (err1)
+							if (err1){
 								res.status(400).send('error while updating '+err);							
-							else 
+							} else {
 								res.status(200).send(course.sections[inds].lessons);
+							}
 						}
 					}
 				}	

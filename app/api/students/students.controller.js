@@ -17,7 +17,9 @@ LOMS = require('../loms/loms.model.js');
  */
 exports.all = function (req, res) {
     Students.find({active: 1}, function (err, student) {
-        if (err) res.sendStatus(err.code);
+        if (err){
+        	res.sendStatus(err.code);
+        } 
 		res.json(student);
     });
 };
@@ -27,7 +29,9 @@ exports.all = function (req, res) {
  */
 exports.create = function(req, res) {
     Students.create(req.body, function (err, student) {
-        if (err) res.sendStatus(err.code);
+        if (err){
+        	res.sendStatus(err.code);
+        } 
         console.log('Student created!');
 		
 		var json_survey = require('../../res/learningstyle.json'); 
@@ -83,9 +87,9 @@ exports.deactivate = function (req, res) {
 exports.get = function (req, res) {
     Students.findById(req.params.id, function(err, student) {
 		var arrayCourses = [];
-		if(functions.studentFound(student, req, res) == true){
+		if(functions.studentFound(student, req, res) === true){
 			student.course.find(function(element, index, array){
-				if(element.active == 1) arrayCourses.push(element);
+				if(element.active === 1){ arrayCourses.push(element); } 
 			});
 			student.course = arrayCourses;
 			res.json(student);
@@ -100,7 +104,7 @@ exports.update = function (req, res) {
 	async.waterfall([
 	    Students.findById.bind(Students, req.params.id),
 	    function(student, next) {
-			if(functions.studentFound(student, req, res) == true) {
+			if(functions.studentFound(student, req, res) === true) {
 				student = _.extend(student, req.body);
 				student.save(next);	
 			}
@@ -117,7 +121,7 @@ exports.init = function (req, res) {
 	async.waterfall([
 	    Students.findById.bind(Students,  req.params.id),
 	    function(student, next) {
-			if(functions.studentFound(student, req, res) == true){
+			if(functions.studentFound(student, req, res) === true){
 				var answers = req.body.answers;
 				for (var i = 0; i < answers.length; i++) { 
 					switch(answers[i].id_question) {
@@ -161,17 +165,18 @@ exports.enrollment = function (req, res) {
 			        console.log(err);
 			        res.status(err.code).send(err);
 			    } else {
-					if(course.length == 0){
+					if(course.length === 0){
 						res.end('The course: ' + req.params.idc + ' is not registrated');
 					} else {
 						if(functions.studentFound(student, req, res) == true){
 							var coursed = false;
 							student.course.find(function(element ,index , array){
 								if(element.idCourse == req.params.idc){
-									if (element.active == 1) 
+									if (element.active === 1){ 
 										activity = 'The student: ' + student._id + ' is already enrolled in the course: ' + req.params.idc;
-									else 
+									} else { 
 										element.active = 1;
+									}
 									activity = element;
 									coursed = true;
 								}
@@ -208,18 +213,18 @@ exports.unenrollment = function (req, res) {
 			        console.log(err);
 			        res.status(err.code).send(err);
 			    } else {
-					if(functions.studentFound(student, req, res) == true){
+					if(functions.studentFound(student, req, res) === true){
 						var coursed = false;
 						student.course.find(function(element ,index , array){
-							if(element.idCourse == req.params.idc){
+							if(element.idCourse === req.params.idc){
 								coursed = true;
 								element.active = 0;
 								activity = element;
 								student.save(next);
 							}
 						});
-						if(!coursed) res.end('The student: ' + student._id 
-							+ ' is not enrolled in the course: ' + req.params.idc);
+						if(!coursed){ res.end('The student: ' + student._id 
+							+ ' is not enrolled in the course: ' + req.params.idc); }
 					}
 			    }
 			});	
@@ -245,21 +250,21 @@ exports.updateActivity = function (req, res) {
 			        console.log(err);
 			        res.status(err.code).send(err);
 			    } else {
-					if(functions.studentFound(student, req, res) == true){
+					if(functions.studentFound(student, req, res) === true){
 						var coursed = false;
 						student.course.find(function(element ,index , array){
-							if(element.idCourse == req.params.idc){
-								if(element.active == 1){
+							if(element.idCourse === req.params.idc){
+								if(element.active === 1){
 									coursed = true;
-									if (element.idLom == req.params.idl){
+									if (element.idLom === req.params.idl){
 									
-										if (req.params.status == 'ok'){
+										if (req.params.status === 'ok'){
 											element.status = 1;
 											ret = student;
 											res.status(200);
 										} 
 										else {
-											 if (req.params.status == 'nok'){
+											 if (req.params.status === 'nok'){
 											 	element.status = -1;
 												ret = student;
 												res.status(200);	
@@ -345,13 +350,13 @@ exports.newActivity = function (req, res) {
 						res.status(404);
 					} else {
 						
-						if(functions.studentFound(student, req, res) == true){
+						if(functions.studentFound(student, req, res) === true){
 							course = course[0];
 							coursed = true;							
 							student.course.find(function(element ,index , array){
-								if(element.idCourse == course.name){
+								if(element.idCourse === course.name){
 									
-									if(element.active == 1 || element.active == -1 ){
+									if(element.active === 1 || element.active === -1 ){
 										element.active = 1;
 										coursed = true;
 										
@@ -401,8 +406,8 @@ exports.newActivity = function (req, res) {
 														res.status(404);
 														activity = 'The lom: ' + element.idLom + ' is not registrated';
 													} else {
-														if(lom.length > 0) activity = lom[0];
-														else activity = lom;
+														if(lom.length > 0){ activity = lom[0]; }
+														else{ activity = lom; }
 														
 														student.save(next);
 													}
@@ -442,11 +447,11 @@ exports.remove = function (req, res) {
 	async.waterfall([
 	    Students.findById.bind(Students, req.params.id),
 	    function(student, next) {
-			if(!student)
+			if(!student){
 				res.end('The student with id: ' + req.params.id + ' is not registrated');
-			else{
+			} else{
 			    Students.remove(student, function (err, resp) {
-			        if (err) res.sendStatus(err.code);
+			        if (err){ res.sendStatus(err.code); }
 			        res.json(resp);
 			    });
 			}

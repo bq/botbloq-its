@@ -27,7 +27,7 @@ exports.all = function (req, res)
 	{
 	// console.log(config)
     Courses.find({}, function (err, course) {
-		if (err) res.sendStatus(err.code);
+		if (err) { res.sendStatus(err.code); }
 		res.json(course);
 	});
 };
@@ -40,13 +40,14 @@ exports.all = function (req, res)
 exports.get = function (req, res){
 	var courseId = req.params.id;
 	Courses.find({'name' : courseId}, function(err, course) {
-        if (err) 
+        if (err) {
 			res.status(404).send(err);
-		else {
-			if (course.length > 0)
+		} else {
+			if (course.length > 0) {
 				res.status(200).json(course); 
-			else 
+			} else {
 				res.status(404).send('The course with id: ' + courseId + ' is not registrated');  
+			}
 		} 
 	});
 };
@@ -59,14 +60,15 @@ exports.remove = function(req,res) {
 	async.waterfall([
 	    Courses.findById.bind(Courses, req.params.id),
 	    function(course, next) {
-			if(!course)
+			if(!course){
 				res.status(404).send('The course with id: ' + req.params.id + ' is not registrated');
-		    else{
+		    } else{
 				Courses.remove(course, function (err, resp) {
-			        if (err)
+			        if (err){
 						res.status(404).send(err);
-			        else 
+			        } else {
 						res.json(resp);
+					}
 			    });
 			}
 	    }
@@ -75,7 +77,7 @@ exports.remove = function(req,res) {
 			console.log(err);
 	        res.status(404).send(err);
 	    } 
-		else res.json(course);
+		else { res.json(course); }
 	});
 };
 
@@ -84,10 +86,11 @@ exports.remove = function(req,res) {
  */
 exports.reset  = function(req, res){
     Courses.remove({}, function (err, resp) {
-	    if (err)
+	    if (err){
 	        res.status(404).send(err);
-		else 
+		} else {
 			res.json(resp);
+		}
     });
 };
 
@@ -95,7 +98,7 @@ exports.reset  = function(req, res){
 // insert the course received as parameter
 exports.create = function(req, res) {
     Courses.create(req.body, function (err, course) {
-		if (err) res.sendStatus(err.code);
+		if (err) {res.sendStatus(err.code); }
 		console.log('Course created!');
 		var id = course._id;
 		res.writeHead(200, {
@@ -112,9 +115,9 @@ exports.update = function(req, res) {
 	async.waterfall([
 	    Courses.findById.bind(Courses, req.params.id),
 	    function(course, next) {
-	        if(!course)
+	        if(!course){
 				res.status(404).send('The course with id: ' + req.params.id + ' is not registrated');
-			else {
+			} else {
 				course = _.extend(course, req.body);
 	       		course.save(next);
 			}
@@ -124,7 +127,7 @@ exports.update = function(req, res) {
 	        console.log(err);
 	        res.status(404).send(err);
 	    } 
-		else res.json(course);
+		else { res.json(course); }
 	});		
 };
 
@@ -151,7 +154,7 @@ exports.update_field = function(req, res) {
 	if(err) {
 		res.status(400).send('error while updating');
 	}	
-	else res.status(200).send('Updated the course with id: ' + req.body.name);
+	else { res.status(200).send('Updated the course with id: ' + req.body.name); }
 			
 }
 

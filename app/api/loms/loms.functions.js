@@ -8,5 +8,5 @@ exports.controlErrors = function (err, res, ret){
         console.log(err);
         res.status(404).send(err);
     } 
-	else res.json(ret);
+	else { res.json(ret); }
 }

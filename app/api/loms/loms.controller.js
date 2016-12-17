@@ -14,7 +14,7 @@ var LOMS = require('./loms.model.js'),
  */
 exports.all = function (req, res) {
     LOMS.find({}, function (err, lom) {
-        if (err) res.sendStatus(err.code);
+        if (err) { res.sendStatus(err.code); }
         res.json(lom);
     });
 };
@@ -24,7 +24,7 @@ exports.all = function (req, res) {
  */
 exports.create = function(req, res) {
     LOMS.create(req.body, function (err, lom) {
-		if (err) res.sendStatus(err.code);
+		if (err) { res.sendStatus(err.code); }
         console.log('LOMS created!');
         var id = lom._id;
 
@@ -40,7 +40,7 @@ exports.create = function(req, res) {
  */
 exports.destroy  = function(req, res){
     LOMS.remove({}, function (err, resp) {
-        if (err) res.sendStatus(err.code);
+        if (err) { res.sendStatus(err.code); }
         res.json(resp);
     });
 };
@@ -52,7 +52,7 @@ exports.destroy  = function(req, res){
  */
 exports.get = function (req, res) {
     LOMS.findById(req.params.id, function (err, lom) {
-       if (err) res.sendStatus(err.code);
+       if (err) { res.sendStatus(err.code); }
         res.json(lom);
     });
 };
@@ -64,8 +64,8 @@ exports.update = function (req, res) {
 	async.waterfall([
 	    LOMS.findById.bind(LOMS, req.params.id),
 	    function(lom, next) {
-	        if(!lom) res.status(404).send('The lom with id: ' + req.params.id + ' is not registrated');
-			else {
+	        if(!lom) { res.status(404).send('The lom with id: ' + req.params.id + ' is not registrated');
+			} else {
 				lom = _.extend(lom, req.body);
 	       		lom.save(next);
 			}
@@ -82,11 +82,11 @@ exports.remove = function (req, res) {
 	async.waterfall([
 	    LOMS.findById.bind(LOMS, req.params.id),
 	    function(lom, next) {
-			if(!lom)
+			if(!lom) {
 				res.end('The lom with id: ' + req.params.id + ' is not registrated');
-		    else{
+		    } else{
 				LOMS.remove(lom, function (err, resp) {
-			        if (err) res.sendStatus(err.code);
+			        if (err) { res.sendStatus(err.code); }
 			        res.json(resp);
 			    });
 			}
@@ -101,16 +101,16 @@ exports.remove = function (req, res) {
  */
 exports.uploadFile =  function (req, res) {
 	LOMS.findById(req.params.id, function(err, lom){
-		if(!lom) res.end('The lom with id: '+  req.params.id +' is not registrated');
-		else {
+		if(!lom) { res.end('The lom with id: '+  req.params.id +' is not registrated');
+		} else {
 			fs.stat(__dirname + '/../../res/files/' + req.params.id, function(err, stats){
-				if(err) fs.mkdir(__dirname + '/../../res/files/' + req.params.id);
+				if(err) { fs.mkdir(__dirname + '/../../res/files/' + req.params.id); }
 			});
 			var file = __dirname + '/../../res/files/' + req.params.id + '/' + req.file.originalname;
 	
 			fs.readFile( req.file.path, function (err, data) {
-				if(!data) res.end('No data to upload');
-				else {
+				if(!data) {res.end('No data to upload');
+				} else {
 					fs.writeFile(file, data, function (err) {
 						if( err ){
 							console.error( err );
