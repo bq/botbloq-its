@@ -17,7 +17,21 @@ var Request = function() {
          return response;
       });
     };
-
+	
+    this.lockBackend =function(path,status,params,headers) {
+      return chakram.request('LOCK', host+path,params,headers).then(function(response) {
+         expect(response).to.have.status(status);
+         return response;
+      });
+    };
+	
+    this.unlockBackend =function(path,status,params,headers) {
+      return chakram.request('UNLOCK', host+path,params,headers).then(function(response) {
+         expect(response).to.have.status(status);
+         return response;
+      });
+    };
+	
     this.getBackend =function(path,status,headers) {
       return chakram.get(host+path,headers).then(function(response) {
         expect(response).to.have.status(status);

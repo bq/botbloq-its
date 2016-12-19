@@ -21,7 +21,7 @@ describe('Chakram', function(){
 	
 
 	it('Testing to create a new student', function () {
- 	    var randomStudent = student.generateRandomStudent();
+ 	    var randomStudent = student.generateRandomStudent('pepe','pepe@gmail.com');
     	// create student
 	    return request.postBackend('/students',200,randomStudent).then(function (response) {
 	    	idStudent = response.body.id_student;

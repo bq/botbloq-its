@@ -2,16 +2,29 @@
 var mongoose = require('mongoose');
 
 var Student = function() {
-    this.generateRandomStudent = function() {
+    this.generateRandomStudent = function(nameStudent, emailStudent) {
+				
         var student = {
 			identification: {
-				name: 'Pepe',
-				email: 'pepe@gmail.com'
+				name:  nameStudent,
+				email: emailStudent
 			}
-			//_id: mongoose.Types.ObjectId()
         };
         return student;
     };
+	
+	this.generateCompleteStudent = function() {
+		var student = {
+			identification: {
+				name: 'antonio',
+				email: 'antonio@gmail.com',
+				address: 'Toledo st, 25',
+				phone: '593018562',
+				type: 'beginner'
+			}
+		};
+		return student;
+	}
 
     this.generateAnswer = function() {
     	var answer = { 

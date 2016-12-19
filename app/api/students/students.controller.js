@@ -26,26 +26,35 @@ exports.all = function (req, res) {
  * Creates a new element
  */
 exports.create = function(req, res) {
+	var bool = false;
 	if (req.body.identification.email !== undefined){
-		Students.find({identification: { email: req.body.identification.email } }, function(err, student1) {
-			if(student1.length === 0){
-			    Students.create(req.body, function (err, student) {
-			        if (err){
-			        	res.sendStatus(err.code);
-			        } 
-			        console.log('Student created!');
-		
-					var json_survey = require('../../res/learningstyle.json'); 
-					json_survey.id_student = student._id;
-		
-					res.json(json_survey);
-			    });
+		Students.find({}, function(err, students) {
+			if(err){
+	        	res.sendStatus(err.status);
 			} else {
-				res.status(403).send("A student with the same email already exists");
+				for(var i = 0; i< students.length; i++){
+					if(students[i].identification.email === req.body.identification.email){
+						bool = true;
+					}
+				}
+				if(bool === false){
+				    Students.create(req.body, function (err, student) {
+				        if (err){
+				        	res.sendStatus(err.status);
+				        } else {
+					        console.log('Student created!');
+							var json_survey = require('../../res/learningstyle.json'); 
+							json_survey.id_student = student._id;
+							res.json(json_survey);
+				        }
+				    });
+				} else {
+					res.status(403).send('A student with the same email already exists');
+				}
 			}
 		});
 	} else {
-		res.status(400).send("Student email is required");
+		res.status(400).send('Student email is required');
 	}
 	
 
@@ -95,41 +104,54 @@ exports.deactivate = function (req, res) {
  * Returns an student by id
  */
 exports.get = function (req, res) {
-    Students.findById(req.params.id, function(err, student) {
-		var arrayCourses = [];
-		if(functions.studentFound(student, req, res) === true){
-			student.course.find(function(element, index, array){
-				if(element.active === 1){ arrayCourses.push(element); } 
-			});
-			student.course = arrayCourses;
-			res.json(student);
+    Students.findOne({_id: req.params.id}, function(err, student) {
+		if(err){
+        	res.sendStatus(err.status);
+		} else {
+			if(functions.studentFound(student, req, res) === true){
+				res.json(student);
+			}
 		}
     });
 };
 
 /**
- * Updates a student by id
+ *  Updates a student by id
  */
 exports.update = function (req, res) {
+	var activity, bool = true;
 	async.waterfall([
 	    Students.findById.bind(Students, req.params.id),
 	    function(student, next) {
 			if(functions.studentFound(student, req, res) === true) {
 				if(req.body.identification.email !== undefined){
-					Students.find({identification: { email: req.body.identification.email } }, function(err, student1) {
-						if(student1.length > 0 && student1 === student){
-							student = _.extend(student, req.body);
-							student.save(next);	
+					Students.find({}, function(err, students) {
+						if(err){
+				        	res.sendStatus(err.status);
 						} else {
-							res.status(403).send("A student with the same email already exists");
+							for(var i = 0; i< students.length; i++){
+								if(students[i].identification.email === req.body.identification.email) {
+									if(students[i]._id.equals(student._id) === false){
+										res.status(400);
+									}	
+								}
+							}
+							if(res.statusCode !== 400) {
+								student = _.extend(student, req.body);
+								student.save(next);	
+								res.status(200);
+							} else {
+								res.status(400).send('A student with the same email already exists');
+							}
+							
+							
 						}
-					
 					});
 				} else {
 					student = _.extend(student, req.body);
 					student.save(next);	
+					res.status(200);
 				}
-
 			}
 		}	
 	], function(err, student) {
@@ -138,7 +160,7 @@ exports.update = function (req, res) {
 };
 
 /**
- * Includes a learning style in a student
+ *  Includes a learning style in a student
  */
 exports.init = function (req, res) {
 	async.waterfall([
@@ -189,14 +211,14 @@ exports.enrollment = function (req, res) {
 			        res.status(err.code).send(err);
 			    } else {
 					if(course.length === 0){
-						res.end('The course: ' + req.params.idc + ' is not registrated');
+						res.status(404).send('The course: ' + req.params.idc + ' is not registrated');
 					} else {
 						if(functions.studentFound(student, req, res) === true){
 							var coursed = false;
 							student.course.find(function(element ,index , array){
 								if(element.idCourse === req.params.idc){
 									if (element.active === 1){ 
-										activity = 'The student: ' + student._id + ' is already enrolled in the course: ' + req.params.idc;
+										res.status(400).send('The student: ' + student._id + ' is already enrolled in the course: ' + req.params.idc);
 									} else { 
 										element.active = 1;
 									}
