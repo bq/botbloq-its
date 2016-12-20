@@ -80,12 +80,8 @@ describe('Chakram', function(){
 							expect(response4.body[0].loms[0].lom_id).to.equal(idLOM);
 							chakram.wait();
 						}); 
-
-			
 					}); 
-
 				});
-				
 			});
 		});
 	});

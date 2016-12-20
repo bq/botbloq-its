@@ -218,7 +218,7 @@ exports.enrollment = function (req, res) {
 							student.course.find(function(element ,index , array){
 								if(element.idCourse === req.params.idc){
 									if (element.active === 1){ 
-										res.status(400).send('The student: ' + student._id + ' is already enrolled in the course: ' + req.params.idc);
+										res.status(400).send('The student: ' + student._id + ' is already enrolled in the course: ' + req.params.idc) ;
 									} else { 
 										element.active = 1;
 									}
@@ -252,7 +252,7 @@ exports.unenrollment = function (req, res) {
 	    function(student, next) { 
 			//find a student by id
 			var Courses = require('../courses/courses.model.js');
-			Courses.find({_id: req.params.idc}, function(err, course){ 
+			Courses.find({name: req.params.idc}, function(err, course){ 
 				// find a course by id
 			    if (err) {
 			        console.log(err);
@@ -268,7 +268,7 @@ exports.unenrollment = function (req, res) {
 								student.save(next);
 							}
 						});
-						if(!coursed){ res.end('The student: ' + student._id +
+						if(!coursed){ res.status(400).send('The student: ' + student._id +
 							 ' is not enrolled in the course: ' + req.params.idc); }
 					}
 			    }
