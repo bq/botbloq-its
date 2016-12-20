@@ -55,6 +55,7 @@
     "jshint": "^2.9.1",
     "jsonfile": "^2.4.0",
     "mocha": "^3.2.0",
+    "mongodb": "^2.2.16",
     "multer": "^1.2.0",
     "sinon": "^1.17.3",
     "supertest": "^1.1.0",

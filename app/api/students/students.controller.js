@@ -109,7 +109,12 @@ exports.get = function (req, res) {
         	res.sendStatus(err.status);
 		} else {
 			if(functions.studentFound(student, req, res) === true){
-				res.json(student);
+				var arrayCourses = [];
+				student.course.find(function(element, index, array){
+					if(element.active === 1){ arrayCourses.push(element); } 
+				});
+				student.course = arrayCourses;
+				if(res.statusCode === 200) res.json(student);
 			}
 		}
     });
@@ -493,7 +498,7 @@ exports.remove = function (req, res) {
 	    Students.findById.bind(Students, req.params.id),
 	    function(student, next) {
 			if(!student){
-				res.end('The student with id: ' + req.params.id + ' is not registrated');
+				res.status(404).send('The student with id: ' + req.params.id + ' is not registrated');
 			} else{
 			    Students.remove(student, function (err, resp) {
 			        if (err){ res.sendStatus(err.code); }

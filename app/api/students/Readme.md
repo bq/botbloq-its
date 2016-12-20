@@ -19,14 +19,36 @@ Retrieve of all the students registered in the system.
 
 **Status Codes**:
 200 OK - Action successfully attempted.
-400 Bad Request - The request contains bad syntax.
-404 Not Found - Resource not found.
 
 **Input**:
 
 **Return**:  
-If successful, this action returns a JSON data block containing the information for each student.
+This action returns a JSON data block containing the information for each student.
+
+
+**GET /botbloq/v1/its/students/:id**
+------------
+
+Retrieve the basic information of a student
+
+**Parameters**
+
+- id: Student ID
+
+**Query Parameters**:
+
+**Permissions**:
+
+**Status Codes**:
+200 OK - Action successfully attempted.
+400 Bad Request - The request contains bad syntax.
+404 Not Found - Resource not found.
+**Input**: 
+
+**Return**: 
+If successful, this action returns the corresponding JSON object student with id introduced.
 If this action is not successful, it returns the error code. 
+
 
 **GET /botbloq/v1/its/students/:idstd/course/:idc**
 -------------
@@ -54,29 +76,6 @@ If successful, this action returns a JSON data block containing the information 
 If this action is not successful, it returns the error code. 
 
 
-**GET /botbloq/v1/its/students/:id**
-------------
-
-Retrieve the basic information of a student
-
-**Parameters**
-
-- id: Student ID
-
-**Query Parameters**:
-
-**Permissions**:
-
-**Status Codes**:
-200 OK - Action successfully attempted.
-400 Bad Request - The request contains bad syntax.
-404 Not Found - Resource not found.
-**Input**: 
-
-**Return**: 
-If successful, this action returns the corresponding JSON object student with id introduced.
-If this action is not successful, it returns the error code. 
-
 **POST /botbloq/v1/its/students**
 -------------
 
@@ -90,9 +89,10 @@ The service creates a new student with  the provided values.
 
 **Status Codes**:
 200 OK - Action successfully attempted.
-400 Bad Request - The request contains bad syntax.
+400 Bad Request - Student email is required.
+403 Forbidden - A student with the same email already exists
 **Input**: 
-A JSON student object.
+A survey.
 **Return**:  
 
 If successful, this action returns: "Added the student with id: " and the id of the new student.
