@@ -267,12 +267,11 @@ Deactivate the information of a student in  the repository (logic deleted).
 
 **Status Codes**:
 200 OK - Action successfully attempted.
-400 Bad Request - The request contains bad syntax.
 404 Not Found - Resource not found.
 **Input**: 
 
 **Return**:  
-If successful, this action returns a JSON data block containing the information for each student.
+If successful, this action returns a JSON data block containing the student information.
 If this action is not successful, it returns the error code. 
 
 **UNLOCK /botbloq/v1/its/students/:id**
