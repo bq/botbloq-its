@@ -146,7 +146,7 @@ exports.selectActivity = function(myLesson, course, status){
  *  In this function the previous checks are carried out to look for the following activity:
  */
 
-exports.nextActivity = function (element, course){
+exports.nextActivity = function (element, course, student){
 	var ret = 0, indexMyLesson = 0, myLesson;
 		
 	// It is verified that the course has at least 1 section.	
@@ -197,7 +197,29 @@ exports.nextActivity = function (element, course){
 				} else { ret = -1; }
 			}
 		
-		} else { indexMyLesson = 0;}
+		} else { //// AQUI OBJETIVOS
+			indexMyLesson = 0;
+			var bool = true, n = 0, i = 0, 
+			stdObjectives = student.knowledgeLevel, 
+			lessons = course.sections[0].lessons;
+			if(stdObjectives.length !== 0){
+				do{
+					if(lessons[i].objectives[0].code === stdObjectives[n].code && lessons[i].objectives[0].level === stdObjectives[n].level){
+						indexMyLesson = i+1;
+						if(stdObjectives.length > (n + 1)) {
+							n++;
+						} else if (lessons.length > (i + 1)){
+							i++;
+						} else {
+							bool = false;
+						}
+					} else {
+						bool = false;
+					}
+				}while(bool === true);
+			}
+			
+		}
 		
 		/**
 		 *  Finally returns the next activity that corresponds or a negative number depending on

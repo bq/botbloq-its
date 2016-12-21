@@ -8,19 +8,13 @@ var LOM = new Schema({
 });
 	
 var Objective = new Schema({
+	code: String,
 	description: String,
-	bloom_domain: {
-		type:String,
-		enum:['cognitive', 'affective', 'psychomotor']
-	},		
-	domain: {
-		type:String,
-		enum:[
-		'Applying', 'Analyzing', 'Synthesizing', 'Evaluating',
-		'Receiving', 'Responding', 'Valuing', 'Organizing', 'Characterizing',
-		'Perception', 'Set', 'Guided response', 'Mechanism', 'Complex overt response', 
-				'Adaptation', 'Origination'
-		]
+	level: Number,
+	bloom: {
+		type: String,
+		enum: ['knoweldge', 'comprehension', 'application', 
+		'analysis', 'sintehsis', 'evaluation']
 	}
 });
 

@@ -1,12 +1,13 @@
 'use strict';
 
 var Students = require('./students.model.js'),
-   config = require('../../res/config.js'), 
-   async = require('async'),
-   _ = require('lodash'),
-   functions = require('./students.functions.js'), 
-Courses = require('../courses/courses.model.js'),
-LOMS = require('../loms/loms.model.js');
+	config = require('../../res/config.js'), 
+	async = require('async'),
+	_ = require('lodash'),
+	functions = require('./students.functions.js'), 
+	functions2 = require('../courses/courses.functions.js'),
+	Courses = require('../courses/courses.model.js'),
+	LOMS = require('../loms/loms.model.js');
 
 
 //ALL STUDENTS
@@ -188,7 +189,7 @@ exports.init = function (req, res) {
 		   				student.learningStyle.processing = answers[i].value;
 		    			break;
 		   			default:
-		   			 	res.end('The id_question: ' + answers[i].id_question + ' is not correct')
+		   			 	res.status(400).send('The id_question: ' + answers[i].id_question + ' is not correct');
 					}
 				}
 				student.save(next);
@@ -289,13 +290,13 @@ exports.unenrollment = function (req, res) {
  *  correct or incorrectly completed, respectively.
  */
 exports.updateActivity = function (req, res) {
-	var ret;
+	var ret, bool = false;
 	async.waterfall([
 	    Students.findById.bind(Students,  req.params.idstd),
 	    function(student, next) { 
 			//find a student by id
 			var Courses = require('../courses/courses.model.js');
-			Courses.find({name: req.params.idc}, function(err, course){ 
+			Courses.findOne({name: req.params.idc}, function(err, course){
 			    if (err) {
 			        console.log(err);
 			        res.status(err.code).send(err);
@@ -324,31 +325,48 @@ exports.updateActivity = function (req, res) {
 												res.status(400); 
 											 }
 										 }
-										 student.activity_log.push(
-											 {
-												 idCourse: element.idCourse,
-												 idSection: element.idSection,
-												 idLesson: element.idLesson,
-												 idLom: element.idLom,
-												 status: element.status
-											 }
-										 );
 										 
 										 /**
-										  *  To calculate the duration of the activity the created_at of the activity is subtracted 
-										  *  with the created_at of the previous activity, or the created_at of the course if it is the first activity.
+										  *  Include the objetive of the finished lesson in student knowledgeLevel  
 										  */
-										 
-										 var lengthAct = student.activity_log.length;
-										 if(lengthAct > 1){											 
-										 	student.activity_log[lengthAct-1].duration = 
-											 		student.activity_log[lengthAct-1].created_at - student.activity_log[lengthAct-2].created_at;
-										 } else {
-										 	student.activity_log[lengthAct-1].duration = 
-											 		student.activity_log[lengthAct-1].created_at - element.created_at;
-										 }
+										if(res.statusCode === 200){
+											 var lesson = functions2.find_lesson(element.idLesson, course.sections[0].lessons);
+											 lesson = course.sections[0].lessons[lesson];
+											 student.knowledgeLevel.find(function(element1, index1, array1){
+												 if(element1.code === lesson.objectives[0].code && element1.level === lesson.objectives[0].level){
+													 bool = true;
+												 }
+											 });
+									 		
+											 if(bool === false && lesson.objectives.length !== 0){
+												 student.knowledgeLevel.push(lesson.objectives[0]);
+											 } 
+											 student.activity_log.push(
+												 {
+													 idCourse: element.idCourse,
+													 idSection: element.idSection,
+													 idLesson: element.idLesson,
+													 idLom: element.idLom,
+													 status: element.status
+												 }
+											 );
+									 
+											 /**
+											  *  To calculate the duration of the activity the created_at of the activity is subtracted 
+											  *  with the created_at of the previous activity, or the created_at of the course if it is the first activity.
+											  */
+									 
+											 var lengthAct = student.activity_log.length;
+											 if(lengthAct > 1){											 
+											 	student.activity_log[lengthAct-1].duration = 
+												 		student.activity_log[lengthAct-1].created_at - student.activity_log[lengthAct-2].created_at;
+											 } else {
+											 	student.activity_log[lengthAct-1].duration = 
+												 		student.activity_log[lengthAct-1].created_at - element.created_at;
+											 }
+									
+										}
 										
-										 console.log(student.activity_log[lengthAct-1]); 									
 										student.save(next);
 									} else{
 										ret = 'The student: ' + student._id + ' does not have the lom: ' + req.params.idl;
@@ -357,7 +375,7 @@ exports.updateActivity = function (req, res) {
 								} else{
 									ret = 'The student: ' + student._id + ' is not activated in the course: ' + req.params.idc;
 									res.status(403);
-								} 
+								} 								
 							}
 						});
 						
@@ -415,7 +433,7 @@ exports.newActivity = function (req, res) {
 										 *  this function is explained in 'students.functions.js'.
 										 */
 										
-										ret = functions.nextActivity(element, course);	
+										ret = functions.nextActivity(element, course, student);	
 										
 										switch (ret){
 										case -1:

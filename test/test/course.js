@@ -33,7 +33,8 @@ var Course = function() {
 				name : 'Lesson_1_1',
 				resume : 'Default Lesson',
 				loms: [] 
-			} 
+			},
+			objectives: []
 		}
 		return lesson;
     };
@@ -63,6 +64,7 @@ var Course = function() {
 							resume: 'Default lesson 1',
 							learning_path: [2,1],
 							type: 'Essential',
+							objectives: [],
 							loms: [{lom_id: loms[0]}]
 						},
 						{
@@ -70,6 +72,7 @@ var Course = function() {
 							resume: 'Default lesson 2',
 							learning_path: [2],
 							type: 'Extension',
+							objectives: [],
 							loms: [{lom_id: loms[1]}]
 						},
 						{
@@ -77,6 +80,7 @@ var Course = function() {
 							resume: 'Default lesson 3',
 							learning_path: [2],
 							type: 'Reinforcement',
+							objectives: [],
 							loms: [{lom_id: loms[2]}]
 						}
 					]
@@ -100,18 +104,21 @@ var Course = function() {
 							name: 'Lesson_0_0',
 							resume: 'initial lesson',
 							learning_path: [],
+							objectives: [],
 							loms: [{lom_id: loms[0]}]
 						},
 						{
 							name: 'Lesson_0_1',
 							resume: 'Zowi charla con gato',
 							learning_path: [],
+							objectives: [],
 							loms: [{lom_id: loms[1]}]
 						},
 						{
 							name: 'Lesson_0_2',
 							resume: 'Zowi camina por la lluvia',
 							learning_path: [],
+							objectives: [],
 							loms: [{lom_id: loms[2]}]
 						},
 						
@@ -119,18 +126,21 @@ var Course = function() {
 							name: 'Lesson_0_3',
 							resume: 'Moviendo a Zowi',
 							learning_path: [],
+							objectives: [],
 							loms: [{lom_id: loms[3]}]
 						},
 						{
 							name: 'Lesson_0_4',
 							resume: 'Un murcielago persigue a Zowi',
 							learning_path: [],
+							objectives: [],
 							loms: [{lom_id: loms[4]}]
 						},
 						{
 							name: 'Lesson_0_5',
 							resume: 'Zowi se alimenta',
 							learning_path: [],
+							objectives: [],
 							loms: [{lom_id: loms[5]}]
 						},
 						
@@ -138,30 +148,35 @@ var Course = function() {
 							name: 'Lesson_0_6',
 							resume: '¿Cuantas manzanas te has comido Zowi?',
 							learning_path: [],
+							objectives: [],
 							loms: [{lom_id: loms[6]}]
 						},
 						{
 							name: 'Lesson_0_7',
 							resume: '¡¡Lueve!!',
 							learning_path: [],
+							objectives: [],
 							loms: [{lom_id: loms[7]}]
 						},
 						{
 							name: 'Lesson_0_8',
 							resume: 'Zowi pesca',
 							learning_path: [],
+							objectives: [],
 							loms: [{lom_id: loms[8]}]
 						},
 						{
 							name: 'Lesson_0_9',
 							resume: 'Zowi enciende la luz',
 							learning_path: [],
+							objectives: [],
 							loms: [{lom_id: loms[9]}]
 						},
 						{
 							name: 'Lesson_1_0',
 							resume: 'Zowi se ha vuelto un listillo',
 							learning_path: [],
+							objectives: [],
 							loms: [{lom_id: loms[10]}]
 						}
 					]
@@ -171,12 +186,12 @@ var Course = function() {
 		return course;
 	}
 	
-	this.generateBitbloqCourse = function(loms){
+	this.generateBitbloqIntroduction = function(loms){
 
 		var course = {
-			name: 'courseBitbloq' + currentDate,
-			code: 'COURSE' + currentDate,
-			content: 'Bitbloq course for test',
+			name: 'courseIntroduction' + currentDate,
+			code: 'INTRO' + currentDate,
+			content: 'Bitbloq introduction for test',
 			sections: [
 				{
 					name: 'Section_1',
@@ -187,6 +202,57 @@ var Course = function() {
 							resume: 'Antes de empezar',
 							learning_path: [1],
 							type: 'Essential',
+							objectives: [{
+								code: 'ROBOT01',
+								description: '',
+								level: 1,
+								bloom:'knoweldge'
+							}],
+							loms: [{lom_id: loms[0]}]
+						},
+						{
+							name: 'Lesson_2',
+							resume: 'Conociendo el entorno',
+							learning_path: [1],
+							type: 'Essential',
+							objectives: [{
+								code: 'ROBOT01',
+								description: '',
+								level: 1,
+								bloom:'knoweldge'
+							}],
+							loms: [{lom_id: loms[1]}]
+						}
+					]	
+				}
+			]
+		}
+		return course;
+	}
+	
+	
+	this.generateBitbloqCourse = function(loms){
+
+		var course = {
+			name: 'courseBitbloq' + currentDate,
+			code: 'COURSE' + currentDate,
+			content: 'Bitbloq  course for test',
+			sections: [
+				{
+					name: 'Section_1',
+					resume: 'Default section',
+					lessons: [
+						{
+							name: 'Lesson_1',
+							resume: 'Antes de empezar',
+							learning_path: [1],
+							type: 'Essential',
+							objectives: [{
+								code: 'ROBOT01',
+								description: '',
+								level: 1,
+								bloom:'knoweldge'
+							}],
 							loms: [{lom_id: loms[0]}]
 						},
 						{
@@ -194,6 +260,12 @@ var Course = function() {
 							resume: 'Conociendo el entorno',
 							learning_path: [2],
 							type: 'Essential',
+							objectives: [{
+								code: 'ROBOT01',
+								description: '',
+								level: 1,
+								bloom:'knoweldge'
+							}],
 							loms: [{lom_id: loms[1]}]
 						},
 						{
@@ -201,6 +273,12 @@ var Course = function() {
 							resume: '¿Que es un robot?',
 							learning_path: [5],
 							type: 'Essential',
+							objectives: [{
+								code: 'ROBOT01',
+								description: '',
+								level: 2,
+								bloom:'knoweldge'
+							}],
 							loms: [{lom_id: loms[2]}]
 						},
 						{
@@ -208,6 +286,12 @@ var Course = function() {
 							resume: 'LED',
 							learning_path: [9, 4],
 							type: 'Reinforcement',
+							objectives: [{
+								code: 'ROBOT01',
+								description: '',
+								level: 2,
+								bloom:'knoweldge'
+							}],
 							loms: [{lom_id: loms[3]}]
 						},
 						{
@@ -215,6 +299,12 @@ var Course = function() {
 							resume: 'Condicionales',
 							learning_path: [6, 10],
 							type: 'Essential',
+							objectives: [{
+								code: 'ROBOT01',
+								description: '',
+								level: 2,
+								bloom:'knoweldge'
+							}],
 							loms: [{lom_id: loms[4]}]
 						},
 						{
@@ -222,6 +312,12 @@ var Course = function() {
 							resume: 'Algoritmos',
 							learning_path: [3, 4],
 							type: 'Essential',
+							objectives: [{
+								code: 'ROBOT01',
+								description: '',
+								level: 2,
+								bloom:'knoweldge'
+							}],
 							loms: [{lom_id: loms[5]}]
 						},
 						{
@@ -229,6 +325,12 @@ var Course = function() {
 							resume: 'Zumbador',
 							learning_path: [7, 10],
 							type: 'Reinforcement',
+							objectives: [{
+								code: 'ROBOT01',
+								description: '',
+								level: 2,
+								bloom:'knoweldge'
+							}],
 							loms: [{lom_id: loms[6]}]
 						},
 						{
@@ -236,12 +338,24 @@ var Course = function() {
 							resume: 'Sensor IR',
 							learning_path: [8, 10],
 							type: 'Reinforcement',
+							objectives: [{
+								code: 'ROBOT01',
+								description: '',
+								level: 2,
+								bloom:'knoweldge'
+							}],
 							loms: [{lom_id: loms[7]}]
 						},
 						{
 							name: 'Lesson_12',
 							resume: 'Sensor luz',
 							learning_path: [10],
+							objectives: [{
+								code: 'ROBOT01',
+								description: '',
+								level: 2,
+								bloom:'knoweldge'
+							}],
 							loms: [{lom_id: loms[8]}]
 						},
 						{
@@ -249,6 +363,12 @@ var Course = function() {
 							resume: 'Servo rotacion continua',
 							learning_path: [4],
 							type: 'Reinforcement',
+							objectives: [{
+								code: 'ROBOT01',
+								description: '',
+								level: 2,
+								bloom:'knoweldge'
+							}],
 							loms: [{lom_id: loms[9]}]
 						},
 						{
@@ -256,6 +376,12 @@ var Course = function() {
 							resume: 'Logica booleana',
 							learning_path: [10],
 							type: 'Extension',
+							objectives: [{
+								code: 'ROBOT01',
+								description: '',
+								level: 2,
+								bloom:'knoweldge'
+							}],
 							loms: [{lom_id: loms[10]}]
 						}
 					]	

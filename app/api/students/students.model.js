@@ -72,19 +72,6 @@ var learningStyleSchema = new Schema({
 	_id: false
 });
 
-var knowledgeLevelSchema = new Schema({
-    name: {
-        type: String,
-    },
-    level: {
-        type: String,
-    },
-    target: {
-        type: String,
-    },
-	_id: false
-});
-
 var courseSchema = new Schema({
 	idCourse: {
 		type: String,
@@ -158,6 +145,17 @@ var activitySchema = new Schema({
 	}
 });
 
+var Objective = new Schema({
+	code: String,
+	description: String,
+	level: Number,
+	bloom: {
+		type: String,
+		enum: ['knoweldge', 'comprehension', 'application', 
+		'analysis', 'sintehsis', 'evaluation']
+	}
+});
+
 
 var studentSchema = new Schema({
 	identification: {
@@ -170,11 +168,7 @@ var studentSchema = new Schema({
 		required: false,
 		default: ''
 	},
-	knowledgeLevel: {
-		type: knowledgeLevelSchema,
-		required: false,
-		default: ''
-	},
+	knowledgeLevel: [Objective],
 	active:{
 		type: Number,
 		required: false,
