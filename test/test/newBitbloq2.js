@@ -174,7 +174,7 @@ describe('Chakram', function(){
 		.then(function(response) {
 			expect(response.body.general).to.have.property('title', '¿Que es un robot? Conociendo sensores y actuadores');
 			lom = response.body._id;
-			console.log('The system returns the third lesson of the course: 3. Que es un robot');
+			console.log('The system returns the third lesson of the course: 3. Que es un robot, Because the first and second have already been coursed');
 			
 			return request.putBackend('/students/'+idStudent+ '/course/' + bitbloqCourse.name +'/lom/' + lom + '/ok', 200)
 			.then(function (response2) {
@@ -237,7 +237,6 @@ describe('Chakram', function(){
 																.then(function(response) {
 																	expect(response.body).to.equal('Course finished');
 																	console.log('The system returns: Course finished');
-																	
 																	chakram.wait();
 																});
 															});
@@ -277,23 +276,4 @@ describe('Chakram', function(){
 			});
 		});	
 	});
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 });

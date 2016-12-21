@@ -218,7 +218,6 @@ exports.nextActivity = function (element, course, student){
 					}
 				}while(bool === true);
 			}
-			
 		}
 		
 		/**

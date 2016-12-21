@@ -83,7 +83,7 @@ exports.remove = function (req, res) {
 	    LOMS.findById.bind(LOMS, req.params.id),
 	    function(lom, next) {
 			if(!lom) {
-				res.end('The lom with id: ' + req.params.id + ' is not registrated');
+				res.status(404).send('The lom with id: ' + req.params.id + ' is not registrated');
 		    } else{
 				LOMS.remove(lom, function (err, resp) {
 			        if (err) { res.sendStatus(err.code); }
@@ -101,7 +101,7 @@ exports.remove = function (req, res) {
  */
 exports.uploadFile =  function (req, res) {
 	LOMS.findById(req.params.id, function(err, lom){
-		if(!lom) { res.end('The lom with id: '+  req.params.id +' is not registrated');
+		if(!lom) { res.status(404).send('The lom with id: '+  req.params.id +' is not registrated');
 		} else {
 			fs.stat(__dirname + '/../../res/files/' + req.params.id, function(err, stats){
 				if(err) { fs.mkdir(__dirname + '/../../res/files/' + req.params.id); }
@@ -109,7 +109,7 @@ exports.uploadFile =  function (req, res) {
 			var file = __dirname + '/../../res/files/' + req.params.id + '/' + req.file.originalname;
 	
 			fs.readFile( req.file.path, function (err, data) {
-				if(!data) {res.end('No data to upload');
+				if(!data) {res.status(400).send('No data to upload');
 				} else {
 					fs.writeFile(file, data, function (err) {
 						if( err ){

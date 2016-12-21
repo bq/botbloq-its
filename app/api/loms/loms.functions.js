@@ -8,5 +8,9 @@ exports.controlErrors = function (err, res, ret){
         console.log(err);
         res.status(404).send(err);
     } 
-	else { res.json(ret); }
+	else { 
+		if(res.statusCode === 200){
+			res.json(ret); 
+		}
+	}
 }
