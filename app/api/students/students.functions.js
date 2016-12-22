@@ -8,7 +8,7 @@ var functions2 = require('../courses/courses.functions.js');
 exports.controlErrors = function (err, res, ret){
     if (err) {
         console.log(err);
-        res.status(404).send(err);
+        res.status(err.code).send(err);
     } 
 	else{ 
 		if(res.statusCode === 200){

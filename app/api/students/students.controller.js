@@ -57,8 +57,6 @@ exports.create = function(req, res) {
 	} else {
 		res.status(400).send('Student email is required');
 	}
-	
-
 };
 
 /**
@@ -321,8 +319,7 @@ exports.updateActivity = function (req, res) {
 												res.status(200);	
 											 } 											
 											 else {
-											 	ret = 'the status: ' + req.params.status + ' is not correct';
-												res.status(400); 
+												res.status(400).send('the status: ' + req.params.status + ' is not correct'); 
 											 }
 										 }
 										 
@@ -369,19 +366,16 @@ exports.updateActivity = function (req, res) {
 										
 										student.save(next);
 									} else{
-										ret = 'The student: ' + student._id + ' does not have the lom: ' + req.params.idl;
-										res.status(404);
+										res.status(404).send('The student: ' + student._id + ' does not have the lom: ' + req.params.idl);
 									} 
 								} else{
-									ret = 'The student: ' + student._id + ' is not activated in the course: ' + req.params.idc;
-									res.status(403);
+									res.status(403).send('The student: ' + student._id + ' is not activated in the course: ' + req.params.idc);
 								} 								
 							}
 						});
 						
 						if(!coursed){
-							ret = 'The student: ' + student._id + ' is not enrolled in the course: ' + req.params.idc;
-							res.status(400);
+							res.status(400).send('The student: ' + student._id + ' is not enrolled in the course: ' + req.params.idc);
 						} 
 					} 
 			    }
@@ -414,8 +408,7 @@ exports.newActivity = function (req, res) {
 			        res.status(err.code).send(err);
 			    } else {
 					if(!course){
-						activity = 'The course: ' + req.params.idc + ' is not registrated';
-						res.status(404);
+						res.status(404).send('The course: ' + req.params.idc + ' is not registrated');
 					} else {
 						
 						if(functions.studentFound(student, req, res) === true){
@@ -442,18 +435,15 @@ exports.newActivity = function (req, res) {
 											student.save(next);
 											break;
 										case -2:
-											activity = 'There is a lesson without loms';
-											res.status(404);
+											res.status(404).send('There is a lesson without loms');
 											student.save(next);
 											break;
 										case -3:
-											activity = 'There is a section without lessons';											
-											res.status(404);
+											res.status(404).send('There is a section without lessons');
 											student.save(next);
 											break;
 										case -4:
-											activity = 'There is a course without sections';
-											res.status(404);
+											res.status(404).send('There is a course without sections');
 											student.save(next);
 											break;
 										default:	
@@ -468,11 +458,10 @@ exports.newActivity = function (req, res) {
 												
 											    if (err) {
 											        console.log(err);
-											        res.status(404).send(err);
+											        res.status(err.code).send(err);
 												} else {
 								            		if(!lom){ 														
-														res.status(404);
-														activity = 'The lom: ' + element.idLom + ' is not registrated';
+														res.status(404).send('The lom: ' + element.idLom + ' is not registrated');
 													} else {
 														if(lom.length > 0){ activity = lom[0]; }
 														else{ activity = lom; }
@@ -487,15 +476,13 @@ exports.newActivity = function (req, res) {
 								}
 							});							
 						} else{
-							res.status(403);
-							activity = 'The student: ' + student._id + 
-							' is not activated in the course: ' + req.params.idc;	
+							res.status(403).send('The student: ' + student._id + 
+							' is not activated in the course: ' + req.params.idc);	
 						} 			
 					}
 					if(!coursed){
-						res.status(404);
-						activity = 'The student: ' + student._id + 
-						' is not enrolled in the course: ' + req.params.idc;
+						res.status(404).send('The student: ' + student._id + 
+						' is not enrolled in the course: ' + req.params.idc);
 					} 
 				}
 				course.save();
