@@ -20,7 +20,7 @@ var Objective = new Schema({
 
 var Lesson = new Schema({ 
 		name: String, 
-		resume: String,  
+		summary: String,  
 		objectives: [Objective],
 		learning_path: [Number],
 		type: {
@@ -34,7 +34,7 @@ var Lesson = new Schema({
 
 var Section = new Schema({ 
 	name: String, 
-	resume  : String, 
+	summary  : String, 
 	objectives: [Objective],
 	lessons  : [Lesson],
 	_id: false
@@ -43,7 +43,7 @@ var Section = new Schema({
 var CoursesSchema = new mongoose.Schema({
 	name: { type: String, trim: true, required: true },
 	code: { type: String, index: { unique: true } },
-	content: { type: String, trim: true },
+	summary: { type: String, trim: true },
 	objectives: [Objective],
 	sections  : [Section],
 	history: [String]

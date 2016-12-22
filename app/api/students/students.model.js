@@ -135,7 +135,7 @@ var activitySchema = new Schema({
 		type: Number,
 		default: 0
 	},
-	attemps: {
+	attempts: {
 		type: Number,
 		required: false
 	},
