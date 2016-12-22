@@ -8,7 +8,7 @@ var Course = function() {
         var course = {
 			name : 'Test_Course_' + currentDate,
 			code : 'TEST'+ currentDate,
-			content : 'Default course for test with name without spaces'
+			summary : 'Default course for test with name without spaces'
 		};
 		return course;
 	};
@@ -18,7 +18,7 @@ var Course = function() {
 			course : '',
 			section : {
 				name : 'Section_1_1',
-				resume : 'Default Section',
+				summary : 'Default Section',
 				lessons: [] 
 			} 
 		}
@@ -31,7 +31,7 @@ var Course = function() {
 			section: 'Section_1_1',
 			lesson : {
 				name : 'Lesson_1_1',
-				resume : 'Default Lesson',
+				summary : 'Default Lesson',
 				loms: [] 
 			},
 			objectives: []
@@ -53,15 +53,15 @@ var Course = function() {
 		var course = {
 			name: 'courseZowi' + currentDate,
 			code: 'COURSE' + currentDate,
-			content: 'Zowi course for test',
+			summary: 'Zowi course for test',
 			sections: [
 				{
 					name: 'Section_1_1',
-					resume: 'Default section',
+					summary: 'Default section',
 					lessons: [
 						{
 							name: 'Lesson_1',
-							resume: 'Default lesson 1',
+							summary: 'Default lesson 1',
 							learning_path: [2,1],
 							type: 'Essential',
 							objectives: [],
@@ -69,7 +69,7 @@ var Course = function() {
 						},
 						{
 							name: 'Lesson_2',
-							resume: 'Default lesson 2',
+							summary: 'Default lesson 2',
 							learning_path: [2],
 							type: 'Extension',
 							objectives: [],
@@ -77,7 +77,7 @@ var Course = function() {
 						},
 						{
 							name: 'Lesson_3',
-							resume: 'Default lesson 3',
+							summary: 'Default lesson 3',
 							learning_path: [2],
 							type: 'Reinforcement',
 							objectives: [],
@@ -94,29 +94,29 @@ var Course = function() {
 		var course = {
 			name: 'courseZowi' + currentDate,
 			code: 'COURSE' + currentDate,
-			content: 'Zowi course for test',
+			summary: 'Zowi course for test',
 			sections: [
 				{
 					name: 'Section_1_1',
-					resume: 'Default section',
+					summary: 'Default section',
 					lessons: [
 						{
 							name: 'Lesson_0_0',
-							resume: 'initial lesson',
+							summary: 'initial lesson',
 							learning_path: [],
 							objectives: [],
 							loms: [{lom_id: loms[0]}]
 						},
 						{
 							name: 'Lesson_0_1',
-							resume: 'Zowi charla con gato',
+							summary: 'Zowi charla con gato',
 							learning_path: [],
 							objectives: [],
 							loms: [{lom_id: loms[1]}]
 						},
 						{
 							name: 'Lesson_0_2',
-							resume: 'Zowi camina por la lluvia',
+							summary: 'Zowi camina por la lluvia',
 							learning_path: [],
 							objectives: [],
 							loms: [{lom_id: loms[2]}]
@@ -124,21 +124,21 @@ var Course = function() {
 						
 						{
 							name: 'Lesson_0_3',
-							resume: 'Moviendo a Zowi',
+							summary: 'Moviendo a Zowi',
 							learning_path: [],
 							objectives: [],
 							loms: [{lom_id: loms[3]}]
 						},
 						{
 							name: 'Lesson_0_4',
-							resume: 'Un murcielago persigue a Zowi',
+							summary: 'Un murcielago persigue a Zowi',
 							learning_path: [],
 							objectives: [],
 							loms: [{lom_id: loms[4]}]
 						},
 						{
 							name: 'Lesson_0_5',
-							resume: 'Zowi se alimenta',
+							summary: 'Zowi se alimenta',
 							learning_path: [],
 							objectives: [],
 							loms: [{lom_id: loms[5]}]
@@ -146,35 +146,35 @@ var Course = function() {
 						
 						{
 							name: 'Lesson_0_6',
-							resume: '¿Cuantas manzanas te has comido Zowi?',
+							summary: '¿Cuantas manzanas te has comido Zowi?',
 							learning_path: [],
 							objectives: [],
 							loms: [{lom_id: loms[6]}]
 						},
 						{
 							name: 'Lesson_0_7',
-							resume: '¡¡Lueve!!',
+							summary: '¡¡Lueve!!',
 							learning_path: [],
 							objectives: [],
 							loms: [{lom_id: loms[7]}]
 						},
 						{
 							name: 'Lesson_0_8',
-							resume: 'Zowi pesca',
+							summary: 'Zowi pesca',
 							learning_path: [],
 							objectives: [],
 							loms: [{lom_id: loms[8]}]
 						},
 						{
 							name: 'Lesson_0_9',
-							resume: 'Zowi enciende la luz',
+							summary: 'Zowi enciende la luz',
 							learning_path: [],
 							objectives: [],
 							loms: [{lom_id: loms[9]}]
 						},
 						{
 							name: 'Lesson_1_0',
-							resume: 'Zowi se ha vuelto un listillo',
+							summary: 'Zowi se ha vuelto un listillo',
 							learning_path: [],
 							objectives: [],
 							loms: [{lom_id: loms[10]}]
@@ -191,15 +191,15 @@ var Course = function() {
 		var course = {
 			name: 'courseIntroduction' + currentDate,
 			code: 'INTRO' + currentDate,
-			content: 'Bitbloq introduction for test',
+			summary: 'Bitbloq introduction for test',
 			sections: [
 				{
 					name: 'Section_1',
-					resume: 'Default section',
+					summary: 'Default section',
 					lessons: [
 						{
 							name: 'Lesson_1',
-							resume: 'Antes de empezar',
+							summary: 'Antes de empezar',
 							learning_path: [1],
 							type: 'Essential',
 							objectives: [{
@@ -212,7 +212,7 @@ var Course = function() {
 						},
 						{
 							name: 'Lesson_2',
-							resume: 'Conociendo el entorno',
+							summary: 'Conociendo el entorno',
 							learning_path: [1],
 							type: 'Essential',
 							objectives: [{
@@ -236,15 +236,15 @@ var Course = function() {
 		var course = {
 			name: 'courseBitbloq' + currentDate,
 			code: 'COURSE' + currentDate,
-			content: 'Bitbloq  course for test',
+			summary: 'Bitbloq  course for test',
 			sections: [
 				{
 					name: 'Section_1',
-					resume: 'Default section',
+					summary: 'Default section',
 					lessons: [
 						{
 							name: 'Lesson_1',
-							resume: 'Antes de empezar',
+							summary: 'Antes de empezar',
 							learning_path: [1],
 							type: 'Essential',
 							objectives: [{
@@ -257,7 +257,7 @@ var Course = function() {
 						},
 						{
 							name: 'Lesson_2',
-							resume: 'Conociendo el entorno',
+							summary: 'Conociendo el entorno',
 							learning_path: [2],
 							type: 'Essential',
 							objectives: [{
@@ -270,7 +270,7 @@ var Course = function() {
 						},
 						{
 							name: 'Lesson_3',
-							resume: '¿Que es un robot?',
+							summary: '¿Que es un robot?',
 							learning_path: [5],
 							type: 'Essential',
 							objectives: [{
@@ -283,7 +283,7 @@ var Course = function() {
 						},
 						{
 							name: 'Lesson_4',
-							resume: 'LED',
+							summary: 'LED',
 							learning_path: [9, 4],
 							type: 'Reinforcement',
 							objectives: [{
@@ -296,7 +296,7 @@ var Course = function() {
 						},
 						{
 							name: 'Lesson_5',
-							resume: 'Condicionales',
+							summary: 'Condicionales',
 							learning_path: [6, 10],
 							type: 'Essential',
 							objectives: [{
@@ -309,7 +309,7 @@ var Course = function() {
 						},
 						{
 							name: 'Lesson_8',
-							resume: 'Algoritmos',
+							summary: 'Algoritmos',
 							learning_path: [3, 4],
 							type: 'Essential',
 							objectives: [{
@@ -322,7 +322,7 @@ var Course = function() {
 						},
 						{
 							name: 'Lesson_9',
-							resume: 'Zumbador',
+							summary: 'Zumbador',
 							learning_path: [7, 10],
 							type: 'Reinforcement',
 							objectives: [{
@@ -335,7 +335,7 @@ var Course = function() {
 						},
 						{
 							name: 'Lesson_10',
-							resume: 'Sensor IR',
+							summary: 'Sensor IR',
 							learning_path: [8, 10],
 							type: 'Reinforcement',
 							objectives: [{
@@ -348,7 +348,7 @@ var Course = function() {
 						},
 						{
 							name: 'Lesson_12',
-							resume: 'Sensor luz',
+							summary: 'Sensor luz',
 							learning_path: [10],
 							objectives: [{
 								code: 'ROBOT01',
@@ -360,7 +360,7 @@ var Course = function() {
 						},
 						{
 							name: 'Lesson_15',
-							resume: 'Servo rotacion continua',
+							summary: 'Servo rotacion continua',
 							learning_path: [4],
 							type: 'Reinforcement',
 							objectives: [{
@@ -373,7 +373,7 @@ var Course = function() {
 						},
 						{
 							name: 'Lesson_20',
-							resume: 'Logica booleana',
+							summary: 'Logica booleana',
 							learning_path: [10],
 							type: 'Extension',
 							objectives: [{
