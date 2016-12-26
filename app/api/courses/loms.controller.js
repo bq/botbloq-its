@@ -27,7 +27,7 @@ exports.all_loms = function (req, res) {
 	var lessonId = req.params.lesson_id;
 	Courses.findOne({'name' : courseId}, function(err, course) {
         if (err){
-			res.status(500).send(err);
+			res.status(err.statusCode).send(err);
 		} else{
 			if (!course){
 				res.status(404).send('The course with id: ' + courseId + ' is not registrated'); 
@@ -63,7 +63,7 @@ exports.get_lom = function (req, res) {
 	
 	Courses.findOne({'name' : courseId}, function(err, course) {
         if (err){
-			res.status(500).send(err); 
+			res.status(err.statusCode).send(err); 
 		} else{
 			if (!course) {
 				res.status(404).send('The course with id: ' + courseId + ' is not registrated'); 
