@@ -100,11 +100,11 @@ exports.create = function(req, res) {
     Courses.create(req.body, function (err, course) {
 		if (err) {res.sendStatus(err.code); }
 		console.log('Course created!');
-		var id = course._id;
+		var nameCse = course.name;
 		res.writeHead(200, {
 			'Content-Type': 'text/plain'
 		});
-		res.end('Added the course with id: ' + id);
+		res.end('Added the course with name: ' + nameCse);
 	});
 };
 

@@ -104,7 +104,7 @@ exports.delete_lesson = function (req, res) {
 						if (err1){
 							res.status(400).send('error while updating '+err)
 						} else {
-							res.status(200).send('Updated the course with id: ' + JSON.stringify(course));
+							res.status(200).send('Updated the course with id: ' + JSON.stringify(course.sections[inds]));
 						}
 					}			
 				}    
@@ -127,7 +127,7 @@ exports.delete_lesson = function (req, res) {
 	// 'lesson':{  
     		// 'name': 'Lesson1.2.3',
        		// 'resume': 'Lesson1.2.3 resume',
-       		// 'los': [] 
+       		// 'loms': [] 
 	  // }
 // }
 
