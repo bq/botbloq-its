@@ -5,7 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
+
+
+## [0.1.7] - 2016-12-26
+
 ### Added
 
 **Module: Students**
@@ -67,7 +70,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - New Students return a Initial Survey in JSON format
 
 
-** Global **
+**Global**
 - Correct error in delete operations
 
 
