@@ -10,7 +10,7 @@ Domain Model - Course Repository (basic management)
 ---------------------------------------------------------------------------------------------------------------------
 
 ---------------------------------------
-**GET /botbloq/v1/its/courses/course/:course_id/section/:section_id/lesson/:lesson_id**
+**GET /botbloq/v1/its/courses/course/:course_id/section/:section_id/lesson/:lesson_id/loms**
 ---------------------------------------
 
 - list all loms from the indicated lesson
@@ -129,7 +129,7 @@ If this action is not successful, it returns the error code.
 ---------------------------------------------------------------------------------------------------------------------
 
 ---------------------------------------
-**GET /botbloq/v1/its/courses/course/:course_id/section/section_id**
+**GET /botbloq/v1/its/courses/course/:course_id/section/section_id/lessons**
 ---------------------------------------
 
 - list all lessons from the indicated course section
