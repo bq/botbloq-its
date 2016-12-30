@@ -18,6 +18,11 @@ var idStudent, idCourse, idLOM, nameCourse, idLoms = [], bitbloqCourse;
 describe('Chakram', function(){
 
 	it('Testing to create a new student', function () {
+		
+		console.log('------------------------------------------');
+		console.log('-------------- newBitbloq2 ---------------');
+		console.log('------------------------------------------');
+		
  	    var randomStudent = student.generateRandomStudent('pepe','pepe@gmail.com');
     	// create student
 	    return request.postBackend('/students',200,randomStudent).then(function (response) {

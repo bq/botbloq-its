@@ -17,6 +17,9 @@ var idStudent, err, idLOM, nameCourse;
 describe('Chakram', function(){
  
 	it('Testing the return all students', function () {
+		console.log('------------------------------------------');
+		console.log('------------- test_student ---------------');
+		console.log('------------------------------------------');
 		return request.getBackend('/students',200);
 	});
 	

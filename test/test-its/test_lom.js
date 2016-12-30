@@ -17,6 +17,9 @@ var err, idLOM, nameCourse;
 describe('Chakram', function(){
  
 	it('Testing the return all loms', function () {
+		console.log('------------------------------------------');
+		console.log('--------------- test_lom -----------------');
+		console.log('------------------------------------------');
 		return request.getBackend('/loms',200);
 	});
 	

@@ -12,6 +12,15 @@ var Course = function() {
 		};
 		return course;
 	};
+	
+    this.generateRandomCourse2 = function(nameCourse, codeCourse) {
+        var course = {
+			name : nameCourse,
+			code : codeCourse,
+			summary : 'Default course for test with name without spaces'
+		};
+		return course;
+	};
 
 	this.generateDefaultSection = function() {
 		var section = {
