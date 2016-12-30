@@ -42,7 +42,7 @@ var Section = new Schema({
 	
 var CoursesSchema = new mongoose.Schema({
 	name: { type: String, trim: true, required: true },
-	code: { type: String, index: { unique: true } },
+	code: { type: String },
 	summary: { type: String, trim: true },
 	objectives: [Objective],
 	sections  : [Section],

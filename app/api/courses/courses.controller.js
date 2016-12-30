@@ -41,14 +41,10 @@ exports.get = function (req, res){
 	var courseId = req.params.id;
 	Courses.find({'name' : courseId}, function(err, course) {
         if (err) {
-			res.status(404).send(err);
+			res.sendStatus(err.code);				
 		} else {
-			if (course.length > 0) {
-				res.status(200).json(course); 
-			} else {
-				res.status(404).send('The course with id: ' + courseId + ' is not registrated');  
-			}
-		} 
+			res.status(200).json(course); 
+		} 			 
 	});
 };
 
@@ -74,10 +70,8 @@ exports.remove = function(req,res) {
 	    }
 	], function(err, course) {
 	    if (err) {
-			console.log(err);
-	        res.status(404).send(err);
+			res.sendStatus(err.code);				
 	    } 
-		else { res.json(course); }
 	});
 };
 
@@ -97,15 +91,35 @@ exports.reset  = function(req, res){
 // Exporting create function
 // insert the course received as parameter
 exports.create = function(req, res) {
-    Courses.create(req.body, function (err, course) {
-		if (err) {res.sendStatus(err.code); }
-		console.log('Course created!');
-		var nameCse = course.name;
-		res.writeHead(200, {
-			'Content-Type': 'text/plain'
+	var bool = false;
+	if (req.body.name !== undefined){
+		Courses.find({}, function(err, courses) {
+			if(err){
+	        	res.sendStatus(err.status);
+			} else {
+				for(var i = 0; i< courses.length; i++){
+					if(courses[i].name === req.body.name){
+						bool = true;
+					}
+				}
+				if(bool === false){
+				    Courses.create(req.body, function (err, course) {
+						if (err) {res.sendStatus(err.code); }
+						console.log('Course created!');
+						var idCse = course._id;
+						res.writeHead(200, {
+							'Content-Type': 'text/plain'
+						});
+						res.end('Added the course with name: ' + idCse);
+					});
+				} else {
+					res.status(403).send('A courses with the same name already exists');
+				}
+			}
 		});
-		res.end('Added the course with name: ' + nameCse);
-	});
+	} else {
+		res.status(400).send('Course name is required');
+	}
 };
 
 // Exporting update function
@@ -115,19 +129,42 @@ exports.update = function(req, res) {
 	async.waterfall([
 	    Courses.findById.bind(Courses, req.params.id),
 	    function(course, next) {
-	        if(!course){
-				res.status(404).send('The course with id: ' + req.params.id + ' is not registrated');
+			if(req.body.name !== undefined){
+				Courses.find({}, function(err, courses) {
+					if(err){
+			        	res.sendStatus(err.status);
+					} else {
+						for(var i = 0; i< courses.length; i++){
+							if(courses[i].name === req.body.name) {
+								if(courses[i]._id.equals(course._id) === false){
+									res.status(400);
+								}	
+							}
+						}
+						if(res.statusCode !== 400) {
+							course = _.extend(course, req.body);
+							course.save(next);	
+							res.status(200);
+						} else {
+							res.status(400).send('A course with the same name already exists');
+						}						
+					}
+				});
 			} else {
 				course = _.extend(course, req.body);
-	       		course.save(next);
+				course.save(next);	
+				res.status(200);
 			}
 	    }
 	], function(err, course) {
 	    if (err) {
-	        console.log(err);
-	        res.status(404).send(err);
+        	res.sendStatus(err.status);
 	    } 
-		else { res.json(course); }
+		else { 
+			if(res.statusCode === 200){
+				res.json(course); 
+			}
+		}
 	});		
 };
 
