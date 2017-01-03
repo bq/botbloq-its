@@ -15,6 +15,27 @@ var idStudent, err, idLOM, nameCourse;
 
 
 describe('Chakram', function(){
+	
+	it('Testing to reset the database', function(){
+		return request.deleteBackend('/loms',200).then(function (response) {
+			return request.getBackend('/loms',200).then(function (response1) {
+				expect(response1.body).to.be.empty;
+				
+				return request.deleteBackend('/courses',200).then(function (response2) {
+					return request.getBackend('/courses',200).then(function (response3) {
+					expect(response3.body).to.be.empty;
+					
+						return request.deleteBackend('/students',200).then(function (response4) {
+							return request.getBackend('/students',200).then(function (response5) {		
+							expect(response5.body).to.be.empty;
+							chakram.wait();
+							});
+						});
+					});
+				});
+			});
+		});	
+	});
  
 	it('Testing the return all students', function () {
 		console.log('------------------------------------------');
@@ -121,7 +142,7 @@ describe('Chakram', function(){
 			var message = response.body;
 	    	idCourse= message.substring(message.lastIndexOf(' ') + 1);
 			return request.getBackend('/courses/' + randomCourse.name, 200).then(function(response2) {
-				expect(response2.body[0].code).to.equal(randomCourse.code);
+				expect(response2.body.code).to.equal(randomCourse.code);
 				console.log('Creating a course');
 				
 				return request.putBackend('/students/'+ idStudent + '/course/' + nameCourse,200)
@@ -147,24 +168,4 @@ describe('Chakram', function(){
 		});
 	});
 	
-	it('Testing to reset the database', function(){
-		return request.deleteBackend('/loms',200).then(function (response) {
-			return request.getBackend('/loms',200).then(function (response1) {
-				expect(response1.body).to.be.empty;
-				
-				return request.deleteBackend('/courses',200).then(function (response2) {
-					return request.getBackend('/courses',200).then(function (response3) {
-					expect(response3.body).to.be.empty;
-					
-						return request.deleteBackend('/students',200).then(function (response4) {
-							return request.getBackend('/students',200).then(function (response5) {		
-							expect(response5.body).to.be.empty;
-							chakram.wait();
-							});
-						});
-					});
-				});
-			});
-		});	
-	});
 });

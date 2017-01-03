@@ -14,6 +14,27 @@ var idStudent, idCourse, idLOM, nameCourse;
 
 
 describe('Chakram', function(){
+	
+	it('Testing to reset the database', function(){
+		return request.deleteBackend('/loms',200).then(function (response) {
+			return request.getBackend('/loms',200).then(function (response1) {
+				expect(response1.body).to.be.empty;
+				
+				return request.deleteBackend('/courses',200).then(function (response2) {
+					return request.getBackend('/courses',200).then(function (response3) {
+					expect(response3.body).to.be.empty;
+					
+						return request.deleteBackend('/students',200).then(function (response4) {
+							return request.getBackend('/students',200).then(function (response5) {		
+							expect(response5.body).to.be.empty;
+							chakram.wait();
+							});
+						});
+					});
+				});
+			});
+		});	
+	});
  
 	it('Testing the return all students', function () {
 		console.log('------------------------------------------');
@@ -69,18 +90,18 @@ describe('Chakram', function(){
 			var message = response.body;
 	    	idCourse= message.substring(message.lastIndexOf(' ') + 1);
 			return request.getBackend('/courses/' + randomCourse.name, 200).then(function(response2) {
-				expect(response2.body[0].code).to.equal(randomCourse.code);
+				expect(response2.body.name).to.equal(randomCourse.name);
 				var defaultSection = course.generateDefaultSection();
 				defaultSection.course = nameCourse;
-				return request.putBackend('/courses/create_section', 200, defaultSection).then ( function (response3) {
+				return request.putBackend('/courses/create_section', 200, defaultSection).then ( function (response) {
 					var defaultLesson = course.generateDefaultLesson();
 					defaultLesson.course = nameCourse;
-					return request.putBackend('/courses/create_lesson', 200, defaultLesson).then(function () {
+					return request.putBackend('/courses/create_lesson', 200, defaultLesson).then(function (response) {
 						var reqLOM = course.generateAssignedLOM();
 						reqLOM.course = randomCourse.name;
 						reqLOM.lom_id = idLOM;
-						return request.putBackend('/courses/assign_lom', 200, reqLOM).then ( function(response4) {
-							expect(response4.body[0].loms[0].lom_id).to.equal(idLOM);
+						return request.putBackend('/courses/assign_lom', 200, reqLOM).then ( function(response) {
+							expect(response.body.lom_id).to.equal(idLOM);
 							chakram.wait();
 						}); 
 					}); 
@@ -90,19 +111,18 @@ describe('Chakram', function(){
 	});
 
 
-
 			
 	it('Testing enroll a student in a Course' , function() {
 		return request.putBackend('/students/'+ idStudent + '/course/' + nameCourse,200)
 		.then(function(response) {
 			// test if the student is already enrolled in the course
-			expect(response.body).to.have.property('idCourse'); // return a course enrolled
-			return request.getBackend('/students/' + idStudent, 200).then(function (response1) {
-				expect(response1.body).to.have.property('course'); // the student has a course
- 	   	    	return request.getBackend('/students/'+ idStudent + '/course/' + nameCourse,200)
-				.then(function(response2) {
-					expect(response2.body).to.have.property('general');
-					var lom = response2.body._id;
+			expect(response.body).to.have.property('idCourse'); // return a course enrolled			
+			return request.getBackend('/students/' + idStudent, 200).then(function (response) {
+				expect(response.body).to.have.property('course'); // the student has a course				
+				return request.getBackend('/students/'+ idStudent + '/course/' + nameCourse,200)
+				.then(function(response) {
+					expect(response.body).to.have.property('general');					
+					var lom = response.body._id;
 					return request.putBackend('/students/'+idStudent+ '/course/' + nameCourse+'/lom/' + lom + '/ok', 200)
 					.then(function (response3) {
 						//console.log(response3.body) // testing
@@ -144,7 +164,7 @@ describe('Chakram', function(){
 						
 						// Testing if the course is in the database
 						return request.getBackend('/courses/' + completeCourse.name, 200).then(function(response2) {
-							expect(response2.body[0].code).to.equal(completeCourse.code);
+							expect(response2.body.code).to.equal(completeCourse.code);
 							console.log('Tested that the course is in the database');
 							
 							// enrolling the student in the course
@@ -198,25 +218,4 @@ describe('Chakram', function(){
 		});
 	});
 	
-	it('Testing to reset the database', function(){
-		return request.deleteBackend('/loms',200).then(function (response) {
-			return request.getBackend('/loms',200).then(function (response1) {
-				expect(response1.body).to.be.empty;
-				
-				return request.deleteBackend('/courses',200).then(function (response2) {
-					return request.getBackend('/courses',200).then(function (response3) {
-					expect(response3.body).to.be.empty;
-					
-						return request.deleteBackend('/students',200).then(function (response4) {
-							return request.getBackend('/students',200).then(function (response5) {		
-							expect(response5.body).to.be.empty;
-							chakram.wait();
-							});
-						});
-					});
-				});
-			});
-		});	
-	});
- 	// TODO test reset all
 });

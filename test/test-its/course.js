@@ -8,7 +8,8 @@ var Course = function() {
         var course = {
 			name : 'Test_Course_' + currentDate,
 			code : 'TEST'+ currentDate,
-			summary : 'Default course for test with name without spaces'
+			summary : 'Default course for test with name without spaces',
+			sections: []
 		};
 		return course;
 	};
@@ -17,7 +18,9 @@ var Course = function() {
         var course = {
 			name : nameCourse,
 			code : codeCourse,
-			summary : 'Default course for test with name without spaces'
+			summary : 'Default course for test with name without spaces',
+			sections: []
+			
 		};
 		return course;
 	};
