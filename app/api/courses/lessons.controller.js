@@ -24,14 +24,15 @@ exports.all_lessons = function (req, res) {
 	var sectionId = req.params.section_id;
 	Courses.findOne({'name' : courseId}, function(err, course) {
         if (err){
-			res.status(500).send(err);
+			res.sendStatus(err);
 		} else{
 			if (!course) {
 				res.status(404).send('The course with id: ' + courseId + ' is not registrated'); 
 			} else{
 				var ind = CoursesFunctions.find_section(sectionId,course.sections);
 				if (ind < 0){ 
-					res.status(404).send('Error: section does not exists '+sectionId);
+					res.status(404).send('The section with id : ' + sectionId +
+					' has not been found un the course with id: ' + courseId);
 				} else {				
 					res.status(200).send(course.sections[ind].lessons);	
 				}		
@@ -50,7 +51,7 @@ exports.get_lesson = function (req, res) {
 	var lessonId = req.params.lesson_id;
 	Courses.findOne({'name' : courseId}, function(err, course) {
         if (err){
-			res.status(500).send(err); 
+			res.sendStatus(err); 
 		} else{
 			if (!course) {
 				res.status(404).send('The course with id: ' + courseId + ' is not registrated'); 
@@ -104,7 +105,7 @@ exports.delete_lesson = function (req, res) {
 						if (err1){
 							res.status(400).send('error while updating '+err)
 						} else {
-							res.status(200).send('Updated the course with id: ' + JSON.stringify(course.sections[inds]));
+							res.status(200).send({ok:1, n: 1});
 						}
 					}			
 				}    
@@ -139,7 +140,7 @@ exports.create_lesson = function(req, res) {
 		
 	Courses.findOne({'name' : courseId}, function (err, course){
 		if (err){
-			res.status(500).send(err);
+			res.sendStatus(err);
 		} else{
 			if (!course){
 				res.status(404).send('The course with id: ' + courseId + ' is not registrated');
@@ -151,14 +152,16 @@ exports.create_lesson = function(req, res) {
 				} else {					
 					var indl = CoursesFunctions.find_lesson(lessonId,course.sections[inds].lessons);
 					if ( indl >= 0 ){
-						res.status(400).send('error lesson already exist');
+						res.status(400).send('Error lesson already exist');
 					} else {
 						var lessons = course.sections[inds].lessons;
 						lessons[lessons.length] = new_lec;
 						var err1 = controller.update_course_field(courseId,'sections',course.sections);
-						if (err1){
+						if (res.statusCode !== 200){
 							res.status(400).send('error while updating '+err)
-						} else { res.status(200).send(new_lec); }
+						} else { 
+							res.status(200).send(lessons[lessons.length-1]); 
+						}
 					}
 				}	
 			}
@@ -214,7 +217,7 @@ exports.update_lesson = function(req, res) {
 						if (err1) {
 							res.status(404).send('error while updating '+err);							
 						} else {
-							res.status(200).send(course.sections[inds].lessons);
+							res.status(200).send(lessons[lessons.length-1]);
 						}
 					}
 				}	
@@ -269,7 +272,7 @@ exports.update_lesson_field = function(req, res) {
 						if (err1){
 							res.status(400).send('error while updating '+err);							
 						}else{
-							res.status(200).send(course.sections[inds].lessons);
+							res.status(200).send(lesson);
 						}
 					}
 				}	

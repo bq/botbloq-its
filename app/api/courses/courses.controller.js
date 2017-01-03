@@ -39,9 +39,11 @@ exports.all = function (req, res)
 // If there are none with this name, then it returns an empty list []
 exports.get = function (req, res){
 	var courseId = req.params.id;
-	Courses.find({'name' : courseId}, function(err, course) {
+	Courses.findOne({name: courseId}, function(err, course) {
         if (err) {
 			res.sendStatus(err.code);				
+		} else if(!course){
+			res.status(404).send('The course with id: ' + courseId + ' is not registrated');
 		} else {
 			res.status(200).json(course); 
 		} 			 
@@ -56,17 +58,13 @@ exports.remove = function(req,res) {
 	async.waterfall([
 	    Courses.findById.bind(Courses, req.params.id),
 	    function(course, next) {
-			if(!course){
-				res.status(404).send('The course with id: ' + req.params.id + ' is not registrated');
-		    } else{
-				Courses.remove(course, function (err, resp) {
-			        if (err){
-						res.status(404).send(err);
-			        } else {
-						res.json(resp);
-					}
-			    });
-			}
+			Courses.remove(course, function (err, resp) {
+		        if (err){
+					res.status(404).send(err);
+		        } else {
+					res.json(resp);
+				}
+		    });
 	    }
 	], function(err, course) {
 	    if (err) {
@@ -110,10 +108,10 @@ exports.create = function(req, res) {
 						res.writeHead(200, {
 							'Content-Type': 'text/plain'
 						});
-						res.end('Added the course with name: ' + idCse);
+						res.end('Added the course with id: ' + idCse);
 					});
 				} else {
-					res.status(403).send('A courses with the same name already exists');
+					res.status(403).send('A course with the same name already exists');
 				}
 			}
 		});
@@ -169,9 +167,9 @@ exports.update = function(req, res) {
 };
 
 var update_field1 = function(courseId,field,value){
-	Courses.findOne({'name' : courseId}, 
+	Courses.findOne({name: courseId}, 
 		function (err, course) {
-			course[field] = value;
+			course[field] = value;			
 			course.save(function (err) {return err});
 		}
 	);
@@ -187,12 +185,29 @@ exports.update_course_field = function(courseId,field,value){
 // it updates just the field with the value indicated via JSON 
 // format in the body of the request. 
 exports.update_field = function(req, res) {
-	var err = update_field1(req.body.name,req.body.field,req.body.value);	
-	if(err) {
-		res.status(400).send('error while updating');
-	}	
-	else { res.status(200).send('Updated the course with id: ' + req.body.name); }
-			
+	if(req.body.field === 'name'){
+		Courses.findOne({name: req.body.value}, function(err, course){
+			if(err){
+				 res.sendStatus(err);
+			} else if (!course){
+				Courses.findOne({'name' : req.body.name}, function (err1, course1) {
+					if(err1){
+						res.sendStatus(err1);
+					}else if (!course1){
+						res.status(404).send('The course with id: ' + req.body.name + ' is not registrated');
+					} else {
+						update_field1(req.body.name,req.body.field,req.body.value);
+						res.status(200).send('Updated the course with id: ' + req.body.name);
+					}
+				});
+			} else {
+				res.status(400).send('The new name already exist in other course')
+			}
+		});
+	} else {
+		update_field1(req.body.name,req.body.field,req.body.value);
+		res.status(200).send('Updated the course with id: ' + req.body.name);
+	}			
 }
 
 

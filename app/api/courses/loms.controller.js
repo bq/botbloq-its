@@ -10,7 +10,8 @@ This version works with the following exported functions.
 var Courses = require('./courses.model.js'),
     config = require('../../res/config.js'),
     async = require('async'),
-    _ = require('lodash');
+    _ = require('lodash'),
+	mongoose = require('mongoose');
 	
 var CoursesFunctions = require('./courses.functions.js'),
 	controller = require('./courses.controller.js'),
@@ -71,20 +72,20 @@ exports.get_lom = function (req, res) {
 				var inds = CoursesFunctions.find_section(sectionId,course.sections);
 				if (inds < 0){
 					res.status(404).send('The section with id : ' + sectionId +
-					' has not been found un the course with id: ' + courseId);
+					' has not been found in the course with id: ' + courseId);
 				} else { // section exists
 					var indl = CoursesFunctions.find_lesson(lessonId,course.sections[inds].lessons);
 					if (indl < 0){
 						res.status(404).send('The lesson with id : ' + lessonId +
-						' has not been found un the section with id: ' + sectionId);
+						' has not been found in the section with id: ' + sectionId);
 					} else { // lesson exists					
 						var lesson = course.sections[inds].lessons[indl];
-						var ind = CoursesFunctions.find_lom(lomId,lesson.los);
+						var ind = CoursesFunctions.find_lom(lomId,lesson.loms);
 						if (ind < 0){
 							res.status(404).send('The lom with id : ' + lomId +
-							' has not been found un the lesson with id: ' + lessonId);
+							' has not been found in the lesson with id: ' + lessonId);
 						} else {//lom exists
-							res.status(200).send(lesson.los[ind]);
+							res.status(200).send(lesson.loms[ind]);
 						}
 					}			
 				} 			 
@@ -117,7 +118,7 @@ exports.assign_lom = function(req, res) {
 		
 	Courses.findOne({'name' : courseId}, function (err, course){
 		if (err){
-			res.status(500).send(err);
+			res.sendStatus(err);
 		} else{
 			if (!course) {
 				res.status(404).send('The course with id: ' + courseId + ' is not registrated');
@@ -135,26 +136,30 @@ exports.assign_lom = function(req, res) {
 						var lessons = course.sections[inds].lessons;							
 						var ind = CoursesFunctions.find_lom(lomId,lessons[indl].loms);
 						if ( ind >= 0){
-							res.status(400).send('error lom already exist '+lomId);
+							res.status(400).send('Error LOM already assigned in the lesson');
 						} else {
-							LOMS.find({_id: lomId}, function(err, lom){
-								if(err){
-									res.senStatus(err.code).send(err);
-								}else {
-									if(lom.length === 0){
-										res.sendStatus(404).send('The lom with id: ' + lomId + ' is not registrated');
+							if(mongoose.Types.ObjectId.isValid(lomId)){
+								LOMS.findOne({_id: lomId}, function(err, lom){
+									if(err){
+										console.log(err);
+										res.sendStatus(err);
+									} else if(!lom){
+										res.status(404).send('The lom with id: ' + lomId + ' is not registrated');
 									} else {
 										var loms = lessons[indl].loms;
-										loms[loms.length] = {'lom_id':lomId};
+										loms[loms.length] = {lom_id: lomId};
 										var err1 = controller.update_course_field(courseId,'sections',course.sections);
-										if (err1){
+										if (res.statusCode !== 200){
 											res.status(400).send('error while updating '+err);							
 										} else {
-											res.status(200).send(course.sections[inds].lessons);
+											res.status(200).send(loms[loms.length-1]);
 										}
-									}
-								}	
-							});
+									}	
+								});
+							} else {
+								res.status(404).send('The lom with id: ' + lomId + ' is not registrated');
+							}
+							
 						}
 					}
 				}	
@@ -183,41 +188,39 @@ exports.delete_lom = function(req, res) {
 		lessonId = req.body.lesson,
 		lomId = req.body.lom_id;
 		
-	Courses.findOne({'name' : courseId}, function (err, course){
+	Courses.findOne({name: courseId}, function (err, course){
 		if (err){
-			res.status(500).send(err);
-		} else{
-			if (!course){ 
-				res.status(404).send('The course with id: ' + courseId + ' is not registrated');
-			} else {
-				var inds = CoursesFunctions.find_section(sectionId,course.sections);
-				if (inds < 0){
-					res.status(404).send('The section with id : ' + sectionId +
-					' has not been found un the course with id: ' + courseId);
-				} else {					
-					var indl = CoursesFunctions.find_lesson(lessonId,course.sections[inds].lessons);
-					if (indl < 0){
-						res.status(404).send('The lesson with id : ' + lessonId +
-						' has not been found un the section with id: ' + sectionId);
+			res.sendStatus(err);
+		} else if (!course){ 
+			res.status(404).send('The course with id: ' + courseId + ' is not registrated');
+		} else {
+			var inds = CoursesFunctions.find_section(sectionId,course.sections);
+			if (inds < 0){
+				res.status(404).send('The section with id : ' + sectionId +
+				' has not been found un the course with id: ' + courseId);
+			} else {					
+				var indl = CoursesFunctions.find_lesson(lessonId,course.sections[inds].lessons);
+				if (indl < 0){
+					res.status(404).send('The lesson with id : ' + lessonId +
+					' has not been found un the section with id: ' + sectionId);
+				} else {
+					var lessons = course.sections[inds].lessons;							
+					var ind = CoursesFunctions.find_lom(lomId,lessons[indl].loms);
+					if (ind < 0){
+						res.status(404).send('The lom with id : ' + lomId +
+						' has not been found un the lesson with id: ' + lessonId);
 					} else {
-						var lessons = course.sections[inds].lessons;							
-						var ind = CoursesFunctions.find_lom(lomId,lessons[indl].los);
-						if (ind < 0){
-							res.status(404).send('The lom with id : ' + lomId +
-							' has not been found un the lesson with id: ' + lessonId);
+						var loms = lessons[indl].loms;
+						loms.splice(ind,1);
+						var err1 = controller.update_course_field(courseId,'sections',course.sections);
+						if (err1){
+							res.status(400).send('error while updating '+err);							
 						} else {
-							var loms = lessons[indl].loms;
-							loms.splice(ind,1);
-							var err1 = controller.update_course_field(courseId,'sections',course.sections);
-							if (err1){
-								res.status(400).send('error while updating '+err);							
-							} else {
-								res.status(200).send(course.sections[inds].lessons);
-							}
+							res.status(200).send({ok: 1, n: 1});
 						}
 					}
-				}	
-			}
+				}
+			}	
 		}
 	});
 };

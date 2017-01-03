@@ -5,7 +5,8 @@ var LOMS = require('./loms.model.js'),
     async = require('async'),
     _ = require('lodash'),
 	fs = require('fs'), 
-	functions = require('./loms.functions.js'); 
+	functions = require('./loms.functions.js'),
+	mongoose = require('mongoose'); 
 
 //ALL LOMS
 	
@@ -51,49 +52,67 @@ exports.destroy  = function(req, res){
  * Returns a lom by id
  */
 exports.get = function (req, res) {
-    LOMS.findById(req.params.id, function (err, lom) {
-       if (err) { res.sendStatus(err.code); }
-        res.json(lom);
-    });
+	if(mongoose.Types.ObjectId.isValid(req.params.id)){
+	    LOMS.findOne({_id: req.params.id}, function (err, lom) {
+	       if (err) { 
+			   res.sendStatus(err.code); 
+		   } else if(!lom){
+			   res.status(404).send('The lom with id: ' + req.params.id + ' is not registrated');
+		   } else {
+	           res.json(lom);
+		   }
+	    });
+	} else {
+	   res.status(404).send('The lom with id: ' + req.params.id + ' is not registrated');
+	}
 };
 
 /**
  * Updates a lom by id
  */	
 exports.update = function (req, res) {
-	async.waterfall([
-	    LOMS.findById.bind(LOMS, req.params.id),
-	    function(lom, next) {
-	        if(!lom) { res.status(404).send('The lom with id: ' + req.params.id + ' is not registrated');
-			} else {
-				lom = _.extend(lom, req.body);
-	       		lom.save(next);
-			}
-	    }
-	], function(err, lom) {
-	    functions.controlErrors(err, res, lom);
-	});
+	if(mongoose.Types.ObjectId.isValid(req.params.id)){
+		async.waterfall([
+		    LOMS.findById.bind(LOMS, req.params.id),
+		    function(lom, next) {
+		        if(!lom) { 
+					res.status(404).send('The lom with id: ' + req.params.id + ' is not registrated');
+				} else {
+					lom = _.extend(lom, req.body);
+		       		lom.save(next);
+				}
+		    }
+		], function(err, lom) {
+		    functions.controlErrors(err, res, lom);
+		});
+	} else {
+		res.status(404).send('The lom with id: ' + req.params.id + ' is not registrated');
+	}
 };
 
 /**
  * Removes a lom by id
  */
 exports.remove = function (req, res) {
-	async.waterfall([
-	    LOMS.findById.bind(LOMS, req.params.id),
-	    function(lom, next) {
-			if(!lom) {
-				res.status(404).send('The lom with id: ' + req.params.id + ' is not registrated');
-		    } else{
-				LOMS.remove(lom, function (err, resp) {
-			        if (err) { res.sendStatus(err.code); }
-			        res.json(resp);
-			    });
-			}
-	    }
-	], function(err, lom) {
-	    functions.controlErrors(err, res, lom);
-	});
+	if(mongoose.Types.ObjectId.isValid(req.params.id)){
+		async.waterfall([
+		    LOMS.findById.bind(LOMS, req.params.id),
+		    function(lom, next) {
+				if(!lom) {
+					res.status(404).send('The lom with id: ' + req.params.id + ' is not registrated');
+			    } else{
+					LOMS.remove(lom, function (err, resp) {
+				        if (err) { res.sendStatus(err.code); }
+				        res.json(resp);
+				    });
+				}
+		    }
+		], function(err, lom) {
+		    functions.controlErrors(err, res, lom);
+		});
+	} else {
+		res.status(404).send('The lom with id: ' + req.params.id + ' is not registrated');
+	}
 };
 
 /**

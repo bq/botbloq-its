@@ -31,13 +31,11 @@ exports.all_sections = function (req, res) {
 	var courseId = req.params.course_id;
 	Courses.findOne({'name' : courseId}, function(err, course) {
         if (err) {
-			res.status(500).send(err);
-		} else{
-			if (!course) {
-				res.status(404).send('The course with id: ' + req.params.id + ' is not registrated');  
-			} else {
-				res.status(200).send(course.sections);
-			}
+			res.sendStatus(err);
+		} else if(!course){
+			res.status(404).send('The course with id: ' + courseId + ' is not registrated')
+		} else {
+			res.status(200).send(course.sections);
 		}
 	});
 };
@@ -51,21 +49,23 @@ exports.get_section = function (req, res) {
 	
 	Courses.findOne({'name' : courseId}, function(err, course) {
         if (err){
-			res.status(500).send(err);
-		} else{
-			if (!course) {
+			res.sendStatus(err);
+		} else if (!course) {
 				res.status(404).send('The course with id: ' + courseId + ' is not registrated');   
-			} else {
-				var sections = course.sections;
-				var len = sections.length;
-				for (var i = 0; i < len; i++) {
-					var elem = sections[i];
-					if (elem.name === sectionId){
-						res.status(200).send('course: '+courseId+'\nsection:\n'+JSON.stringify(elem));
-					}
-				}			
-				res.status(404).send('The section with id : ' + sectionId +
-				' has not been found un the course with id: ' + courseId);	
+		} else {
+			var sections = course.sections;
+			var len = sections.length;
+			var bool = false;
+			for (var i = 0; i < len; i++) {
+				var elem = sections[i];
+				if (elem.name === sectionId){
+					res.status(200).send(elem);
+					bool = true;
+				}
+			}			
+			if (!bool){
+				res.status(404).send('The section with id : ' + sectionId 
+				+ ' has not been found un the course with id: ' + courseId);	
 			}
 		} 
 	});	
@@ -106,10 +106,11 @@ exports.create_section = function(req, res) {
 		new_sec = req.body.section,
 		sectionId = new_sec.name;
 		
-	
 	Courses.findOne({'name' : courseId}, function (err, course){
 		if (err){
-			res.status(500).send(err); 
+			res.sendStatus(err); 
+		} else if (!course){
+			res.status(404).send('The course with id: ' + courseId + ' is not registrated');
 		} else {
 			var sections = course.sections;
 			if (exist_section(sectionId,sections)){
@@ -123,10 +124,10 @@ exports.create_section = function(req, res) {
 				// sections.push(new_sec);
 				sections[sections.length] = new_sec;
 				var err1 = controller.update_course_field(courseId,'sections',sections);
-				if (err1){ 
+				if (res.statusCode !== 200){ 
 					res.status(400).send('error while updating '+err);
 				} else {
-					res.status(200).send(new_sec);
+					res.status(200).send(sections[sections.length-1]);
 				}
 			}
 		}
@@ -144,7 +145,7 @@ exports.create_section = function(req, res) {
 	// 'course':'Course1',
 	// 'section':{  
     		// 'name': 'Section1.3',
-       		// 'resume': 'Section1.3 resume',
+       		// 'summary': 'Section1.3 summary',
        		// 'lessons': [] 
 	  // }
 // }
@@ -156,12 +157,15 @@ exports.update_section = function(req, res) {
 	
 	Courses.findOne({'name' : courseId}, function (err, course){
 		if (err){
-			res.status(500).send(err);
+			res.sendStatus(err);
+		}else if(!course){
+			res.status(404).send('The course with id: ' + courseId + ' is not registrated');
 		} else {
 			var sections = course.sections;
 			var ind = find_section(sectionId,sections);
 			if (ind < 0){
-				res.statu(404).send('Error section does not exist');
+				res.status(404).send('The section with id : ' + sectionId +
+				' has not been found un the course with id: ' + courseId);
 			 } else {
 				course.sections.splice(ind,1); //remove old section
 				sections[sections.length] = new_sec; //push the new one
@@ -169,7 +173,8 @@ exports.update_section = function(req, res) {
 				if (err1) {
 					res.status(400).send('error while updating '+err);
 				} else {
-					res.staus(200).send('Updated the course with id: ' + JSON.stringify(course));
+					res.status(200).send(sections[sections.length-1]);
+					console.log(sections);
 				}
 			}
 		}
@@ -192,24 +197,41 @@ exports.update_section_field = function(req, res) {
 	var courseId = req.body.course,
 		sectionId = req.body.section,
 		field = req.body.field,
-		value = req.body.value;
+		value = req.body.value,
+		bool = false;
 		
 	Courses.findOne({'name' : courseId}, function (err, course){
 		if (err) {
-			res.status(500).send(err);
+			res.sendStatus(err);
+		} else if(!course){
+			res.status(404).send('The course with id: ' + courseId + ' is not registrated');
 		} else {
-			var sections = course.sections;
-			var ind = find_section(sectionId,sections);
-			if ( ind < 0 ) {
-				res.status(404).send('Error section does not exist');
-			} else {
-				var sec = sections[ind];
-				sec[field] = value;
-				var err1 = controller.update_course_field(courseId,'sections',sections);
-				if (err1){
-					res.status(400).send('Error while updating ' + err)
+			if(field === 'name'){
+				var ind = find_section(value,sections);
+				if(ind === -1){
+					bool = true;
 				} else {
-					res.status(200).send('Updated the course with id: ' + JSON.stringify(course));
+					res.status(400).send('The new name already exist in other section');
+					bool = false;
+				}
+			} else {
+				bool = true;
+			}
+			if (bool === true){
+				var sections = course.sections;
+				ind = find_section(sectionId,sections);
+				if ( ind < 0 ) {
+					res.status(404).send('The section with id : ' + sectionId +
+				' has not been found un the course with id: ' + courseId);
+				} else {
+					var sec = sections[ind];
+					sec[field] = value;
+					var err1 = controller.update_course_field(courseId,'sections',sections);
+					if (err1){
+						res.status(400).send('Error while updating ' + err)
+					} else {
+						res.status(200).send(sec);
+					}
 				}
 			}
 		}
@@ -242,26 +264,24 @@ exports.delete_section = function(req,res) {
 	// var courseId = req.params.id;
 	Courses.findOne({'name' : courseId}, function(err, course){
         if (err){
-			res.status(500).send(err);
-		} else {
-			if (!course) {
-				res.sendStatus(404).send('The course with id: ' + courseId + ' is not rgistrated');  
-			} else{
-				var ind = find_section(sectionId,course.sections);
-				if (ind < 0){
-					res.status(404).send('The section with id : ' + sectionId +
-					' has not been found un the course with id: ' + courseId);
-				} else {
-					course.sections.splice(ind,1);
-					var err1 = controller.update_course_field(courseId,'sections',course.sections);
-					if (err1) {
-						res.status(400).send('error while updating '+err)
-					} else { 
-						res.status(200).send('Updated the course with id: ' + JSON.stringify(course));
-					}
-				}						
-			} 
-		} 
+			res.sendStatus(err);
+		} else if (!course) {
+			res.status(404).send('The course with id: ' + courseId + ' is not registrated');  
+		} else{
+			var ind = find_section(sectionId,course.sections);
+			if (ind < 0){
+				res.status(404).send('The section with id : ' + sectionId +
+				' has not been found un the course with id: ' + courseId);
+			} else {
+				course.sections.splice(ind,1);
+				var err1 = controller.update_course_field(courseId,'sections',course.sections);
+				if (err1) {
+					res.status(400).send('error while updating '+err)
+				} else { 
+					res.status(200).send({ok:1, n: 1});
+				}
+			}						
+		}  
 	});	
 };
 	
