@@ -8,6 +8,11 @@ var Course = function() {
         var course = {
 			name : 'Test_Course_' + currentDate,
 			code : 'TEST'+ currentDate,
+			statistics: {
+				std_enrolled : [],
+				std_finished : [],
+				std_unenrolled : []
+			},
 			summary : 'Default course for test with name without spaces',
 			sections: []
 		};
@@ -18,6 +23,11 @@ var Course = function() {
         var course = {
 			name : nameCourse,
 			code : codeCourse,
+			statistics: {
+				std_enrolled : [],
+				std_finished : [],
+				std_unenrolled : []
+			},
 			summary : 'Default course for test with name without spaces',
 			sections: []
 			
@@ -65,6 +75,11 @@ var Course = function() {
 		var course = {
 			name: 'courseZowi' + currentDate,
 			code: 'COURSE' + currentDate,
+			statistics: {
+				std_enrolled : [],
+				std_finished : [],
+				std_unenrolled : []
+			},
 			summary: 'Zowi course for test',
 			sections: [
 				{
@@ -106,6 +121,11 @@ var Course = function() {
 		var course = {
 			name: 'courseZowi' + currentDate,
 			code: 'COURSE' + currentDate,
+			statistics: {
+				std_enrolled: [],
+				std_finished: [],
+				std_unenrolled: []
+			},
 			summary: 'Zowi course for test',
 			sections: [
 				{
@@ -203,6 +223,11 @@ var Course = function() {
 		var course = {
 			name: 'courseIntroduction' + currentDate,
 			code: 'INTRO' + currentDate,
+			statistics: {
+				std_enrolled : [],
+				std_finished : [],
+				std_unenrolled : []
+			},
 			summary: 'Bitbloq introduction for test',
 			sections: [
 				{
@@ -248,6 +273,11 @@ var Course = function() {
 		var course = {
 			name: 'courseBitbloq' + currentDate,
 			code: 'COURSE' + currentDate,
+			statistics: {
+				std_enrolled : [],
+				std_finished : [],
+				std_unenrolled : []
+			},
 			summary: 'Bitbloq  course for test',
 			sections: [
 				{

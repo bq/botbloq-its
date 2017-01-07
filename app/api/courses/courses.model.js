@@ -39,6 +39,13 @@ var Section = new Schema({
 	lessons  : [Lesson],
 	_id: false
 });
+
+var Statistics = new Schema({
+	std_enrolled : [String],
+	std_finished : [String],
+	std_unenrolled : [String],
+	_id: false
+});
 	
 var CoursesSchema = new mongoose.Schema({
 	name: { type: String, trim: true, required: true },
@@ -46,6 +53,7 @@ var CoursesSchema = new mongoose.Schema({
 	summary: { type: String, trim: true },
 	objectives: [Objective],
 	sections  : [Section],
+	statistics: {type: Statistics},
 	history: [String]
 	}, 
 	{ timestamps: true }
