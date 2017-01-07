@@ -299,7 +299,7 @@ describe('Chakram', function(){
 		});
 	});
 	
-	it('Testing to create a lesson in a section ans a course and testing errors', function () {
+	it('Testing to create a lesson in a section and a course and testing errors', function () {
 		lesson = course.generateDefaultLesson();
 		lesson.course = id;
 	    return request.putBackend('/courses/create_lesson',404, lesson).then(function (response) {

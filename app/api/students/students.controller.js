@@ -15,12 +15,12 @@ var Students = require('./students.model.js'),
  * Returns all elements
  */
 exports.all = function (req, res) {
-    Students.find({active: 1}, function (err, student) {
-        if (err){
-        	res.sendStatus(err.code);
-        } 
+	Students.find({active: 1}, function (err, student) {
+		if (err){
+			res.sendStatus(err.code);
+		} 
 		res.json(student);
-    });
+	});
 };
 
 /**
@@ -63,9 +63,9 @@ exports.create = function(req, res) {
  * Destroys all elements
  */
 exports.destroy  = function(req, res){
-    Students.remove({}, function (err, resp) {
+	Students.remove({}, function (err, resp) {
 		functions.controlErrors(err, res, resp);
-    });
+	});
 };
 
 //BY ID	
@@ -103,9 +103,9 @@ exports.deactivate = function (req, res) {
  * Returns an student by id
  */
 exports.get = function (req, res) {
-    Students.findOne({_id: req.params.id}, function(err, student) {
+	Students.findOne({_id: req.params.id}, function(err, student) {
 		if(err){
-        	res.sendStatus(err.status);
+			res.sendStatus(err.status);
 		} else {
 			if(functions.studentFound(student, req, res) === true){
 				var arrayCourses = [];
@@ -116,7 +116,7 @@ exports.get = function (req, res) {
 				if(res.statusCode === 200) res.json(student);
 			}
 		}
-    });
+	});
 };
 
 /**
@@ -208,7 +208,7 @@ exports.enrollment = function (req, res) {
 	    Students.findById.bind(Students,  req.params.idstd),
 	    function(student, next) { 
 			//find a student by id
-			Courses.find({name: req.params.idc}, function(err, course){ 
+			Courses.findOne({name: req.params.idc}, function(err, course){ 
 				// find a course by id
 			    if (err) {
 			        console.log(err);
@@ -231,9 +231,11 @@ exports.enrollment = function (req, res) {
 								}
 							});
 							if(!coursed){ 
-								newCourse = {idCourse: course[0].name, idSection: '', idLesson: '', idLom: '', status: 0, active: -1};
+								newCourse = {idCourse: course.name, idSection: '', idLesson: '', idLom: '', status: 0, active: -1};
 								student.course.push(newCourse);
 								activity = newCourse;
+								course.statistics.std_enrolled.push(student._id);
+								course.save();
 							}
 							student.save(next);	 
 						}
@@ -256,7 +258,7 @@ exports.unenrollment = function (req, res) {
 	    function(student, next) { 
 			//find a student by id
 			var Courses = require('../courses/courses.model.js');
-			Courses.find({name: req.params.idc}, function(err, course){ 
+			Courses.findOne({name: req.params.idc}, function(err, course){ 
 				// find a course by id
 			    if (err) {
 			        console.log(err);
@@ -265,10 +267,17 @@ exports.unenrollment = function (req, res) {
 					if(functions.studentFound(student, req, res) === true){
 						var coursed = false;
 						student.course.find(function(element ,index , array){
-							if(element.idCourse === req.params.idc){
+							if(element.idCourse === req.params.idc && element.active !== 0){
 								coursed = true;
 								element.active = 0;
 								activity = element;
+								course.statistics.std_unenrolled.push(student._id);
+								course.statistics.std_enrolled.find(function(element1, index1, array1){
+									if(element1 === student._id){
+										array1.splice(index, 1);
+									}
+								});
+								course.save();
 								student.save(next);
 							}
 						});
@@ -401,91 +410,94 @@ exports.newActivity = function (req, res) {
 	    Students.findById.bind(Students,  req.params.idstd),
 	    function(student, next) { //find a student by id
 			var Courses = require('../courses/courses.model.js');
-			Courses.find({name: req.params.idc}, function(err, course){ 
+			Courses.findOne({name: req.params.idc}, function(err, course){ 
 				// find a course by name
 			    if (err) {
 			        console.log(err);
 			        res.status(err.code).send(err);
-			    } else {
-					if(!course){
-						res.status(404).send('The course: ' + req.params.idc + ' is not registrated');
-					} else {
-						
-						if(functions.studentFound(student, req, res) === true){
-							course = course[0];
-							coursed = true;							
-							student.course.find(function(element ,index , array){
-								if(element.idCourse === course.name){
+			    } else if(!course){
+					res.status(404).send('The course: ' + req.params.idc + ' is not registrated');
+				} else {
+					if(functions.studentFound(student, req, res) === true){
+						coursed = true;							
+						student.course.find(function(element ,index , array){
+							if(element.idCourse === course.name){
+								
+								if(element.active === 1 || element.active === -1 ){
+									element.active = 1;
+									coursed = true;
 									
-									if(element.active === 1 || element.active === -1 ){
-										element.active = 1;
-										coursed = true;
+									/** 
+									 *  By 'next Activity' function calculate the next activity,
+									 *  this function is explained in 'students.functions.js'.
+									 */
+									
+									ret = functions.nextActivity(element, course, student);	
+									
+									switch (ret){
+									case -1:
+										course.statistics.std_finished.push(student._id);
+										course.statistics.std_enrolled.find(function(element, index, array){
+											if(student._id.equals(element)){
+												array.splice(index,1) ;
+											}
+										});
+										activity = 'Course finished';
+										res.status(200);
+										student.save(next);
+										break;
+									case -2:
+										res.status(404).send('There is a lesson without loms');
+										student.save(next);
+										break;
+									case -3:
+										res.status(404).send('There is a section without lessons');
+										student.save(next);
+										break;
+									case -4:
+										res.status(404).send('There is a course without sections');
+										student.save(next);
+										break;
+									default:	
+										element = ret;
 										
-										/** 
-										 *  By 'next Activity' function calculate the next activity,
-										 *  this function is explained in 'students.functions.js'.
+										/**
+										 *  Once the following activity is obtained, the function 
+										 *  returns the LOM information corresponding to that activity.
 										 */
 										
-										ret = functions.nextActivity(element, course, student);	
-										
-										switch (ret){
-										case -1:
-											activity = 'Course finished';
-											res.status(200);
-											student.save(next);
-											break;
-										case -2:
-											res.status(404).send('There is a lesson without loms');
-											student.save(next);
-											break;
-										case -3:
-											res.status(404).send('There is a section without lessons');
-											student.save(next);
-											break;
-										case -4:
-											res.status(404).send('There is a course without sections');
-											student.save(next);
-											break;
-										default:	
-											element = ret;
+										LOMS.find({_id: element.idLom}, function(err, lom) {
 											
-											/**
-											 *  Once the following activity is obtained, the function 
-											 *  returns the LOM information corresponding to that activity.
-											 */
-											
-											LOMS.find({_id: element.idLom}, function(err, lom) {
-												
-											    if (err) {
-											        console.log(err);
-											        res.status(err.code).send(err);
+										    if (err) {
+										        console.log(err);
+										        res.status(err.code).send(err);
+											} else {
+							            		if(!lom){ 														
+													res.status(404).send('The lom: ' + element.idLom + ' is not registrated');
 												} else {
-								            		if(!lom){ 														
-														res.status(404).send('The lom: ' + element.idLom + ' is not registrated');
-													} else {
-														if(lom.length > 0){ activity = lom[0]; }
-														else{ activity = lom; }
-														
-														student.save(next);
-													}
+													if(lom.length > 0){ activity = lom[0]; }
+													else{ activity = lom; }
+													
+													student.save(next);
 												}
-											});	
-											break;
-										}
+											}
+										});	
+										break;
 									}
 								}
-							});							
-						} else{
-							res.status(403).send('The student: ' + student._id + 
-							' is not activated in the course: ' + req.params.idc);	
-						} 			
-					}
-					if(!coursed){
-						res.status(404).send('The student: ' + student._id + 
-						' is not enrolled in the course: ' + req.params.idc);
-					} 
+							}
+						});							
+					} else{
+						res.status(403).send('The student: ' + student._id + 
+						' is not activated in the course: ' + req.params.idc);	
+					} 			
 				}
+				if(!coursed){
+					res.status(404).send('The student: ' + student._id + 
+					' is not enrolled in the course: ' + req.params.idc);
+				} 	
 				course.save();
+			
 			});	
 	    }
 	], function(err, student) {		

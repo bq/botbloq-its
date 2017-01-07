@@ -73,16 +73,15 @@ exports.get_section = function (req, res) {
 
 function exist_section(sectionId,sections){
 	// verify that the 'new' section does not
-	// already exists. In this case, it is an ERROR			
-	var resp = sections.some(function(elem) 
-		{
-			var cmp = sectionId.localeCompare(elem.name);
-			if ( cmp === 0 ) {
-				return true;
-				}
+	// already exists. In this case, it is an ERROR		
+	var bool = false;
+	for(var i = 0; i < sections.length; i++){
+		if(sections[i].name === sectionId){
+			bool = true;
 		}
-	);
-	return resp;
+	}
+
+	return bool;
 }
 
 // Exporting create_section function
@@ -106,7 +105,7 @@ exports.create_section = function(req, res) {
 		new_sec = req.body.section,
 		sectionId = new_sec.name;
 		
-	Courses.findOne({'name' : courseId}, function (err, course){
+	Courses.findOne({name: courseId}, function (err, course){
 		if (err){
 			res.sendStatus(err); 
 		} else if (!course){
@@ -122,7 +121,7 @@ exports.create_section = function(req, res) {
 				// then we have to insert it in the array			
 				// push the new section at the end of the sections array					
 				// sections.push(new_sec);
-				sections[sections.length] = new_sec;
+				sections.push(new_sec);
 				var err1 = controller.update_course_field(courseId,'sections',sections);
 				if (res.statusCode !== 200){ 
 					res.status(400).send('error while updating '+err);

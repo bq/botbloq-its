@@ -51,16 +51,13 @@ in the list of sections. If it doesn't exists in the list returns -1
 exports.find_section = function(sectionId,sections){
 	// verify that the 'new' section does not
 	// already exists. In this case, it is an ERROR	
-	var len = sections.length;
-	for (var i = 0; i < len; i++) {		
-		var elem = sections[i];
-		var cmp = sectionId.localeCompare(elem.name);
-		if ( cmp === 0 ) 
-			{ 
-				return i;
-			}
+	var ret = -1;
+	for (var i = 0 ; i < sections.length; i ++){
+		if(sections[i].name === sectionId){
+			ret = i;
+		}
 	}
-	return -1;
+	return ret;
 }
 
 /*
@@ -71,16 +68,13 @@ in the list of lessons. If it doesn't exists in the list returns -1
 exports.find_lesson = function(lessonId,lessons){
 	// verify that the 'new' lesson does not
 	// already exists. In this case, it is an ERROR	
-	var len = lessons.length;
-	for (var i = 0; i < len; i++) {		
-		var elem = lessons[i];
-		var cmp = lessonId.localeCompare(elem.name);
-		if ( cmp === 0 ) 
-			{ 
-				return i;
-			}
+	var ret = -1;
+	for (var i = 0 ; i < lessons.length; i ++){
+		if(lessons[i].name === lessonId){
+			ret = i;
+		}
 	}
-	return -1;
+	return ret;
 }
 
 /*
@@ -89,14 +83,11 @@ in the list of loms. If it doesn't exists in the list returns -1
 */
 
 exports.find_lom = function(lomId,loms){
-	var len = loms.length;
-	for (var i = 0; i < len; i++) {		
-		var elem = loms[i];
-		var cmp = lomId.localeCompare(elem.lom_id);
-		if ( cmp === 0 ) 
-			{ 
-				return i;
-			}
+	var ret = -1;
+	for (var i = 0 ; i < loms.length; i ++){
+		if(loms[i].lom_id === lomId){
+			ret = i;
+		}
 	}
-	return -1;
+	return ret;
 }
