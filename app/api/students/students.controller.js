@@ -182,12 +182,13 @@ exports.init = function (req, res) {
 		     			break;
 		    		case 'ls_per':
 		    			student.learningStyle.perception = answers[i].value;
-		   			 break;
+		   				break;
 		   			case 'ls_proc':
 		   				student.learningStyle.processing = answers[i].value;
 		    			break;
 		   			default:
-		   			 	res.status(400).send('The id_question: ' + answers[i].id_question + ' is not correct');
+		   			 	res.status(400).send('The id_question: ' +
+		   			 	  answers[i].id_question + ' is not correct');
 					}
 				}
 				student.save(next);
@@ -213,32 +214,36 @@ exports.enrollment = function (req, res) {
 			    if (err) {
 			        console.log(err);
 			        res.status(err.code).send(err);
-			    } else {
-					if(course.length === 0){
-						res.status(404).send('The course: ' + req.params.idc + ' is not registrated');
-					} else {
-						if(functions.studentFound(student, req, res) === true){
-							var coursed = false;
-							student.course.find(function(element ,index , array){
-								if(element.idCourse === req.params.idc){
-									if (element.active === 1){ 
-										res.status(400).send('The student: ' + student._id + ' is already enrolled in the course: ' + req.params.idc) ;
-									} else { 
-										element.active = 1;
-									}
-									activity = element;
-									coursed = true;
+			    } else if(course!){
+					res.status(404).send('The course: ' + 
+						req.params.idc + ' is not registrated');
+				} else {
+					if(functions.studentFound(student, req, res) === true){
+						var coursed = false;
+						student.course.find(function(element ,index , array){
+							if(element.idCourse === req.params.idc){
+								if (element.active === 1){ 
+									res.status(400).send('The student: ' + 
+										student._id + ' is already enrolled in the course: ' +
+										req.params.idc);
+								} else { 
+									element.active = 1;
 								}
-							});
-							if(!coursed){ 
-								newCourse = {idCourse: course.name, idSection: '', idLesson: '', idLom: '', status: 0, active: -1};
-								student.course.push(newCourse);
-								activity = newCourse;
-								course.statistics.std_enrolled.push(student._id);
-								course.save();
+								activity = element;
+								coursed = true;
 							}
-							student.save(next);	 
+						});
+						// if student is activated and is not enrolled in the same course
+						if(!coursed){ 
+							newCourse = {idCourse: course.name, idSection: '', 
+							  idLesson: '', idLom: '', status: 0, active: -1};
+
+							student.course.push(newCourse);
+							activity = newCourse;
+							course.statistics.std_enrolled.push(student._id);
+							course.save();
 						}
+						student.save(next);	 
 					}
 				}
 			});	
@@ -501,7 +506,6 @@ exports.newActivity = function (req, res) {
 			});	
 	    }
 	], function(err, student) {		
-		
 		functions.controlErrors(err, res, activity);
 	});
 };

@@ -47,8 +47,8 @@ exports.get_section = function (req, res) {
 	var courseId = req.params.course_id;
 	var sectionId = req.params.section_id;
 	
-	Courses.findOne({'name' : courseId}, function(err, course) {
-        if (err){
+	Courses.findOne({name: courseId}, function(err, course) {
+		if (err){
 			res.sendStatus(err);
 		} else if (!course) {
 				res.status(404).send('The course with id: ' + courseId + ' is not registrated');   
@@ -95,7 +95,7 @@ function exist_section(sectionId,sections){
 	// 'course':'Course1',
 	// 'section':{  
     		// 'name': 'Section1.3',
-       		// 'resume': 'Section1.3 resume',
+       		// 'summary': 'Section1.3 resume',
        		// 'lessons': [] 
 	  // }
 // }
@@ -120,7 +120,6 @@ exports.create_section = function(req, res) {
 				// the new section does not already exists
 				// then we have to insert it in the array			
 				// push the new section at the end of the sections array					
-				// sections.push(new_sec);
 				sections.push(new_sec);
 				var err1 = controller.update_course_field(courseId,'sections',sections);
 				if (res.statusCode !== 200){ 

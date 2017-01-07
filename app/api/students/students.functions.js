@@ -196,15 +196,22 @@ exports.nextActivity = function (element, course, student){
 					}
 				} else { ret = -1; }
 			}
-		
-		} else { //// AQUI OBJETIVOS
+		/**
+		 *  If it is the first time that the student requests an activity, the system checks if he has 
+		 *  already studied a lesson with the same objective as the first lessons of the current 
+		 *  course, and the first lesson with the objective different from those obtained by the
+		 *  student is returned.
+		 */
+
+		} else { 
 			indexMyLesson = 0;
 			var bool = true, n = 0, i = 0, 
 			stdObjectives = student.knowledgeLevel, 
 			lessons = course.sections[0].lessons;
 			if(stdObjectives.length !== 0){
 				do{
-					if(lessons[i].objectives[0].code === stdObjectives[n].code && lessons[i].objectives[0].level === stdObjectives[n].level){
+					if(lessons[i].objectives[0].code === stdObjectives[n].code &&
+					   lessons[i].objectives[0].level === stdObjectives[n].level){
 						indexMyLesson = i+1;
 						if(stdObjectives.length > (n + 1)) {
 							n++;
