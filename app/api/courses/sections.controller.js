@@ -21,6 +21,7 @@ function update_section_field: updates just a field of a section
 var Courses = require('./courses.model.js'),
 	Sections = require('./courses.model.js'),
     config = require('../../res/config.js'),
+    CoursesFunctions = require('./courses.functions.js'),
     async = require('async'),
     _ = require('lodash');
 var controller = require('./courses.controller.js');
@@ -71,19 +72,6 @@ exports.get_section = function (req, res) {
 	});	
 };
 
-function exist_section(sectionId,sections){
-	// verify that the 'new' section does not
-	// already exists. In this case, it is an ERROR		
-	var bool = false;
-	for(var i = 0; i < sections.length; i++){
-		if(sections[i].name === sectionId){
-			bool = true;
-		}
-	}
-
-	return bool;
-}
-
 // Exporting create_section function
 // It receives as the body of the request in JSON format
 // the name of the course where the section should be created and 
@@ -112,7 +100,7 @@ exports.create_section = function(req, res) {
 			res.status(404).send('The course with id: ' + courseId + ' is not registrated');
 		} else {
 			var sections = course.sections;
-			if (exist_section(sectionId,sections)){
+			if (CoursesFunctions.exist_section(sectionId,sections)){
 				res.status(400).send('Error section already exist');
 			}
 			else {
@@ -121,7 +109,7 @@ exports.create_section = function(req, res) {
 				// then we have to insert it in the array			
 				// push the new section at the end of the sections array					
 				sections.push(new_sec);
-				var err1 = controller.update_course_field(courseId,'sections',sections);
+				var err1 = CoursesFunctions.update_field1(courseId,'sections',sections);
 				if (res.statusCode !== 200){ 
 					res.status(400).send('error while updating '+err);
 				} else {
@@ -153,21 +141,21 @@ exports.update_section = function(req, res) {
 		new_sec = req.body.section,
 		sectionId = new_sec.name;
 	
-	Courses.findOne({'name' : courseId}, function (err, course){
+	Courses.findOne({name: courseId}, function (err, course){
 		if (err){
 			res.sendStatus(err);
 		}else if(!course){
 			res.status(404).send('The course with id: ' + courseId + ' is not registrated');
 		} else {
 			var sections = course.sections;
-			var ind = find_section(sectionId,sections);
+			var ind = CoursesFunctions.find_section(sectionId,sections);
 			if (ind < 0){
 				res.status(404).send('The section with id : ' + sectionId +
 				' has not been found un the course with id: ' + courseId);
 			 } else {
 				course.sections.splice(ind,1); //remove old section
 				sections[sections.length] = new_sec; //push the new one
-				var err1 = controller.update_course_field(courseId,'sections',sections);
+				var err1 = CoursesFunctions.update_field1(courseId,'sections',sections);
 				if (err1) {
 					res.status(400).send('error while updating '+err);
 				} else {
@@ -198,14 +186,14 @@ exports.update_section_field = function(req, res) {
 		value = req.body.value,
 		bool = false;
 		
-	Courses.findOne({'name' : courseId}, function (err, course){
+	Courses.findOne({name: courseId}, function (err, course){
 		if (err) {
 			res.sendStatus(err);
 		} else if(!course){
 			res.status(404).send('The course with id: ' + courseId + ' is not registrated');
 		} else {
 			if(field === 'name'){
-				var ind = find_section(value,sections);
+				var ind = CoursesFunctions.find_section(value,sections);
 				if(ind === -1){
 					bool = true;
 				} else {
@@ -217,14 +205,14 @@ exports.update_section_field = function(req, res) {
 			}
 			if (bool === true){
 				var sections = course.sections;
-				ind = find_section(sectionId,sections);
+				ind = CoursesFunctions.find_section(sectionId,sections);
 				if ( ind < 0 ) {
 					res.status(404).send('The section with id : ' + sectionId +
 				' has not been found un the course with id: ' + courseId);
 				} else {
 					var sec = sections[ind];
 					sec[field] = value;
-					var err1 = controller.update_course_field(courseId,'sections',sections);
+					var err1 = CoursesFunctions.update_field1(courseId,'sections',sections);
 					if (err1){
 						res.status(400).send('Error while updating ' + err)
 					} else {
@@ -234,21 +222,6 @@ exports.update_section_field = function(req, res) {
 			}
 		}
 	});
-}
-
-function find_section(sectionId,sections){
-
-	// verify that the 'new' section does not
-	// already exists. In this case, it is an ERROR	
-	var len = sections.length;
-	for (var i = 0; i < len; i++) {		
-		var elem = sections[i];
-		var cmp = sectionId.localeCompare(elem.name);
-		if ( cmp === 0 ) { 
-			return i;
-		}
-	}
-	return -1;
 }
 		
 // Exporting delete_section function
@@ -260,19 +233,19 @@ exports.delete_section = function(req,res) {
 	var sectionId = req.params.section_id;
 
 	// var courseId = req.params.id;
-	Courses.findOne({'name' : courseId}, function(err, course){
+	Courses.findOne({name: courseId}, function(err, course){
         if (err){
 			res.sendStatus(err);
 		} else if (!course) {
 			res.status(404).send('The course with id: ' + courseId + ' is not registrated');  
 		} else{
-			var ind = find_section(sectionId,course.sections);
+			var ind = CoursesFunctions.find_section(sectionId,course.sections);
 			if (ind < 0){
 				res.status(404).send('The section with id : ' + sectionId +
 				' has not been found un the course with id: ' + courseId);
 			} else {
 				course.sections.splice(ind,1);
-				var err1 = controller.update_course_field(courseId,'sections',course.sections);
+				var err1 = CoursesFunctions.update_field1(courseId,'sections',course.sections);
 				if (err1) {
 					res.status(400).send('error while updating '+err)
 				} else { 

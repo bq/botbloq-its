@@ -96,7 +96,7 @@ exports.delete_lesson = function (req, res) {
 					' has not been found un the section with id: ' + sectionId);
 				} else {
 					course.sections[inds].lessons.splice(indl,1);
-					var err1 = controller.update_course_field(courseId,'sections',course.sections);
+					var err1 = CoursesFunctions.update_field1(courseId,'sections',course.sections);
 					if (err1){
 						res.status(400).send('error while updating '+err)
 					} else {
@@ -149,9 +149,9 @@ exports.create_lesson = function(req, res) {
 				} else {
 					var lessons = course.sections[inds].lessons;
 					lessons.push(new_lec);
-					var err1 = controller.update_course_field(courseId,'sections',course.sections);
+					var err1 = CoursesFunctions.update_field1(courseId,'sections',course.sections);
 					if (res.statusCode !== 200){
-						res.status(400).send('error while updating '+err)
+						res.status(400).send('error while updating '+err);
 					} else { 
 						res.status(200).send(lessons[lessons.length-1]); 
 					}
@@ -204,7 +204,7 @@ exports.update_lesson = function(req, res) {
 					var lessons = course.sections[inds].lessons;
 					lessons.splice(indl,1);
 					lessons[lessons.length] = new_lec;
-					var err1 = controller.update_course_field(courseId,'sections',course.sections);
+					var err1 = CoursesFunctions.update_field1(courseId,'sections',course.sections);
 					if (err1) {
 						res.status(404).send('error while updating '+err);							
 					} else {
@@ -257,7 +257,7 @@ exports.update_lesson_field = function(req, res) {
 					lessons.splice(indl,1);
 					lesson[field] = value;
 					lessons[lessons.length] = lesson;
-					var err1 = controller.update_course_field(courseId,'sections',course.sections);
+					var err1 = CoursesFunctions.update_field1(courseId,'sections',course.sections);
 					if (err1){
 						res.status(400).send('error while updating '+err);							
 					}else{

@@ -17,6 +17,7 @@ format in the body of the request.
 
 var Courses = require('./courses.model.js'),
     config = require('../../res/config.js'),
+    CoursesFunctions = require('./courses.functions.js'),
     async = require('async'),
     _ = require('lodash');
 	
@@ -166,20 +167,6 @@ exports.update = function(req, res) {
 	});		
 };
 
-var update_field1 = function(courseId,field,value){
-	Courses.findOne({name: courseId}, 
-		function (err, course) {
-			course[field] = value;			
-			course.save(function (err) {return err});
-		}
-	);
-}
-
-exports.update_course_field = function(courseId,field,value){
-	var err = update_field1(courseId,field,value);
-	return err;
-}
-
 // Exporting update function
 // update the field of the course received as parameter
 // it updates just the field with the value indicated via JSON 
@@ -196,7 +183,7 @@ exports.update_field = function(req, res) {
 					}else if (!course1){
 						res.status(404).send('The course with id: ' + req.body.name + ' is not registrated');
 					} else {
-						update_field1(req.body.name,req.body.field,req.body.value);
+						CoursesFunctions.update_field1(req.body.name,req.body.field,req.body.value);
 						res.status(200).send('Updated the course with id: ' + req.body.name);
 					}
 				});
@@ -205,7 +192,7 @@ exports.update_field = function(req, res) {
 			}
 		});
 	} else {
-		update_field1(req.body.name,req.body.field,req.body.value);
+		CoursesFunctions.update_field1(req.body.name,req.body.field,req.body.value);
 		res.status(200).send('Updated the course with id: ' + req.body.name);
 	}			
 }

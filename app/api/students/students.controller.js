@@ -214,7 +214,7 @@ exports.enrollment = function (req, res) {
 			    if (err) {
 			        console.log(err);
 			        res.status(err.code).send(err);
-			    } else if(course!){
+			    } else if(!course){
 					res.status(404).send('The course: ' + 
 						req.params.idc + ' is not registrated');
 				} else {

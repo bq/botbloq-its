@@ -439,6 +439,7 @@ describe('Chakram', function(){
 						console.log('deleting a lesson of a section and a course');
 						
 						lesson = course.generateDefaultLesson();
+						lesson.lesson.name = 'Lesson_1_2';
 						lesson.course = nameCourse;
 					    return request.putBackend('/courses/create_lesson',200, lesson).then(function (response) {
 							chakram.wait();

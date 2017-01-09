@@ -35,7 +35,7 @@ Find the first course with the name indicated. Then
 update the indicated field with the value 
 */
 exports.update_field1 = function(courseId,field,value){
-	Courses.findOne({'name' : courseId}, 
+	Courses.findOne({name: courseId}, 
 		function (err, course) {
 			course[field] = value;
 			course.save(function (err) {return err});
@@ -58,6 +58,18 @@ exports.find_section = function(sectionId,sections){
 		}
 	}
 	return ret;
+}
+
+exports.exist_section = function exist_section(sectionId,sections){
+	// verify that the 'new' section does not
+	// already exists. In this case, it is an ERROR		
+	var bool = false;
+	for(var i = 0; i < sections.length; i++){
+		if(sections[i].name === sectionId){
+			bool = true;
+		}
+	}
+	return bool;
 }
 
 /*

@@ -148,7 +148,7 @@ exports.assign_lom = function(req, res) {
 									} else {
 										var loms = lessons[indl].loms;
 										loms[loms.length] = {lom_id: lomId};
-										var err1 = controller.update_course_field(courseId,'sections',course.sections);
+										var err1 = CoursesFunctions.update_field1(courseId,'sections',course.sections);
 										if (res.statusCode !== 200){
 											res.status(400).send('error while updating '+err);							
 										} else {
@@ -212,7 +212,7 @@ exports.delete_lom = function(req, res) {
 					} else {
 						var loms = lessons[indl].loms;
 						loms.splice(ind,1);
-						var err1 = controller.update_course_field(courseId,'sections',course.sections);
+						var err1 = CoursesFunctions.update_field1(courseId,'sections',course.sections);
 						if (err1){
 							res.status(400).send('error while updating '+err);							
 						} else {
