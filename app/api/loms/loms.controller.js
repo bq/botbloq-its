@@ -8,7 +8,7 @@ var LOMS = require('./loms.model.js'),
 	functions = require('./loms.functions.js'),
 	RuleEngine = require('node-rules'),
 	mongoose = require('mongoose'),
-	rules = require('./array_conditions.js');
+	rules = require('../../res/rules.js');
 
 //ALL LOMS
 	
