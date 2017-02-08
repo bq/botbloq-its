@@ -28,8 +28,7 @@ exports.all = function (req, res)
 	{
 	// console.log(config)
     Courses.find({}, function (err, course) {
-		if (err) { res.sendStatus(err.code); }
-		res.json(course);
+		CoursesFunctions.controlErrors(err, res, course);
 	});
 };
 
@@ -42,7 +41,8 @@ exports.get = function (req, res){
 	var courseId = req.params.id;
 	Courses.findOne({name: courseId}, function(err, course) {
         if (err) {
-			res.sendStatus(err.code);				
+        	console.log(err);
+			res.status(err.code).send(err);				
 		} else if(!course){
 			res.status(404).send('The course with id: ' + courseId + ' is not registrated');
 		} else {
@@ -60,17 +60,16 @@ exports.remove = function(req,res) {
 	    Courses.findById.bind(Courses, req.params.id),
 	    function(course, next) {
 			Courses.remove(course, function (err, resp) {
-		        if (err){
-					res.status(404).send(err);
-		        } else {
-					res.json(resp);
-				}
+		        CoursesFunctions.controlErrors(err, res, resp);
 		    });
 	    }
 	], function(err, course) {
 	    if (err) {
-			res.sendStatus(err.code);				
-	    } 
+	    	console.log(err);
+			res.status(err.code).send(err);				
+	    } else {
+	    	res.sendStatus(200);
+	    }
 	});
 };
 
@@ -79,11 +78,7 @@ exports.remove = function(req,res) {
  */
 exports.reset  = function(req, res){
     Courses.remove({}, function (err, resp) {
-	    if (err){
-	        res.status(404).send(err);
-		} else {
-			res.json(resp);
-		}
+	    CoursesFunctions.controlErrors(err, res, resp);
     });
 };
 
@@ -91,10 +86,11 @@ exports.reset  = function(req, res){
 // insert the course received as parameter
 exports.create = function(req, res) {
 	var bool = false;
-	if (req.body.name !== undefined){
+	if (req.body.name){
 		Courses.find({}, function(err, courses) {
 			if(err){
-	        	res.sendStatus(err.status);
+				console.log(err);
+	        	res.status(err.code).send(err);
 			} else {
 				for(var i = 0; i< courses.length; i++){
 					if(courses[i].name === req.body.name){
@@ -103,7 +99,10 @@ exports.create = function(req, res) {
 				}
 				if(bool === false){
 				    Courses.create(req.body, function (err, course) {
-						if (err) {res.sendStatus(err.code); }
+						if (err) {
+							console.log(err);
+							res.status(err.code).send(err);
+						}
 						console.log('Course created!');
 						var idCse = course._id;
 						res.writeHead(200, {
@@ -128,42 +127,34 @@ exports.update = function(req, res) {
 	async.waterfall([
 	    Courses.findById.bind(Courses, req.params.id),
 	    function(course, next) {
-			if(req.body.name !== undefined){
-				Courses.find({}, function(err, courses) {
+			if(req.body.name){
+				Courses.findOne({name: req.body.name}, function(err, course2) {
 					if(err){
-			        	res.sendStatus(err.status);
+						console.log(err);
+			        	res.status(err.code).send(err);
+					} else if(!course2){
+						res.status(200);
 					} else {
-						for(var i = 0; i< courses.length; i++){
-							if(courses[i].name === req.body.name) {
-								if(courses[i]._id.equals(course._id) === false){
-									res.status(400);
-								}	
-							}
-						}
-						if(res.statusCode !== 400) {
-							course = _.extend(course, req.body);
-							course.save(next);	
+						if(course._id.equals(course2._id)){
 							res.status(200);
 						} else {
 							res.status(400).send('A course with the same name already exists');
-						}						
+						}
+					}
+	
+					if(res.statusCode === 200) {
+						course = _.extend(course, req.body);
+						course.save(next);						
 					}
 				});
 			} else {
+				res.status(200);
 				course = _.extend(course, req.body);
 				course.save(next);	
-				res.status(200);
 			}
 	    }
 	], function(err, course) {
-	    if (err) {
-        	res.sendStatus(err.status);
-	    } 
-		else { 
-			if(res.statusCode === 200){
-				res.json(course); 
-			}
-		}
+	    CoursesFunctions.controlErrors(err, res, course);
 	});		
 };
 
@@ -175,11 +166,13 @@ exports.update_field = function(req, res) {
 	if(req.body.field === 'name'){
 		Courses.findOne({name: req.body.value}, function(err, course){
 			if(err){
-				 res.sendStatus(err);
+				console.log(err);
+				res.status(err.code).send(err);
 			} else if (!course){
-				Courses.findOne({'name' : req.body.name}, function (err1, course1) {
+				Courses.findOne({name: req.body.name}, function (err1, course1) {
 					if(err1){
-						res.sendStatus(err1);
+						console.log(err1);
+						res.status(err1.code).send(err);
 					}else if (!course1){
 						res.status(404).send('The course with id: ' + req.body.name + ' is not registrated');
 					} else {

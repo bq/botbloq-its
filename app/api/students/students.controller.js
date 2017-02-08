@@ -16,10 +16,7 @@ var Students = require('./students.model.js'),
  */
 exports.all = function (req, res) {
 	Students.find({active: 1}, function (err, student) {
-		if (err){
-			res.sendStatus(err.code);
-		} 
-		res.json(student);
+		functions.controlErrors(err, res, student);
 	});
 };
 
@@ -28,10 +25,11 @@ exports.all = function (req, res) {
  */
 exports.create = function(req, res) {
 	var bool = false;
-	if (req.body.identification.email !== undefined){
+	if (req.body.identification.email){
 		Students.find({}, function(err, students) {
 			if(err){
-	        	res.sendStatus(err.status);
+				console.log(err);
+	        	res.status(err.code).send(err);
 			} else {
 				for(var i = 0; i< students.length; i++){
 					if(students[i].identification.email === req.body.identification.email){
@@ -41,7 +39,8 @@ exports.create = function(req, res) {
 				if(bool === false){
 				    Students.create(req.body, function (err, student) {
 				        if (err){
-				        	res.sendStatus(err.status);
+				        	console.log(err);
+				        	res.status(err.code).send(err);
 				        } else {
 					        console.log('Student created!');
 							var json_survey = require('../../res/learningstyle.json'); 
@@ -105,15 +104,22 @@ exports.deactivate = function (req, res) {
 exports.get = function (req, res) {
 	Students.findOne({_id: req.params.id}, function(err, student) {
 		if(err){
-			res.sendStatus(err.status);
+			console.log(err);
+			res.status(err.code).send(err);
 		} else {
 			if(functions.studentFound(student, req, res) === true){
 				var arrayCourses = [];
 				student.course.find(function(element, index, array){
-					if(element.active === 1){ arrayCourses.push(element); } 
+					if(element.active === 1){ 
+						arrayCourses.push(element); 
+					} 
 				});
 				student.course = arrayCourses;
-				if(res.statusCode === 200) res.json(student);
+				if(res.statusCode === 200){
+					res.json(student);
+				} else {
+					res.sendStatus(res.statusCode);
+				}
 			}
 		}
 	});
@@ -122,45 +128,41 @@ exports.get = function (req, res) {
 /**
  *  Updates a student by id
  */
-exports.update = function (req, res) {
-	var activity, bool = true;
+exports.update = function(req, res) {
 	async.waterfall([
 	    Students.findById.bind(Students, req.params.id),
 	    function(student, next) {
-			if(functions.studentFound(student, req, res) === true) {
-				if(req.body.identification.email !== undefined){
-					Students.find({}, function(err, students) {
+	    	if(functions.studentFound(student, req, res) === true) {
+				if(req.body.identification.email){
+					Students.findOne({'identification.email': req.body.identification.email}, function(err, student2) {
 						if(err){
-				        	res.sendStatus(err.status);
+							console.log(err);
+				        	res.status(err.code).send(err);
+						} else if(!student2){
+							res.status(200);
 						} else {
-							for(var i = 0; i< students.length; i++){
-								if(students[i].identification.email === req.body.identification.email) {
-									if(students[i]._id.equals(student._id) === false){
-										res.status(400);
-									}	
-								}
-							}
-							if(res.statusCode !== 400) {
-								student = _.extend(student, req.body);
-								student.save(next);	
+							if(student._id.equals(student2._id)){
 								res.status(200);
 							} else {
 								res.status(400).send('A student with the same email already exists');
 							}
-							
-							
+						}
+		
+						if(res.statusCode === 200) {
+							student = _.extend(student, req.body);
+							student.save(next);						
 						}
 					});
 				} else {
+					res.status(200);
 					student = _.extend(student, req.body);
 					student.save(next);	
-					res.status(200);
 				}
 			}
-		}	
+	    }
 	], function(err, student) {
-		functions.controlErrors(err, res, student);
-	});
+	    functions.controlErrors(err, res, student);
+	});		
 };
 
 /**
@@ -248,7 +250,7 @@ exports.enrollment = function (req, res) {
 				}
 			});	
 	    }
-	], function(err, student) {
+	], function(err) {
 		functions.controlErrors(err, res, activity);
 	});
 };
@@ -341,7 +343,7 @@ exports.updateActivity = function (req, res) {
 										  *  Include the objetive of the finished lesson in student knowledgeLevel  
 										  */
 										if(res.statusCode === 200){
-											 var lesson = functions2.find_lesson(element.idLesson, course.sections[0].lessons);
+											 var lesson = functions2.exist_section_lesson(element.idLesson, course.sections[0].lessons);
 											 lesson = course.sections[0].lessons[lesson];
 											 student.knowledgeLevel.find(function(element1, index1, array1){
 												 if(element1.code === lesson.objectives[0].code && element1.level === lesson.objectives[0].level){
@@ -492,9 +494,6 @@ exports.newActivity = function (req, res) {
 								}
 							}
 						});							
-					} else{
-						res.status(403).send('The student: ' + student._id + 
-						' is not activated in the course: ' + req.params.idc);	
 					} 			
 				}
 				if(!coursed){
@@ -522,12 +521,16 @@ exports.remove = function (req, res) {
 				res.status(404).send('The student with id: ' + req.params.id + ' is not registrated');
 			} else{
 			    Students.remove(student, function (err, resp) {
-			        if (err){ res.sendStatus(err.code); }
-			        res.json(resp);
+			        functions.controlErrors(err, res, resp);
 			    });
 			}
 	    }
-	], function(err, student) {
-		functions.controlErrors(err, res, student);
+	], function(err) {
+		if(err){
+			console.log(err);
+			res.status(err.code).send(err);
+		} else {
+		 	res.sendStatus(200);
+		}
 	});
 };

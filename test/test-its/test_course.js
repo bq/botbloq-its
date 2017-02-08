@@ -164,16 +164,16 @@ describe('Chakram', function(){
 	it('Testing to create a section in a course and testing errors', function () {
 		section = course.generateDefaultSection();
 		section.course = id;
-	    return request.putBackend('/courses/create_section',404, section).then(function (response) {
+	    return request.postBackend('/courses/create_section',404, section).then(function (response) {
 			expect(response.body).to.equal('The course with id: ' + id + ' is not registrated');
 			console.log('creating a sections in a not registrated course');
 			
 			section.course = nameCourse;
-		    return request.putBackend('/courses/create_section',200, section).then(function (response) {
+		    return request.postBackend('/courses/create_section',200, section).then(function (response) {
 				expect(response.body.name).to.equal(section.section.name);
 				console.log('creating a section in a course');
 				
-			    return request.putBackend('/courses/create_section',400, section).then(function (response) {
+			    return request.postBackend('/courses/create_section',400, section).then(function (response) {
 					expect(response.body).to.equal('Error section already exist');
 					console.log('creating a repeat section in a course');
 					
@@ -278,7 +278,7 @@ describe('Chakram', function(){
 		console.log('-------------- lessons testing ---------------');
 		section = course.generateDefaultSection();
 		section.course = nameCourse;
-	    return request.putBackend('/courses/create_section',200, section).then(function (response) {
+	    return request.postBackend('/courses/create_section',200, section).then(function (response) {
 		    return request.getBackend('/courses/'+id+'/section/'+id+'/lessons',404).then(function (response) {
 				expect(response.body).to.equal('The course with id: ' + id + ' is not registrated');
 				console.log('getting all lessons of a section of a not registrated course');
@@ -302,23 +302,23 @@ describe('Chakram', function(){
 	it('Testing to create a lesson in a section and a course and testing errors', function () {
 		lesson = course.generateDefaultLesson();
 		lesson.course = id;
-	    return request.putBackend('/courses/create_lesson',404, lesson).then(function (response) {
+	    return request.postBackend('/courses/create_lesson',404, lesson).then(function (response) {
 			expect(response.body).to.equal('The course with id: ' + id + ' is not registrated');
 			console.log('creating a lesson in a section of a not registrated course');
 			
 			lesson.course = nameCourse;
 			lesson.section = id;
-		    return request.putBackend('/courses/create_lesson',404, lesson).then(function (response) {
+		    return request.postBackend('/courses/create_lesson',404, lesson).then(function (response) {
 				expect(response.body).to.equal('The section with id : ' + id + 
 				' has not been found un the course with id: ' + nameCourse);
 				console.log('creating a lesson in a not registrated section of a course');
 				
 				lesson.section = 'Section_1_1';
-			    return request.putBackend('/courses/create_lesson',200, lesson).then(function (response) {
+			    return request.postBackend('/courses/create_lesson',200, lesson).then(function (response) {
 					expect(response.body.name).to.equal(lesson.lesson.name);
 					console.log('creating a lesson in a section of a course');
 					
-				    return request.putBackend('/courses/create_lesson',400, lesson).then(function (response) {
+				    return request.postBackend('/courses/create_lesson',400, lesson).then(function (response) {
 						expect(response.body).to.equal('Error lesson already exist');
 						console.log('creating a lesson with a repeat name in a section of a course');
 						
@@ -441,7 +441,7 @@ describe('Chakram', function(){
 						lesson = course.generateDefaultLesson();
 						lesson.lesson.name = 'Lesson_1_2';
 						lesson.course = nameCourse;
-					    return request.putBackend('/courses/create_lesson',200, lesson).then(function (response) {
+					    return request.postBackend('/courses/create_lesson',200, lesson).then(function (response) {
 							chakram.wait();
 						});
 					});
@@ -487,29 +487,29 @@ describe('Chakram', function(){
 			console.log('creating a lom');
 			
 			lom_assign = {course: id, section: id, lesson: id, lom_id: id};
-			return request.putBackend('/courses/assign_lom',404, lom_assign).then(function (response) {
+			return request.postBackend('/courses/assign_lom',404, lom_assign).then(function (response) {
 				expect(response.body).to.equal('The course with id: ' + id + ' is not registrated');
 				console.log('assigning a lom in a lesson of a section and a not registrated course');
 				
 				lom_assign.course = nameCourse;
-				return request.putBackend('/courses/assign_lom',404, lom_assign).then(function (response) {
+				return request.postBackend('/courses/assign_lom',404, lom_assign).then(function (response) {
 					expect(response.body).to.equal('The section with id : ' + id + 
 					' has not been found un the course with id: ' + lom_assign.course);
 					console.log('assigning a lom in a lesson of a not registrated section and a course');
 					
 					lom_assign.section = section.section.name;
-					return request.putBackend('/courses/assign_lom',404, lom_assign).then(function (response) {
+					return request.postBackend('/courses/assign_lom',404, lom_assign).then(function (response) {
 						expect(response.body).to.equal('The lesson with id : ' + id + 
 						' has not been found un the section with id: ' + lom_assign.section);
 						console.log('assigning a lom in a not registrated lesson of a section and a course');
 						
 						lom_assign.lesson = lesson.lesson.name;
-						return request.putBackend('/courses/assign_lom',404, lom_assign).then(function (response) {
+						return request.postBackend('/courses/assign_lom',404, lom_assign).then(function (response) {
 							expect(response.body).to.equal('The lom with id: ' + id + ' is not registrated');
 							console.log('assigning a not registrated lom in a lesson of a section and a course');
 							
 							lom_assign.lom_id = idLOM;
-							return request.putBackend('/courses/assign_lom',200, lom_assign).then(function (response) {
+							return request.postBackend('/courses/assign_lom',200, lom_assign).then(function (response) {
 								expect(response.body.lom_id).to.equal(lom_assign.lom_id);
 								console.log('assigning a lom in a lesson of a section and a course');
 								chakram.wait();

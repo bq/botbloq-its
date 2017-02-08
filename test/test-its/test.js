@@ -93,14 +93,14 @@ describe('Chakram', function(){
 				expect(response2.body.name).to.equal(randomCourse.name);
 				var defaultSection = course.generateDefaultSection();
 				defaultSection.course = nameCourse;
-				return request.putBackend('/courses/create_section', 200, defaultSection).then ( function (response) {
+				return request.postBackend('/courses/create_section', 200, defaultSection).then ( function (response) {
 					var defaultLesson = course.generateDefaultLesson();
 					defaultLesson.course = nameCourse;
-					return request.putBackend('/courses/create_lesson', 200, defaultLesson).then(function (response) {
+					return request.postBackend('/courses/create_lesson', 200, defaultLesson).then(function (response) {
 						var reqLOM = course.generateAssignedLOM();
 						reqLOM.course = randomCourse.name;
 						reqLOM.lom_id = idLOM;
-						return request.putBackend('/courses/assign_lom', 200, reqLOM).then ( function(response) {
+						return request.postBackend('/courses/assign_lom', 200, reqLOM).then ( function(response) {
 							expect(response.body.lom_id).to.equal(idLOM);
 							chakram.wait();
 						}); 

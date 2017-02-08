@@ -24,7 +24,7 @@ exports.controlErrors = function (err, res, ret){
 exports.studentFound = function (student, req, res){
 	var bool = false, ret;
 	
-	if (req.params.idstd !== undefined){ ret = req.params.idstd; }
+	if (req.params.idstd){ ret = req.params.idstd; }
 	else{ ret = req.params.id; }
 
 	if(student.active === 0){
@@ -45,7 +45,7 @@ exports.findTypeLesson = function(lessons, type, course){
 	var ret = [];
 	for(var i = 0; i <= lessons.length; i++){
 				
-		if(course.sections[0].lessons[lessons[i]] !== undefined && course.sections[0].lessons[lessons[i]].type === type){
+		if(course.sections[0].lessons[lessons[i]] && course.sections[0].lessons[lessons[i]].type === type){
 			ret.push(course.sections[0].lessons[lessons[i]]);
 		}
 	}
@@ -138,7 +138,7 @@ exports.selectActivity = function(myLesson, course, status){
 		break;
 	}
 	
-	if (ret !== -1) { ret = functions2.find_lesson(ret.name, course.sections[0].lessons); }
+	if (ret !== -1) { ret = functions2.exist_section_lesson(ret.name, course.sections[0].lessons); }
 	return ret;
 }
 
@@ -159,7 +159,7 @@ exports.nextActivity = function (element, course, student){
 		 */
 	
 		if(element.status !== 0){ 
-			indexMyLesson = functions2.find_lesson(element.idLesson, course.sections[0].lessons);
+			indexMyLesson = functions2.exist_section_lesson(element.idLesson, course.sections[0].lessons);
 			myLesson = course.sections[0].lessons[indexMyLesson];
 			
 			/**

@@ -100,7 +100,7 @@ exports.create_section = function(req, res) {
 			res.status(404).send('The course with id: ' + courseId + ' is not registrated');
 		} else {
 			var sections = course.sections;
-			if (CoursesFunctions.exist_section(sectionId,sections)){
+			if (CoursesFunctions.exist_section_lesson(sectionId,sections) !== -1){
 				res.status(400).send('Error section already exist');
 			}
 			else {
@@ -148,7 +148,7 @@ exports.update_section = function(req, res) {
 			res.status(404).send('The course with id: ' + courseId + ' is not registrated');
 		} else {
 			var sections = course.sections;
-			var ind = CoursesFunctions.find_section(sectionId,sections);
+			var ind = CoursesFunctions.exist_section_lesson(sectionId,sections);
 			if (ind < 0){
 				res.status(404).send('The section with id : ' + sectionId +
 				' has not been found un the course with id: ' + courseId);
@@ -193,7 +193,7 @@ exports.update_section_field = function(req, res) {
 			res.status(404).send('The course with id: ' + courseId + ' is not registrated');
 		} else {
 			if(field === 'name'){
-				var ind = CoursesFunctions.find_section(value,sections);
+				var ind = CoursesFunctions.exist_section_lesson(value,sections);
 				if(ind === -1){
 					bool = true;
 				} else {
@@ -205,7 +205,7 @@ exports.update_section_field = function(req, res) {
 			}
 			if (bool === true){
 				var sections = course.sections;
-				ind = CoursesFunctions.find_section(sectionId,sections);
+				ind = CoursesFunctions.exist_section_lesson(sectionId,sections);
 				if ( ind < 0 ) {
 					res.status(404).send('The section with id : ' + sectionId +
 				' has not been found un the course with id: ' + courseId);
@@ -239,7 +239,7 @@ exports.delete_section = function(req,res) {
 		} else if (!course) {
 			res.status(404).send('The course with id: ' + courseId + ' is not registrated');  
 		} else{
-			var ind = CoursesFunctions.find_section(sectionId,course.sections);
+			var ind = CoursesFunctions.exist_section_lesson(sectionId,course.sections);
 			if (ind < 0){
 				res.status(404).send('The section with id : ' + sectionId +
 				' has not been found un the course with id: ' + courseId);

@@ -6,7 +6,9 @@ var LOMS = require('./loms.model.js'),
     _ = require('lodash'),
 	fs = require('fs'), 
 	functions = require('./loms.functions.js'),
-	mongoose = require('mongoose'); 
+	RuleEngine = require('node-rules'),
+	mongoose = require('mongoose'),
+	rules = require('./array_conditions.js');
 
 //ALL LOMS
 	
@@ -15,8 +17,7 @@ var LOMS = require('./loms.model.js'),
  */
 exports.all = function (req, res) {
     LOMS.find({}, function (err, lom) {
-        if (err) { res.sendStatus(err.code); }
-        res.json(lom);
+        functions.controlErrors(err, res, lom);
     });
 };
 
@@ -25,7 +26,11 @@ exports.all = function (req, res) {
  */
 exports.create = function(req, res) {
     LOMS.create(req.body, function (err, lom) {
-		if (err) { res.sendStatus(err.code); }
+		
+		if (err) { 
+			console.log(err);
+			res.status(err.code).send(err);
+		}
         console.log('LOMS created!');
         var id = lom._id;
 
@@ -41,8 +46,7 @@ exports.create = function(req, res) {
  */
 exports.destroy  = function(req, res){
     LOMS.remove({}, function (err, resp) {
-        if (err) { res.sendStatus(err.code); }
-        res.json(resp);
+        functions.controlErrors(err, res, resp)
     });
 };
 
@@ -55,7 +59,9 @@ exports.get = function (req, res) {
 	if(mongoose.Types.ObjectId.isValid(req.params.id)){
 	    LOMS.findOne({_id: req.params.id}, function (err, lom) {
 	       if (err) { 
-			   res.sendStatus(err.code); 
+			   console.log(err);
+			   res.status(err.code).send(err);
+
 		   } else if(!lom){
 			   res.status(404).send('The lom with id: ' + req.params.id + ' is not registrated');
 		   } else {
@@ -102,17 +108,41 @@ exports.remove = function (req, res) {
 					res.status(404).send('The lom with id: ' + req.params.id + ' is not registrated');
 			    } else{
 					LOMS.remove(lom, function (err, resp) {
-				        if (err) { res.sendStatus(err.code); }
-				        res.json(resp);
+				        functions.controlErrors(err, res,resp);
 				    });
 				}
 		    }
-		], function(err, lom) {
-		    functions.controlErrors(err, res, lom);
+		], function(err) {
+		    if(err){
+		    	console.log(err);
+		    	res.status(err.code).send(err);
+		    } else {
+		    	res.sendStatus(200);
+		    }
 		});
 	} else {
 		res.status(404).send('The lom with id: ' + req.params.id + ' is not registrated');
 	}
+};
+
+exports.rules = function(req,res) {
+	var fact = {
+		units : 11,
+		problems : 4.4,
+		steps: 4,
+		corrects_steps: 53,
+		duration : 8176,
+		hints: 2,
+		skills :12.25
+	};
+
+	var R = new RuleEngine(rules.rules);
+
+	R.execute(fact, function(result){
+		
+		console.log("Grupo " + result.group);
+
+	});
 };
 
 /**
@@ -120,7 +150,8 @@ exports.remove = function (req, res) {
  */
 exports.uploadFile =  function (req, res) {
 	LOMS.findById(req.params.id, function(err, lom){
-		if(!lom) { res.status(404).send('The lom with id: '+  req.params.id +' is not registrated');
+		if(!lom) { 
+			res.status(404).send('The lom with id: '+  req.params.id +' is not registrated');
 		} else {
 			fs.stat(__dirname + '/../../res/files/' + req.params.id, function(err, stats){
 				if(err) { fs.mkdir(__dirname + '/../../res/files/' + req.params.id); }
@@ -158,10 +189,16 @@ exports.downloadFile = function(req, res, next){
 
   res.download(path, function(err){
 	  if(err){
-		  console.error( err );
+		  console.log( err );
 		  res.status(404).send('Sorry, the file: '+  file +' couldn\'t be downloaded');
 	  } else {
 		  res.end('File: '+  file +' download successfully');	
 	  }
   });
 };
+
+
+
+
+
+

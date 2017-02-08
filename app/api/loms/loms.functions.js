@@ -6,11 +6,13 @@
 exports.controlErrors = function (err, res, ret){
     if (err) {
         console.log(err);
-        res.status(404).send(err);
+        res.sendStatus(err.code);
     } 
 	else { 
 		if(res.statusCode === 200){
 			res.json(ret); 
+		} else {
+			res.sendStatus(res.statusCode);
 		}
 	}
 }

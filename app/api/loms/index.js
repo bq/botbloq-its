@@ -20,6 +20,9 @@ router.get('/:id', controller.get);
 //downloads a file of a lom
 router.get('/:id/download/:file', controller.downloadFile);
 
+//rules test
+router.get('/rules/rules', controller.rules);
+
 
 /////////////////////////// POSTS
 

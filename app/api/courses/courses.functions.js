@@ -21,7 +21,8 @@ exports.addElementInList = function(element, next) {
 */
 
 var Courses = require('./courses.model.js'),
-    config = require('../../res/config.js');
+    config = require('../../res/config.js'),
+    _ = require('lodash');
 
 // Courses constants
 // var OK200 = 200,
@@ -44,48 +45,18 @@ exports.update_field1 = function(courseId,field,value){
 }
 
 /*
-returns the index position of the section identified by sectionId
-in the list of sections. If it doesn't exists in the list returns -1
+returns the index position of the section or lesson identified by id
+in the list of sections or lessons. If it doesn't exists in the list returns -1
 */
 
-exports.find_section = function(sectionId,sections){
-	// verify that the 'new' section does not
-	// already exists. In this case, it is an ERROR	
+exports.exist_section_lesson = function (id,array){	
 	var ret = -1;
-	for (var i = 0 ; i < sections.length; i ++){
-		if(sections[i].name === sectionId){
-			ret = i;
+	
+	_.forEach(array, function(value){
+		if(value.name === id) {
+			ret = _.indexOf(array,value);
 		}
-	}
-	return ret;
-}
-
-exports.exist_section = function exist_section(sectionId,sections){
-	// verify that the 'new' section does not
-	// already exists. In this case, it is an ERROR		
-	var bool = false;
-	for(var i = 0; i < sections.length; i++){
-		if(sections[i].name === sectionId){
-			bool = true;
-		}
-	}
-	return bool;
-}
-
-/*
-returns the index position of the lesson identified by lessonId
-in the list of lessons. If it doesn't exists in the list returns -1
-*/
-
-exports.find_lesson = function(lessonId,lessons){
-	// verify that the 'new' lesson does not
-	// already exists. In this case, it is an ERROR	
-	var ret = -1;
-	for (var i = 0 ; i < lessons.length; i ++){
-		if(lessons[i].name === lessonId){
-			ret = i;
-		}
-	}
+	});
 	return ret;
 }
 
@@ -96,10 +67,25 @@ in the list of loms. If it doesn't exists in the list returns -1
 
 exports.find_lom = function(lomId,loms){
 	var ret = -1;
-	for (var i = 0 ; i < loms.length; i ++){
-		if(loms[i].lom_id === lomId){
-			ret = i;
+	
+	_.forEach(loms, function(value){
+		if(value.lom_id === lomId) {
+			ret = _.indexOf(loms,value);
+		}
+	});
+	return ret;
+}
+
+exports.controlErrors = function (err, res, ret){
+    if (err) {
+        console.log(err);
+        res.sendStatus(err.code);
+    } 
+	else { 
+		if(res.statusCode === 200){
+			res.json(ret); 
+		} else {
+			res.sendStatus(res.statusCode);
 		}
 	}
-	return ret;
 }

@@ -18,12 +18,15 @@ router.get('/:course_id/section/:section_id/lesson/:lesson_id/loms', loms_ctrl.a
 // list the indicated lom
 router.get('/:course_id/section/:section_id/lesson/:lesson_id/lom/:lom_id', loms_ctrl.get_lom); 
 
+// POSTs
+// create a particular lom of a lesson
+router.post('/assign_lom', loms_ctrl.assign_lom);
+
 // DELETEs a particular lom of a lesson
 router.delete('/delete_lom', loms_ctrl.delete_lom);
 
 // PUTs
-// create a particular lom of a lesson
-router.put('/assign_lom', loms_ctrl.assign_lom);
+
 
 /*
 **************LESSONS******************************
@@ -35,12 +38,14 @@ router.get('/:course_id/section/:section_id/lessons', lesson_ctrl.all_lessons);
 // list the indicated lesson
 router.get('/:course_id/section/:section_id/lesson/:lesson_id', lesson_ctrl.get_lesson); 
 
+// POSTs
+// create a particular lesson of a course section
+router.post('/create_lesson', lesson_ctrl.create_lesson); 
+
 // DELETEs a particular lesson of a section
 router.delete('/:course_id/section/:section_id/lesson/:lesson_id', lesson_ctrl.delete_lesson);
 
 // PUTs
-// create a particular lesson of a course section
-router.put('/create_lesson', lesson_ctrl.create_lesson); 
 // update a particular lesson of a course section
 router.put('/update_lesson', lesson_ctrl.update_lesson); 
 // update a particular field of lesson of a course section
@@ -54,11 +59,11 @@ router.put('/update_lesson_field', lesson_ctrl.update_lesson_field);
 router.get('/:course_id/sections', section_ctrl.all_sections); // list all sections from course
 router.get('/:course_id/section/:section_id', section_ctrl.get_section); // list the indicated section
 
+// POSTs
+router.post('/create_section', section_ctrl.create_section);
+
 // DELETEs
 router.delete('/:course_id/section/:section_id', section_ctrl.delete_section);
-
-// PUTs
-router.put('/create_section', section_ctrl.create_section);
 
 // PUTs
 router.put('/update_section_field', section_ctrl.update_section_field); // update a particular field 
