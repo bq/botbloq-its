@@ -24,7 +24,7 @@ var Student = function() {
 			}
 		};
 		return student;
-	}
+	};
 
     this.generateAnswer = function() {
     	var answer = { 
@@ -35,9 +35,21 @@ var Student = function() {
     		{id_question : 'ls_proc', value: 'active'}
     	]};
     	return answer;
+    };
 
+    this.generateRuleStudent = function(units, problems, steps, c_steps, duration, hints, skills) {
+    	var student = {
+			"units" : units,
+			"problems" : problems,
+			"steps": steps,
+			"corrects_steps": c_steps,
+			"duration" : duration,
+			"hints": hints,
+			"skills" :skills
+    	};
 
-    }
+    	 return student;
+    };
 };
 
 module.exports = Student;
