@@ -20,8 +20,6 @@ router.get('/:id', controller.get);
 //downloads a file of a lom
 router.get('/:id/download/:file', controller.downloadFile);
 
-//rules test
-router.get('/rules/rules', controller.rules);
 
 
 /////////////////////////// POSTS
@@ -33,6 +31,8 @@ router.post('/', controller.create);
 router.post('/:id/upload', upload.single('file'), controller.uploadFile);
 //router.post('/:id/upload', controller.uploadFile);
 
+//rules test
+router.post('/rules/rules', controller.rules);
 
 /////////////////////////// PUTs
 

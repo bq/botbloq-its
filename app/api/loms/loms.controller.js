@@ -8,7 +8,7 @@ var LOMS = require('./loms.model.js'),
 	functions = require('./loms.functions.js'),
 	RuleEngine = require('node-rules'),
 	mongoose = require('mongoose'),
-	rules = require('../../res/rules.js');
+	rules = require('../../res/rules.json');
 
 //ALL LOMS
 	
@@ -126,21 +126,13 @@ exports.remove = function (req, res) {
 };
 
 exports.rules = function(req,res) {
-	var fact = {
-		units : 11,
-		problems : 4.4,
-		steps: 4,
-		corrects_steps: 53,
-		duration : 8176,
-		hints: 2,
-		skills :12.25
-	};
+	
+	var R = new RuleEngine();
+	R.fromJSON(rules);
 
-	var R = new RuleEngine(rules.rules);
-
-	R.execute(fact, function(result){
+	R.execute(req.body, function(result){
 		
-		console.log("Grupo " + result.group);
+		res.status(200).send("Grupo " + result.group);
 
 	});
 };
