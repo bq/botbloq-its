@@ -85,20 +85,19 @@ describe('Chakram', function(){
 	// TODO be careful with the responses with lists. problems with asyn
 	it('Testing to create a new Course' , function() {
 		var randomCourse = course.generateRandomCourse();
-		nameCourse = randomCourse.name;
 		return request.postBackend('/courses', 200, randomCourse).then(function (response) { 
 			var message = response.body;
-	    	idCourse= message.substring(message.lastIndexOf(' ') + 1);
-			return request.getBackend('/courses/' + randomCourse.name, 200).then(function(response2) {
+	    	idCourse = message.substring(message.lastIndexOf(' ') + 1);
+			return request.getBackend('/courses/' + idCourse, 200).then(function(response2) {
 				expect(response2.body.name).to.equal(randomCourse.name);
 				var defaultSection = course.generateDefaultSection();
-				defaultSection.course = nameCourse;
+				defaultSection.course = idCourse;
 				return request.postBackend('/courses/create_section', 200, defaultSection).then ( function (response) {
 					var defaultLesson = course.generateDefaultLesson();
-					defaultLesson.course = nameCourse;
+					defaultLesson.course = idCourse;
 					return request.postBackend('/courses/create_lesson', 200, defaultLesson).then(function (response) {
 						var reqLOM = course.generateAssignedLOM();
-						reqLOM.course = randomCourse.name;
+						reqLOM.course = idCourse;
 						reqLOM.lom_id = idLOM;
 						return request.postBackend('/courses/assign_lom', 200, reqLOM).then ( function(response) {
 							expect(response.body.lom_id).to.equal(idLOM);
@@ -113,17 +112,17 @@ describe('Chakram', function(){
 
 			
 	it('Testing enroll a student in a Course' , function() {
-		return request.putBackend('/students/'+ idStudent + '/course/' + nameCourse,200)
+		return request.putBackend('/students/'+ idStudent + '/course/' + idCourse,200)
 		.then(function(response) {
 			// test if the student is already enrolled in the course
-			expect(response.body).to.have.property('idCourse'); // return a course enrolled			
+			expect(response.body).to.have.property('idCourse'); // return a course enrolled	
 			return request.getBackend('/students/' + idStudent, 200).then(function (response) {
-				expect(response.body).to.have.property('course'); // the student has a course				
-				return request.getBackend('/students/'+ idStudent + '/course/' + nameCourse,200)
+				expect(response.body).to.have.property('course'); // the student has a course	
+				return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
 				.then(function(response) {
 					expect(response.body).to.have.property('general');					
 					var lom = response.body._id;
-					return request.putBackend('/students/'+idStudent+ '/course/' + nameCourse+'/lom/' + lom + '/ok', 200)
+					return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/ok', 200)
 					.then(function (response3) {
 						//console.log(response3.body) // testing
 						chakram.wait();
@@ -163,19 +162,19 @@ describe('Chakram', function(){
 						console.log('Created a course with 3 LOMS');
 						
 						// Testing if the course is in the database
-						return request.getBackend('/courses/' + completeCourse.name, 200).then(function(response2) {
+						return request.getBackend('/courses/' + idCourse, 200).then(function(response2) {
 							expect(response2.body.code).to.equal(completeCourse.code);
 							console.log('Tested that the course is in the database');
 							
 							// enrolling the student in the course
-							return request.putBackend('/students/'+ idStudent + '/course/' + completeCourse.name,200)
+							return request.putBackend('/students/'+ idStudent + '/course/' + idCourse,200)
 							.then(function(response3) {
 								
 								// testing if the student is already enrolled in the course
-								expect(response3.body).to.have.property('idCourse', completeCourse.name);
+								expect(response3.body).to.have.property('idCourse', idCourse);
 								console.log('Student enrolled in the course');
 								
-					   	    	return request.getBackend('/students/'+ idStudent + '/course/' + completeCourse.name,200)
+					   	    	return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
 								.then(function(response4) {
 									
 									// testing if the system returns the first activity of the course
@@ -183,10 +182,10 @@ describe('Chakram', function(){
 									var lom = response4.body._id;
 									console.log('The system returns the first activity of the course');
 									
-									return request.putBackend('/students/'+idStudent+ '/course/' + completeCourse.name +'/lom/' + lom + '/ok', 200)
+									return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/ok', 200)
 									.then(function (response5) {
 										expect(response5.body.course[1]).to.have.property('status', 1);
-							   	    	return request.getBackend('/students/'+ idStudent + '/course/' + completeCourse.name,200)
+							   	    	return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
 										.then(function(response6) {
 											
 											// testing if the system returns the third activity of the course
@@ -194,9 +193,9 @@ describe('Chakram', function(){
 											lom = response6.body._id;
 											console.log('The system returns the third activity of the course because the first activity completed successfully');
 											
-											return request.putBackend('/students/'+idStudent+ '/course/' + completeCourse.name +'/lom/' + lom + '/ok', 200)
+											return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/ok', 200)
 											.then(function (response7) { 
-								   	    		return request.getBackend('/students/'+ idStudent + '/course/' + completeCourse.name,200)
+								   	    		return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
 												.then(function(response8) {
 													
 													// testing if the system recognizes if el student has completed the course

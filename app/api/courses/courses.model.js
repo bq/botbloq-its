@@ -48,7 +48,7 @@ var Statistics = new Schema({
 });
 	
 var CoursesSchema = new mongoose.Schema({
-	name: { type: String, trim: true, required: true },
+	name: { type: String, trim: true, required: true, unique: true },
 	code: { type: String },
 	summary: { type: String, trim: true },
 	objectives: [Objective],

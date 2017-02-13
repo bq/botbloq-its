@@ -19,6 +19,7 @@ var Courses = require('./courses.model.js'),
     config = require('../../res/config.js'),
     CoursesFunctions = require('./courses.functions.js'),
     async = require('async'),
+    mongoose = require('mongoose'),
     _ = require('lodash');
 	
 
@@ -33,22 +34,24 @@ exports.all = function (req, res)
 };
 
 // Exporting get function
-// list the course specified by its name
-// If there are several courses with the same name
-// all of them will be showed
-// If there are none with this name, then it returns an empty list []
+// list the course specified by its id
+// If there are none with this id, then it returns an empty list []
 exports.get = function (req, res){
 	var courseId = req.params.id;
-	Courses.findOne({name: courseId}, function(err, course) {
-        if (err) {
-        	console.log(err);
-			res.status(err.code).send(err);				
-		} else if(!course){
-			res.status(404).send('The course with id: ' + courseId + ' is not registrated');
-		} else {
-			res.status(200).json(course); 
-		} 			 
-	});
+	if(mongoose.Types.ObjectId.isValid(courseId)){
+		Courses.findOne({_id: courseId}, function(err, course) {
+	        if (err) {
+	        	console.log(err);
+				res.status(err.code).send(err);				
+			} else if(!course){
+				res.status(404).send('The course with id: ' + courseId + ' is not registrated');
+			} else {
+				res.status(200).json(course); 
+			} 			 
+		});
+	} else {
+		res.status(404).send('The course with id: ' + courseId + ' is not registrated');
+	}
 };
 
 // Exporting remove function
@@ -168,32 +171,32 @@ exports.update_field = function(req, res) {
 			if(err){
 				console.log(err);
 				res.status(err.code).send(err);
+
 			} else if (!course){
-				Courses.findOne({name: req.body.name}, function (err1, course1) {
-					if(err1){
-						console.log(err1);
-						res.status(err1.code).send(err);
-					}else if (!course1){
-						res.status(404).send('The course with id: ' + req.body.name + ' is not registrated');
-					} else {
-						CoursesFunctions.update_field1(req.body.name,req.body.field,req.body.value);
-						res.status(200).send('Updated the course with id: ' + req.body.name);
-					}
-				});
+				if(mongoose.Types.ObjectId.isValid(req.body.course)){
+					Courses.findOne({_id: req.body.course}, function (err1, course1) {
+						if(err1){
+							console.log(err1);
+							res.status(err1.code).send(err);
+						}else if (!course1){
+							res.status(404).send('The course with id: ' + req.body.course + ' is not registrated');
+						} else {
+							CoursesFunctions.update_field(req.body.course,req.body.field,req.body.value);
+							res.status(200).send('Updated the course with id: ' + req.body.course);
+						}
+					});
+				} else {
+					res.status(404).send('The course with id: ' + req.body.course + ' is not registrated');
+				}
 			} else {
 				res.status(400).send('The new name already exist in other course')
 			}
 		});
 	} else {
-		CoursesFunctions.update_field1(req.body.name,req.body.field,req.body.value);
-		res.status(200).send('Updated the course with id: ' + req.body.name);
+		CoursesFunctions.update_field(req.body.course,req.body.field,req.body.value);
+		res.status(200).send('Updated the course with id: ' + req.body.course);
 	}			
 }
-
-
-
-
-
 
 
 

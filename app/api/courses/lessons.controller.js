@@ -13,6 +13,7 @@ var Courses = require('./courses.model.js'),
     async = require('async'),
     _ = require('lodash');
 var CoursesFunctions = require('./courses.functions.js'),
+	mongoose = require('mongoose'),
 	controller = require('./courses.controller.js');
 	
 // Exporting function all_lessons
@@ -22,22 +23,26 @@ var CoursesFunctions = require('./courses.functions.js'),
 exports.all_lessons = function (req, res) {	
 	var courseId = req.params.course_id;
 	var sectionId = req.params.section_id;
-	Courses.findOne({name: courseId}, function(err, course) {
-        if (err){
-        	console.log(err);
-			res.status(err.code).send(err);
-		} else if (!course) {
-			res.status(404).send('The course with id: ' + courseId + ' is not registrated'); 
-		} else{
-			var ind = CoursesFunctions.exist_section_lesson(sectionId,course.sections);
-			if (ind < 0){ 
-				res.status(404).send('The section with id : ' + sectionId +
-				' has not been found un the course with id: ' + courseId);
-			} else {				
-				res.status(200).send(course.sections[ind].lessons);	
-			}					
-		}   
-	});
+	if(mongoose.Types.ObjectId.isValid(courseId)){
+		Courses.findOne({_id: courseId}, function(err, course) {
+	        if (err){
+	        	console.log(err);
+				res.status(err.code).send(err);
+			} else if (!course) {
+				res.status(404).send('The course with id: ' + courseId + ' is not registrated'); 
+			} else{
+				var ind = CoursesFunctions.exist_section_lesson(sectionId,course.sections);
+				if (ind < 0){ 
+					res.status(404).send('The section with id : ' + sectionId +
+					' has not been found un the course with id: ' + courseId);
+				} else {				
+					res.status(200).send(course.sections[ind].lessons);	
+				}					
+			}   
+		});
+	} else {
+		res.status(404).send('The course with id: ' + courseId + ' is not registrated'); 
+	}
 };
 
 // Exporting function get_lesson
@@ -48,28 +53,32 @@ exports.get_lesson = function (req, res) {
 	var courseId = req.params.course_id;
 	var sectionId = req.params.section_id;
 	var lessonId = req.params.lesson_id;
-	Courses.findOne({'name' : courseId}, function(err, course) {
-        if (err){
-        	console.log(err);
-			res.status(err.code).send(err); 
-		} else if (!course) {
-			res.status(404).send('The course with id: ' + courseId + ' is not registrated'); 
-		} else { 
-			var inds = CoursesFunctions.exist_section_lesson(sectionId,course.sections);
-			if (inds < 0){
-				res.status(404).send('The section with id : ' + sectionId +
-				' has not been found un the course with id: ' + courseId);
-			} else {	// section exists
-				var indl = CoursesFunctions.exist_section_lesson(lessonId,course.sections[inds].lessons);
-				if (indl < 0) {
-					res.status(404).send('The lesson with id : ' + lessonId +
-					' has not been found un the section with id: ' + sectionId);
-				} else {
-					res.status(200).send(course.sections[inds].lessons[indl]);	
-				}	
-			}    
-		}
-	});
+	if(mongoose.Types.ObjectId.isValid(courseId)){
+		Courses.findOne({_id: courseId}, function(err, course) {
+	        if (err){
+	        	console.log(err);
+				res.status(err.code).send(err); 
+			} else if (!course) {
+				res.status(404).send('The course with id: ' + courseId + ' is not registrated'); 
+			} else { 
+				var inds = CoursesFunctions.exist_section_lesson(sectionId,course.sections);
+				if (inds < 0){
+					res.status(404).send('The section with id : ' + sectionId +
+					' has not been found un the course with id: ' + courseId);
+				} else {	// section exists
+					var indl = CoursesFunctions.exist_section_lesson(lessonId,course.sections[inds].lessons);
+					if (indl < 0) {
+						res.status(404).send('The lesson with id : ' + lessonId +
+						' has not been found un the section with id: ' + sectionId);
+					} else {
+						res.status(200).send(course.sections[inds].lessons[indl]);	
+					}	
+				}    
+			}
+		});
+	} else {
+		res.status(404).send('The course with id: ' + courseId + ' is not registrated'); 
+	}
 };
 
 // Exporting function delete_lesson
@@ -81,34 +90,38 @@ exports.delete_lesson = function (req, res) {
 	var courseId = req.params.course_id;
 	var sectionId = req.params.section_id;
 	var lessonId = req.params.lesson_id;
-	Courses.findOne({'name' : courseId}, function(err, course) {
-        if (err) {
-        	console.log(err);
-			res.status(err.code).send(err);
-		} else if (!course) {
-			res.status(404).send('The course with id: ' + courseId + ' is not registrated');
-		} else{ 
-			var inds = CoursesFunctions.exist_section_lesson(sectionId,course.sections);
-			if (inds < 0) {
-				res.status(404).send('The section with id : ' + sectionId +
-				' has not been found un the course with id: ' + courseId);
-			} else {	// section exists
-				var indl = CoursesFunctions.exist_section_lesson(lessonId,course.sections[inds].lessons);
-				if ( indl < 0 ){
-					res.status(404).send('The lesson with id : ' + lessonId +
-					' has not been found un the section with id: ' + sectionId);
-				} else {
-					course.sections[inds].lessons.splice(indl,1);
-					var err1 = CoursesFunctions.update_field1(courseId,'sections',course.sections);
-					if (err1){
-						res.status(400).send('error while updating '+err)
+	if(mongoose.Types.ObjectId.isValid(courseId)){
+		Courses.findOne({_id: courseId}, function(err, course) {
+	        if (err) {
+	        	console.log(err);
+				res.status(err.code).send(err);
+			} else if (!course) {
+				res.status(404).send('The course with id: ' + courseId + ' is not registrated');
+			} else{ 
+				var inds = CoursesFunctions.exist_section_lesson(sectionId,course.sections);
+				if (inds < 0) {
+					res.status(404).send('The section with id : ' + sectionId +
+					' has not been found un the course with id: ' + courseId);
+				} else {	// section exists
+					var indl = CoursesFunctions.exist_section_lesson(lessonId,course.sections[inds].lessons);
+					if ( indl < 0 ){
+						res.status(404).send('The lesson with id : ' + lessonId +
+						' has not been found un the section with id: ' + sectionId);
 					} else {
-						res.status(200).send({ok:1, n: 1});
-					}
-				}			
-			}    
-		}
-	});
+						course.sections[inds].lessons.splice(indl,1);
+						var err1 = CoursesFunctions.update_field(courseId,'sections',course.sections);
+						if (err1){
+							res.status(400).send('error while updating '+err)
+						} else {
+							res.status(200).send({ok:1, n: 1});
+						}
+					}			
+				}    
+			}
+		});
+	} else {
+		res.status(404).send('The course with id: ' + courseId + ' is not registrated');
+	}
 };
 
 // Exporting create_lesson function
@@ -120,7 +133,7 @@ exports.delete_lesson = function (req, res) {
 // If lesson doesn't exist previously, it creates the new lesson
 // Example: 
 // {
-	// 'course':'Course1',
+	// 'course':'507f1f77bcf86cd799439011',
 	// 'section':'Section2',
 	// 'lesson':{  
     		// 'name': 'Lesson1.2.3',
@@ -134,35 +147,38 @@ exports.create_lesson = function(req, res) {
 		sectionId = req.body.section,
 		new_lec = req.body.lesson,
 		lessonId = new_lec.name;
-		
-	Courses.findOne({name: courseId}, function (err, course){
-		if (err){
-			console.log(err);
-			res.status(err.code).send(err);
-		} else if (!course){
-			res.status(404).send('The course with id: ' + courseId + ' is not registrated');
-		} else {
-			var inds = CoursesFunctions.exist_section_lesson(sectionId,course.sections);
-			if (inds < 0){
-				res.status(404).send('The section with id : ' + sectionId +
-				' has not been found un the course with id: ' + courseId);
-			} else {					
-				var indl = CoursesFunctions.exist_section_lesson(lessonId,course.sections[inds].lessons);
-				if ( indl >= 0 ){
-					res.status(400).send('Error lesson already exist');
-				} else {
-					var lessons = course.sections[inds].lessons;
-					lessons.push(new_lec);
-					var err1 = CoursesFunctions.update_field1(courseId,'sections',course.sections);
-					if (res.statusCode !== 200){
-						res.status(400).send('error while updating '+err);
-					} else { 
-						res.status(200).send(lessons[lessons.length-1]); 
+	if(mongoose.Types.ObjectId.isValid(courseId)){
+		Courses.findOne({_id: courseId}, function (err, course){
+			if (err){
+				console.log(err);
+				res.status(err.code).send(err);
+			} else if (!course){
+				res.status(404).send('The course with id: ' + courseId + ' is not registrated');
+			} else {
+				var inds = CoursesFunctions.exist_section_lesson(sectionId,course.sections);
+				if (inds < 0){
+					res.status(404).send('The section with id : ' + sectionId +
+					' has not been found un the course with id: ' + courseId);
+				} else {					
+					var indl = CoursesFunctions.exist_section_lesson(lessonId,course.sections[inds].lessons);
+					if ( indl >= 0 ){
+						res.status(400).send('Error lesson already exist');
+					} else {
+						var lessons = course.sections[inds].lessons;
+						lessons.push(new_lec);
+						var err1 = CoursesFunctions.update_field(courseId,'sections',course.sections);
+						if (res.statusCode !== 200){
+							res.status(400).send('error while updating '+err);
+						} else { 
+							res.status(200).send(lessons[lessons.length-1]); 
+						}
 					}
-				}
-			}	
-		}
-	});
+				}	
+			}
+		});
+	} else {
+		res.status(404).send('The course with id: ' + courseId + ' is not registrated');
+	}
 }
 
 // Exporting update_lesson function
@@ -174,7 +190,7 @@ exports.create_lesson = function(req, res) {
 // If lesson doesn't exist previously, it sets an error
 // Example: 
 // {
-	// 'course':'Course1',
+	// 'course':'507f1f77bcf86cd799439011',
 	// 'section':'Section2',
 	// 'lesson':{  
     		// 'name': 'Lesson1.2.3',
@@ -188,37 +204,40 @@ exports.update_lesson = function(req, res) {
 		sectionId = req.body.section,
 		new_lec = req.body.lesson,
 		lessonId = new_lec.name;
-			
-	Courses.findOne({'name' : courseId}, function (err, course){
-		if (err){
-			console.log(err);
-			res.status(err.code).send(err);
-		} else if (!course) {
-			 res.status(404).send('The course with id: ' + courseId + ' is not registrated');
-		} else {
-			var inds = CoursesFunctions.exist_section_lesson(sectionId,course.sections);
-			if (inds < 0){
-				res.status(404).send('The section with id : ' + sectionId +
-				' has not been found un the course with id: ' + courseId);
-			} else {					
-				var indl = CoursesFunctions.exist_section_lesson(lessonId,course.sections[inds].lessons);
-				if ( indl < 0 ){
-					res.status(404).send('The lesson with id : ' + lessonId +
-					' has not been found un the section with id: ' + sectionId);
-				} else {
-					var lessons = course.sections[inds].lessons;
-					lessons.splice(indl,1);
-					lessons[lessons.length] = new_lec;
-					var err1 = CoursesFunctions.update_field1(courseId,'sections',course.sections);
-					if (err1) {
-						res.status(404).send('error while updating '+err);							
+	if(mongoose.Types.ObjectId.isValid(courseId)){	
+		Courses.findOne({_id: courseId}, function (err, course){
+			if (err){
+				console.log(err);
+				res.status(err.code).send(err);
+			} else if (!course) {
+				 res.status(404).send('The course with id: ' + courseId + ' is not registrated');
+			} else {
+				var inds = CoursesFunctions.exist_section_lesson(sectionId,course.sections);
+				if (inds < 0){
+					res.status(404).send('The section with id : ' + sectionId +
+					' has not been found un the course with id: ' + courseId);
+				} else {					
+					var indl = CoursesFunctions.exist_section_lesson(lessonId,course.sections[inds].lessons);
+					if ( indl < 0 ){
+						res.status(404).send('The lesson with id : ' + lessonId +
+						' has not been found un the section with id: ' + sectionId);
 					} else {
-						res.status(200).send(lessons[lessons.length-1]);
+						var lessons = course.sections[inds].lessons;
+						lessons.splice(indl,1);
+						lessons[lessons.length] = new_lec;
+						var err1 = CoursesFunctions.update_field(courseId,'sections',course.sections);
+						if (err1) {
+							res.status(404).send('error while updating '+err);							
+						} else {
+							res.status(200).send(lessons[lessons.length-1]);
+						}
 					}
-				}
-			}	
-		}
-	});
+				}	
+			}
+		});
+	} else {
+		res.status(404).send('The course with id: ' + courseId + ' is not registrated');
+	}
 };
 
 // Exporting update_lesson_field function
@@ -227,7 +246,7 @@ exports.update_lesson = function(req, res) {
 // the new value of the field 
 // Example: 
 // { 
-    // 'course': 'Course1',
+    // 'course': '507f1f77bcf86cd799439011',
     // 'section': 'Section1.1',
 	// 'lesson': 'Lesson1.1.1',
     // 'field':'resume',
@@ -240,37 +259,40 @@ exports.update_lesson_field = function(req, res) {
 		lessonId = req.body.lesson,
 		field = req.body.field,
 		value = req.body.value;
-		
-	Courses.findOne({'name' : courseId}, function (err, course){
-		if (err){
-			console.log(err);
-			res.status(err.code).send(err); 
-		} else if (!course){
-			res.status(404).send('The course with id: ' + courseId + ' is not registrated');
-		} else {
-			var inds = CoursesFunctions.exist_section_lesson(sectionId,course.sections);
-			if (inds < 0){
-				res.status(404).send('The section with id : ' + sectionId +
-				' has not been found un the course with id: ' + courseId);
-			} else {					
-				var indl = CoursesFunctions.exist_section_lesson(lessonId,course.sections[inds].lessons);
-				if ( indl < 0 ){ 
-					res.status(404).send('The lesson with id : ' + lessonId +
-					' has not been found un the section with id: ' + sectionId);
-				} else {
-					var lessons = course.sections[inds].lessons,
-						lesson = lessons[indl];
-					lessons.splice(indl,1);
-					lesson[field] = value;
-					lessons[lessons.length] = lesson;
-					var err1 = CoursesFunctions.update_field1(courseId,'sections',course.sections);
-					if (err1){
-						res.status(400).send('error while updating '+err);							
-					}else{
-						res.status(200).send(lesson);
+	if(mongoose.Types.ObjectId.isValid(courseId)){
+		Courses.findOne({_id: courseId}, function (err, course){
+			if (err){
+				console.log(err);
+				res.status(err.code).send(err); 
+			} else if (!course){
+				res.status(404).send('The course with id: ' + courseId + ' is not registrated');
+			} else {
+				var inds = CoursesFunctions.exist_section_lesson(sectionId,course.sections);
+				if (inds < 0){
+					res.status(404).send('The section with id : ' + sectionId +
+					' has not been found un the course with id: ' + courseId);
+				} else {					
+					var indl = CoursesFunctions.exist_section_lesson(lessonId,course.sections[inds].lessons);
+					if ( indl < 0 ){ 
+						res.status(404).send('The lesson with id : ' + lessonId +
+						' has not been found un the section with id: ' + sectionId);
+					} else {
+						var lessons = course.sections[inds].lessons,
+							lesson = lessons[indl];
+						lessons.splice(indl,1);
+						lesson[field] = value;
+						lessons[lessons.length] = lesson;
+						var err1 = CoursesFunctions.update_field(courseId,'sections',course.sections);
+						if (err1){
+							res.status(400).send('error while updating '+err);							
+						}else{
+							res.status(200).send(lesson);
+						}
 					}
-				}
-			}	
-		}
-	});
+				}	
+			}
+		});
+	} else {
+		res.status(404).send('The course with id: ' + courseId + ' is not registrated');
+	}
 };
