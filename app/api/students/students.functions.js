@@ -1,5 +1,7 @@
 'use strict';
 var functions2 = require('../courses/courses.functions.js');
+var Courses = require('../courses/courses.model.js');
+var _ = require('lodash');
 
 
 /**
@@ -31,6 +33,78 @@ exports.studentFound = function (student, req, res){
 		res.status(403).send('The student with id: ' + ret + ' is not activated');
 	} else { bool = true; }
 	return bool;
+}
+
+/**
+ *	This function returns all courses completed by the student
+ */
+exports.getCoursesDone = function(student, courses){
+	var coursesDone = [];
+	
+	for(var i = 0; i < courses.length; i++ ){
+		for(var j = 0; j < courses[i].statistics.std_finished.length; j++){
+			if(student._id.equals(courses[i].statistics.std_finished[j])){
+				coursesDone.push(courses[i]._id);
+			}
+		}
+	}
+	return coursesDone;
+
+}
+
+/**
+ *	This function returns all courses completed by the student
+ */
+exports.getCoursesNotDone = function(student, courses){
+	var coursesDone = [], coursesNotDone = [];
+	
+	for(var i = 0; i < courses.length; i++ ){
+		for(var j = 0; j < courses[i].statistics.std_finished.length; j++){
+			if(student._id.equals(courses[i].statistics.std_finished[j])){
+				coursesDone.push(courses[i]._id);
+			}
+		}
+		if(coursesDone.indexOf(courses[i]._id) === -1){
+			coursesNotDone.push(courses[i]._id);
+		}
+	}
+	return coursesNotDone;
+
+}
+
+/**
+ *	Returns all active student courses
+ */
+exports.getActiveCourses = function(student){
+	var activeCourses = [];
+	for (var i = 0; i < student.course.length; i++){
+		if(student.course[i].active === 1) {
+			activeCourses.push(student.course[i].idCourse);
+		}
+	} 
+	return activeCourses;
+}
+
+exports.doUpdate = function(object, newObject){
+	var result, result2;
+	result = _.keysIn(newObject);
+	if(result.length > 0){
+		_.forEach(result, function(key){
+			if(typeof newObject[key] !== 'string'){
+				result2 = _.keysIn(newObject[key]);
+				if(result2.length > 0){
+					_.forEach(result2, function(key2){
+						object[key][key2] = newObject[key][key2];
+					});
+				} else {
+					object[key] = newObject[key];
+				}
+			} else {
+				object[key] = newObject[key];
+			}
+		});
+	} 
+	return object;
 }
 
 /**

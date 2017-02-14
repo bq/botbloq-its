@@ -7,6 +7,7 @@ var Students = require('./students.model.js'),
 	functions = require('./students.functions.js'), 
 	functions2 = require('../courses/courses.functions.js'),
 	Courses = require('../courses/courses.model.js'),
+	mongoose = require('mongoose'),
 	LOMS = require('../loms/loms.model.js');
 
 
@@ -102,10 +103,19 @@ exports.deactivate = function (req, res) {
  * Returns an student by id
  */
 exports.get = function (req, res) {
-	Students.findOne({_id: req.params.id}, function(err, student) {
+	var finder;
+	if(mongoose.Types.ObjectId.isValid(req.params.id)){
+		finder = {_id: req.params.id};
+	} else {
+		finder = {'identification.email': req.params.id};
+	}
+
+	Students.findOne(finder, function(err, student) {
 		if(err){
 			console.log(err);
 			res.status(err.code).send(err);
+		}else if(!student){
+			res.status(404).send('The student with id o email: ' + req.params.id + ' is not registrated');
 		} else {
 			if(functions.studentFound(student, req, res) === true){
 				var arrayCourses = [];
@@ -149,13 +159,15 @@ exports.update = function(req, res) {
 						}
 		
 						if(res.statusCode === 200) {
-							student = _.extend(student, req.body);
+							var newStudent = functions.doUpdate(student,req.body);
+							student = _.extend(student, newStudent);
 							student.save(next);						
 						}
 					});
 				} else {
 					res.status(200);
-					student = _.extend(student, req.body);
+					var newStudent = functions.doUpdate(student,req.body);
+					student = _.extend(student, newStudent);
 					student.save(next);	
 				}
 			}
@@ -296,6 +308,44 @@ exports.unenrollment = function (req, res) {
 	], function(err, student) {
 		functions.controlErrors(err, res, activity);
 	});
+}
+
+exports.dataCourses = function (req, res) {
+	var data = [];
+    Students.findOne({_id: req.params.id}, function(err, student) { 
+    	if(err){
+    		console.log(err);
+			res.status(err.code).send(err);
+    	} else if(!student){
+    		res.status(404).send('The student with id: ' + req.params.id + ' is not registrated');
+    	} else {
+    		Courses.find({}, function(err, courses){
+	    		res.status(200);
+				switch(req.params.data){
+					case 'courses-done':
+						data = functions.getCoursesDone(student, courses);
+						break;
+					case 'courses-not-done':
+						data = functions.getCoursesNotDone(student, courses);
+						break;
+					case 'active-courses':
+						data = functions.getActiveCourses(student);
+						break;
+					case 'all':
+						data = {coursesDone: [], coursesNotDone: [], activeCourses: []};
+						data.coursesDone = functions.getCoursesDone(student, courses);
+						data.activeCourses = functions.getActiveCourses(student)
+						data.coursesNotDone = functions.getCoursesNotDone(student, courses);
+						break;
+					default:
+						data = 'Error: ' + req.params.data + ' is not correct';
+						res.status(400);
+						break;
+				}
+				res.send(data);
+			});
+		}
+    });
 }
 
 /**

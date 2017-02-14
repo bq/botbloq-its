@@ -146,13 +146,15 @@ exports.update = function(req, res) {
 					}
 	
 					if(res.statusCode === 200) {
-						course = _.extend(course, req.body);
+						var newCourse = CoursesFunctions.doUpdate(course, req.body);
+						course = _.extend(course, newCourse);
 						course.save(next);						
 					}
 				});
 			} else {
 				res.status(200);
-				course = _.extend(course, req.body);
+				var newCourse = CoursesFunctions.doUpdate(course, req.body);
+				course = _.extend(course, newCourse);
 				course.save(next);	
 			}
 	    }
@@ -189,7 +191,7 @@ exports.update_field = function(req, res) {
 					res.status(404).send('The course with id: ' + req.body.course + ' is not registrated');
 				}
 			} else {
-				res.status(400).send('The new name already exist in other course')
+				res.status(400).send('The new name already exist in other course');
 			}
 		});
 	} else {

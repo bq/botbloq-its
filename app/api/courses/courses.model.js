@@ -53,7 +53,7 @@ var CoursesSchema = new mongoose.Schema({
 	summary: { type: String, trim: true },
 	objectives: [Objective],
 	sections  : [Section],
-	statistics: {type: Statistics},
+	statistics: {type: Statistics, required: true},
 	history: [String]
 	}, 
 	{ timestamps: true }

@@ -84,7 +84,8 @@ exports.update = function (req, res) {
 		        if(!lom) { 
 					res.status(404).send('The lom with id: ' + req.params.id + ' is not registrated');
 				} else {
-					lom = _.extend(lom, req.body);
+					var newLom = functions.doUpdate(lom, req.body);
+					lom = _.extend(lom, newLom);
 		       		lom.save(next);
 				}
 		    }
