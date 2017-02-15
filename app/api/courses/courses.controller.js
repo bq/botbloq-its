@@ -163,42 +163,6 @@ exports.update = function(req, res) {
 	});		
 };
 
-// Exporting update function
-// update the field of the course received as parameter
-// it updates just the field with the value indicated via JSON 
-// format in the body of the request. 
-exports.update_field = function(req, res) {
-	if(req.body.field === 'name'){
-		Courses.findOne({name: req.body.value}, function(err, course){
-			if(err){
-				console.log(err);
-				res.status(err.code).send(err);
-
-			} else if (!course){
-				if(mongoose.Types.ObjectId.isValid(req.body.course)){
-					Courses.findOne({_id: req.body.course}, function (err1, course1) {
-						if(err1){
-							console.log(err1);
-							res.status(err1.code).send(err);
-						}else if (!course1){
-							res.status(404).send('The course with id: ' + req.body.course + ' is not registrated');
-						} else {
-							CoursesFunctions.update_field(req.body.course,req.body.field,req.body.value);
-							res.status(200).send('Updated the course with id: ' + req.body.course);
-						}
-					});
-				} else {
-					res.status(404).send('The course with id: ' + req.body.course + ' is not registrated');
-				}
-			} else {
-				res.status(400).send('The new name already exist in other course');
-			}
-		});
-	} else {
-		CoursesFunctions.update_field(req.body.course,req.body.field,req.body.value);
-		res.status(200).send('Updated the course with id: ' + req.body.course);
-	}			
-}
 
 
 

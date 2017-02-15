@@ -109,12 +109,13 @@ exports.delete_lesson = function (req, res) {
 						' has not been found un the section with id: ' + sectionId);
 					} else {
 						course.sections[inds].lessons.splice(indl,1);
-						var err1 = CoursesFunctions.update_field(courseId,'sections',course.sections);
-						if (err1){
+
+						if (res.statusCode !== 200){
 							res.status(400).send('error while updating '+err)
 						} else {
 							res.status(200).send({ok:1, n: 1});
 						}
+						course.save();
 					}			
 				}    
 			}
@@ -126,26 +127,15 @@ exports.delete_lesson = function (req, res) {
 
 // Exporting create_lesson function
 // It receives as the body of the request in JSON format
-// the name of the course and the section where the new lesson should be created and 
-// the name of the lesson to be created and its information
+// the information of the lesson
 // It verifies if section and course exist. 
 // If lesson already exist, it sets an error
 // If lesson doesn't exist previously, it creates the new lesson
-// Example: 
-// {
-	// 'course':'507f1f77bcf86cd799439011',
-	// 'section':'Section2',
-	// 'lesson':{  
-    		// 'name': 'Lesson1.2.3',
-       		// 'resume': 'Lesson1.2.3 resume',
-       		// 'loms': [] 
-	  // }
-// }
 
 exports.create_lesson = function(req, res) {	
-	var courseId = req.body.course,
-		sectionId = req.body.section,
-		new_lec = req.body.lesson,
+	var courseId = req.params.idc,
+		sectionId = req.params.ids,
+		new_lec = req.body,
 		lessonId = new_lec.name;
 	if(mongoose.Types.ObjectId.isValid(courseId)){
 		Courses.findOne({_id: courseId}, function (err, course){
@@ -166,12 +156,13 @@ exports.create_lesson = function(req, res) {
 					} else {
 						var lessons = course.sections[inds].lessons;
 						lessons.push(new_lec);
-						var err1 = CoursesFunctions.update_field(courseId,'sections',course.sections);
+						
 						if (res.statusCode !== 200){
 							res.status(400).send('error while updating '+err);
 						} else { 
 							res.status(200).send(lessons[lessons.length-1]); 
 						}
+						course.save();
 					}
 				}	
 			}
@@ -183,26 +174,15 @@ exports.create_lesson = function(req, res) {
 
 // Exporting update_lesson function
 // It receives as the body of the request in JSON format
-// the name of the course and the section where the lesson should be updated and 
-// the name of the lesson to be updated and its information
+// the information of the lesson to update
 // It verifies if section and course exist. 
 // If lesson already exist, it updates the lesson
 // If lesson doesn't exist previously, it sets an error
-// Example: 
-// {
-	// 'course':'507f1f77bcf86cd799439011',
-	// 'section':'Section2',
-	// 'lesson':{  
-    		// 'name': 'Lesson1.2.3',
-       		// 'resume': 'Lesson1.2.3 resume',
-       		// 'los': [] 
-	  // }
-// }
 
 exports.update_lesson = function(req, res) {	
-	var courseId = req.body.course,
-		sectionId = req.body.section,
-		new_lec = req.body.lesson,
+	var courseId = req.params.idc,
+		sectionId = req.params.ids,
+		new_lec = req.body,
 		lessonId = new_lec.name;
 	if(mongoose.Types.ObjectId.isValid(courseId)){	
 		Courses.findOne({_id: courseId}, function (err, course){
@@ -222,72 +202,16 @@ exports.update_lesson = function(req, res) {
 						res.status(404).send('The lesson with id : ' + lessonId +
 						' has not been found un the section with id: ' + sectionId);
 					} else {
+
 						var lessons = course.sections[inds].lessons;
-						lessons.splice(indl,1);
-						lessons[lessons.length] = new_lec;
-						var err1 = CoursesFunctions.update_field(courseId,'sections',course.sections);
-						if (err1) {
+						lessons[indl] = CoursesFunctions.doUpdate(lessons[indl] , new_lec);
+
+						if (res.statusCode !== 200) {
 							res.status(404).send('error while updating '+err);							
 						} else {
 							res.status(200).send(lessons[lessons.length-1]);
 						}
-					}
-				}	
-			}
-		});
-	} else {
-		res.status(404).send('The course with id: ' + courseId + ' is not registrated');
-	}
-};
-
-// Exporting update_lesson_field function
-// It receives as the body of the request in JSON format
-// the names of the course, the section, the lesson and the field and 
-// the new value of the field 
-// Example: 
-// { 
-    // 'course': '507f1f77bcf86cd799439011',
-    // 'section': 'Section1.1',
-	// 'lesson': 'Lesson1.1.1',
-    // 'field':'resume',
-    // 'value': 'Lesson1.1.1 new resume'
-  // }
-
-exports.update_lesson_field = function(req, res) {	
-	var courseId = req.body.course,
-		sectionId = req.body.section,
-		lessonId = req.body.lesson,
-		field = req.body.field,
-		value = req.body.value;
-	if(mongoose.Types.ObjectId.isValid(courseId)){
-		Courses.findOne({_id: courseId}, function (err, course){
-			if (err){
-				console.log(err);
-				res.status(err.code).send(err); 
-			} else if (!course){
-				res.status(404).send('The course with id: ' + courseId + ' is not registrated');
-			} else {
-				var inds = CoursesFunctions.exist_section_lesson(sectionId,course.sections);
-				if (inds < 0){
-					res.status(404).send('The section with id : ' + sectionId +
-					' has not been found un the course with id: ' + courseId);
-				} else {					
-					var indl = CoursesFunctions.exist_section_lesson(lessonId,course.sections[inds].lessons);
-					if ( indl < 0 ){ 
-						res.status(404).send('The lesson with id : ' + lessonId +
-						' has not been found un the section with id: ' + sectionId);
-					} else {
-						var lessons = course.sections[inds].lessons,
-							lesson = lessons[indl];
-						lessons.splice(indl,1);
-						lesson[field] = value;
-						lessons[lessons.length] = lesson;
-						var err1 = CoursesFunctions.update_field(courseId,'sections',course.sections);
-						if (err1){
-							res.status(400).send('error while updating '+err);							
-						}else{
-							res.status(200).send(lesson);
-						}
+						course.save();
 					}
 				}	
 			}

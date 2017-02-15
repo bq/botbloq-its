@@ -105,25 +105,16 @@ exports.get_lom = function (req, res) {
 
 
 // Exporting assign_lom function
-// It receives as the body of the request in JSON format
-// the name of the course, section, and lesson where the new lom should be created  
-// and the lom_id to be created 
 // It verifies if the course, section, and lesson exist. 
 // If lom already exist, it sets an error
 // If lom doesn't exist previously, it creates the new lom
-// Example: 
-// {
-	// 'course':'507f1f77bcf86cd799439011',
-	// 'section':'Section2',
-	// 'lesson':'Lesson1.2.3',
-	// 'lom_id': 'lom1.2.3.1'
-// }
+
 
 exports.assign_lom = function(req, res) {	
-	var courseId = req.body.course,
-		sectionId = req.body.section,
-		lessonId = req.body.lesson,
-		lomId = req.body.lom_id;
+	var courseId = req.params.idc,
+		sectionId = req.params.ids,
+		lessonId = req.params.idle,
+		lomId = req.params.idlo;
 	if(mongoose.Types.ObjectId.isValid(courseId)){
 		Courses.findOne({_id: courseId}, function (err, course){
 			if (err){
@@ -158,12 +149,13 @@ exports.assign_lom = function(req, res) {
 										} else {
 											var loms = lessons[indl].loms;
 											loms[loms.length] = {lom_id: lomId};
-											var err1 = CoursesFunctions.update_field(courseId,'sections',course.sections);
+
 											if (res.statusCode !== 200){
 												res.status(400).send('error while updating '+err);							
 											} else {
 												res.status(200).send(loms[loms.length-1]);
 											}
+											course.save();
 										}	
 									});
 								} else {
@@ -181,25 +173,17 @@ exports.assign_lom = function(req, res) {
 	}
 };
 
-// Exporting delete_lom function
-// It receives as the body of the request in JSON format
-// the name of the course, section, lesson, and the lom to be deleted  
+// Exporting delete_lom function 
 // It verifies if the course, section, lesson, and lom exist.
 // If the course, section, or lesson does not exist, it sends an error message
 // If lom does not exist, it considers the lom deleted (i.e. not an error) 
-// Example: 
-// {
-	// 'course':'507f1f77bcf86cd799439011',
-	// 'section':'Section2',
-	// 'lesson':'Lesson1.2.3',
-	// 'lom_id': 'lom1.2.3.1'
-// }
+
 
 exports.delete_lom = function(req, res) {	
-	var courseId = req.body.course,
-		sectionId = req.body.section,
-		lessonId = req.body.lesson,
-		lomId = req.body.lom_id;
+	var courseId = req.params.idc,
+		sectionId = req.params.ids,
+		lessonId = req.params.idle,
+		lomId = req.params.idlo;
 	if(mongoose.Types.ObjectId.isValid(courseId)){
 		Courses.findOne({_id: courseId}, function (err, course){
 			if (err){
@@ -226,12 +210,13 @@ exports.delete_lom = function(req, res) {
 						} else {
 							var loms = lessons[indl].loms;
 							loms.splice(ind,1);
-							var err1 = CoursesFunctions.update_field(courseId,'sections',course.sections);
-							if (err1){
+
+							if (res.statusCode !== 200){
 								res.status(400).send('error while updating '+err);							
 							} else {
 								res.status(200).send({ok: 1, n: 1});
 							}
+							course.save();
 						}
 					}
 				}	

@@ -37,39 +37,22 @@ var Course = function() {
 
 	this.generateDefaultSection = function() {
 		var section = {
-			course : '',
-			section : {
 				name : 'Section_1_1',
 				summary : 'Default Section',
 				lessons: [] 
-			} 
-		}
+			};
 		return section;
     };
 
 	this.generateDefaultLesson = function() {
 		var lesson = {
-			course : '',
-			section: 'Section_1_1',
-			lesson : {
 				name : 'Lesson_1_1',
 				summary : 'Default Lesson',
-				loms: [] 
-			},
-			objectives: []
-		}
+				loms: [],
+				objectives: []
+			};
 		return lesson;
     };
-
-    this.generateAssignedLOM = function() {
-    	var assignLOM = {
-    		course : '',
-    		section : 'Section_1_1',
-    		lesson : 'Lesson_1_1',
-    		lom_id : ''
-    	};
-    	return assignLOM;
-    }
 	
 	this.generateCompleteCourse = function(loms){
 		var course = {

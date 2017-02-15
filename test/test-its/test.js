@@ -88,19 +88,18 @@ describe('Chakram', function(){
 		return request.postBackend('/courses', 200, randomCourse).then(function (response) { 
 			var message = response.body;
 	    	idCourse = message.substring(message.lastIndexOf(' ') + 1);
+	    	console.log('Course created');
 			return request.getBackend('/courses/' + idCourse, 200).then(function(response2) {
 				expect(response2.body.name).to.equal(randomCourse.name);
-				var defaultSection = course.generateDefaultSection();
-				defaultSection.course = idCourse;
-				return request.postBackend('/courses/create_section', 200, defaultSection).then ( function (response) {
-					var defaultLesson = course.generateDefaultLesson();
-					defaultLesson.course = idCourse;
-					return request.postBackend('/courses/create_lesson', 200, defaultLesson).then(function (response) {
-						var reqLOM = course.generateAssignedLOM();
-						reqLOM.course = idCourse;
-						reqLOM.lom_id = idLOM;
-						return request.postBackend('/courses/assign_lom', 200, reqLOM).then ( function(response) {
+				var section = course.generateDefaultSection();
+				return request.postBackend('/courses/' + idCourse, 200, section).then ( function (response) {
+					var lesson = course.generateDefaultLesson();
+					console.log('Section created');
+					return request.postBackend('/courses/' + idCourse + '/section/' + section.name, 200, lesson).then(function (response) {
+						console.log('Lesson created');
+						return request.postBackend('/courses/' + idCourse + '/section/' + section.name + '/lesson/' + lesson.name + '/lom/' + idLOM , 200).then ( function(response) {
 							expect(response.body.lom_id).to.equal(idLOM);
+							console.log('Lom assigned');
 							chakram.wait();
 						}); 
 					}); 
