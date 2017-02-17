@@ -20,22 +20,6 @@ exports.controlErrors = function (err, res, ret){
 }
 
 /**
- *	This function checks a student exists in the database 
- *  and is activated, not logically deleted.
- */
-exports.studentFound = function (student, req, res){
-	var bool = false, ret;
-	
-	if (req.params.idstd){ ret = req.params.idstd; }
-	else{ ret = req.params.id; }
-
-	if(student.active === 0){
-		res.status(403).send('The student with id: ' + ret + ' is not activated');
-	} else { bool = true; }
-	return bool;
-}
-
-/**
  *	This function returns all courses completed by the student
  */
 exports.getCoursesDone = function(student, courses){

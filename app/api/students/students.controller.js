@@ -117,7 +117,7 @@ exports.get = function (req, res) {
 		}else if(!student){
 			res.status(404).send('The student with id o email: ' + req.params.id + ' is not registrated');
 		} else {
-			if(functions.studentFound(student, req, res) === true){
+			if(student.active === 1){
 				var arrayCourses = [];
 				student.course.find(function(element, index, array){
 					if(element.active === 1){ 
@@ -130,6 +130,8 @@ exports.get = function (req, res) {
 				} else {
 					res.sendStatus(res.statusCode);
 				}
+			} else {
+				res.status(403).send('The student with id: ' + req.params.id + ' is not activated');
 			}
 		}
 	});
@@ -142,7 +144,7 @@ exports.update = function(req, res) {
 	async.waterfall([
 	    Students.findById.bind(Students, req.params.id),
 	    function(student, next) {
-	    	if(functions.studentFound(student, req, res) === true) {
+	    	if(student.active === 1) {
 				if(req.body.identification.email){
 					Students.findOne({'identification.email': req.body.identification.email}, function(err, student2) {
 						if(err){
@@ -170,6 +172,8 @@ exports.update = function(req, res) {
 					student = _.extend(student, newStudent);
 					student.save(next);	
 				}
+			} else {
+				res.status(403).send('The student with id: ' + req.params.id + ' is not activated');
 			}
 	    }
 	], function(err, student) {
@@ -184,7 +188,7 @@ exports.init = function (req, res) {
 	async.waterfall([
 	    Students.findById.bind(Students,  req.params.id),
 	    function(student, next) {
-			if(functions.studentFound(student, req, res) === true){
+			if(student.active === 1){
 				var answers = req.body.answers;
 				for (var i = 0; i < answers.length; i++) { 
 					switch(answers[i].id_question) {
@@ -206,6 +210,8 @@ exports.init = function (req, res) {
 					}
 				}
 				student.save(next);
+			} else {
+				res.status(403).send('The student with id: ' + req.params.id + ' is not activated');
 			}
 	    }
 	], function(err, student) {
@@ -232,7 +238,7 @@ exports.enrollment = function (req, res) {
 					res.status(404).send('The course with id: ' + 
 						req.params.idc + ' is not registrated');
 				} else {
-					if(functions.studentFound(student, req, res) === true){
+					if(student.active === 1){
 						var coursed = false;
 						student.course.find(function(element ,index , array){
 							if(element.idCourse === req.params.idc){
@@ -258,7 +264,9 @@ exports.enrollment = function (req, res) {
 							course.save();
 						}
 						student.save(next);	 
-					}
+					} else {
+						res.status(403).send('The student with id: ' + req.params.idstd + ' is not activated');
+					}		
 				}
 			});	
 	    }
@@ -282,7 +290,7 @@ exports.unenrollment = function (req, res) {
 			        console.log(err);
 			        res.status(err.code).send(err);
 			    } else {
-					if(functions.studentFound(student, req, res) === true){
+					if(student.active === 1){
 						var coursed = false;
 						student.course.find(function(element ,index , array){
 							if(element.idCourse === req.params.idc && element.active !== 0){
@@ -301,6 +309,8 @@ exports.unenrollment = function (req, res) {
 						});
 						if(!coursed){ res.status(400).send('The student: ' + student._id +
 							 ' is not enrolled in the course with id: ' + req.params.idc); }
+					} else {
+						res.status(403).send('The student with id: ' + req.params.idstd + ' is not activated');
 					}
 			    }
 			});	
@@ -363,7 +373,7 @@ exports.updateActivity = function (req, res) {
 			        console.log(err);
 			        res.status(err.code).send(err);
 			    } else {
-					if(functions.studentFound(student, req, res) === true){
+					if(student.active === 1){
 						var coursed = false;
 						student.course.find(function(element ,index , array){
 							if(element.idCourse === req.params.idc){
@@ -441,7 +451,9 @@ exports.updateActivity = function (req, res) {
 						if(!coursed){
 							res.status(400).send('The student: ' + student._id + ' is not enrolled in the course with id: ' + req.params.idc);
 						} 
-					} 
+					} else {
+						res.status(403).send('The student with id: ' + student._id + ' is not activated');
+					}
 			    }
 			});	
 	    }
@@ -472,7 +484,7 @@ exports.newActivity = function (req, res) {
 			    } else if(!course){
 					res.status(404).send('The course with id: ' + req.params.idc + ' is not registrated');
 				} else {
-					if(functions.studentFound(student, req, res) === true){
+					if(student.active === 1){
 
 						coursed = true;							
 						student.course.find(function(element ,index , array){
@@ -540,7 +552,9 @@ exports.newActivity = function (req, res) {
 								}
 							}
 						});							
-					} 			
+					} else {
+						res.status(403).send('The student with id: ' + student._id + ' is not activated');
+					}
 				}
 				if(!coursed){
 					res.status(404).send('The student: ' + student._id + 
