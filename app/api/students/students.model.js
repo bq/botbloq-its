@@ -34,7 +34,7 @@ var identificationSchema = new Schema({
 
 var learningStyleSchema = new Schema({
     type: {
-        type: String,
+        type: Number,
 		required: false
     },
     comprehension: {

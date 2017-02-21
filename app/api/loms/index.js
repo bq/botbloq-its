@@ -31,9 +31,6 @@ router.post('/', controller.create);
 router.post('/:id/upload', upload.single('file'), controller.uploadFile);
 //router.post('/:id/upload', controller.uploadFile);
 
-//rules test
-router.post('/rules/rules', controller.rules);
-
 /////////////////////////// PUTs
 
 // updates a loms

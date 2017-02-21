@@ -6,10 +6,8 @@ var LOMS = require('./loms.model.js'),
     _ = require('lodash'),
 	fs = require('fs'), 
 	functions = require('./loms.functions.js'),
-	RuleEngine = require('node-rules'),
-	mongoose = require('mongoose'),
-	rules = require('../../res/rules.json');
-
+	mongoose = require('mongoose');
+	
 //ALL LOMS
 	
 /**
@@ -126,17 +124,7 @@ exports.remove = function (req, res) {
 	}
 };
 
-exports.rules = function(req,res) {
-	
-	var R = new RuleEngine();
-	R.fromJSON(rules);
 
-	R.execute(req.body, function(result){
-		
-		res.status(200).send("Grupo " + result.group);
-
-	});
-};
 
 /**
  * Uploads a file in a lom

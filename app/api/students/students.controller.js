@@ -7,8 +7,13 @@ var Students = require('./students.model.js'),
 	functions = require('./students.functions.js'), 
 	functions2 = require('../courses/courses.functions.js'),
 	Courses = require('../courses/courses.model.js'),
+	RuleEngine = require('node-rules'),
 	mongoose = require('mongoose'),
 	LOMS = require('../loms/loms.model.js');
+
+var rules = require('../../res/rules.json');
+var ruleEngine = new RuleEngine();
+ruleEngine.fromJSON(rules);
 
 
 //ALL STUDENTS
@@ -569,6 +574,61 @@ exports.newActivity = function (req, res) {
 	});
 };
 
+
+exports.group = function(req,res) {
+	async.waterfall([Students.findById.bind(Students, req.params.id),
+		function(student, next) {
+			if(!student){
+				res.status(404).send('The student with id: ' + req.params.id + ' is not registrated');
+			} else if(student.active !== 1){
+				res.status(403).send('The student with id: ' + student._id + ' is not activated');
+			} else {
+				var courses = [], lessons = [], loms = [], status = [], durations = [];
+				var activities = student.activity_log;
+				_.forEach(activities, function(activity){
+					if(courses.indexOf(activity.idCourse) === -1){
+						courses.push(activity.idCourse);
+					}
+					if(lessons.indexOf(activity.idLesson) === -1){
+						lessons.push(activity.idLesson);
+					}
+					if(loms.indexOf(activity.idLom) === -1){
+						loms.push(activity.idLom);
+					}
+					status.push(activity.status);
+					durations.push(activity.duration);
+				});
+				var correct_loms = _.countBy(status, Math.floor);
+				correct_loms = (correct_loms['1'] * 100) / loms.length;
+
+				var averageDuration = _.meanBy(durations);
+
+				var features = {
+									units: 			courses.length, 
+									problems: 		lessons.length, 
+									steps: 			loms.length, 
+									corrects_steps: correct_loms, 
+									duration: 		averageDuration, 
+									hints: 			2, 
+									skills: 		3
+								};
+
+				ruleEngine.execute(features, function(result){
+					student.learningStyle.type = result.group;
+					student.save(next);
+				});
+				
+			}
+		}
+	], function(err, student) {
+		if(err){
+			console.log(err);
+			res.status(err.code).send(err);
+		} else {
+		 	res.status(200).send(student.learningStyle);
+		}
+	});
+};
 
 /**
  * Removes a element by id
