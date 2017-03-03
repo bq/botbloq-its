@@ -388,13 +388,13 @@ exports.updateActivity = function (req, res) {
 									
 										if (req.params.status === 'ok'){
 											element.status = 1;
-											ret = student;
+											ret = element;
 											res.status(200);
 										} 
 										else {
 											 if (req.params.status === 'nok'){
 											 	element.status = -1;
-												ret = student;
+												ret = element;
 												res.status(200);	
 											 } 											
 											 else {
