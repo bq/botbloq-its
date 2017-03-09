@@ -9,15 +9,17 @@ var router = express.Router();
 
 /////////////////////////////// GETs
 
-// gets all students
-router.get('/', controller.all);
+// gets a new activity for the enrolled course
+router.get('/:idstd/course/:idc', controller.newActivity); 
+
+// gets a list with course information of a student
+router.get('/:id/:data', controller.dataCourses);
 
 // gets a student
 router.get('/:id', controller.get); 
 
-router.get('/:id/:data', controller.dataCourses);
-
-router.get('/:idstd/course/:idc', controller.newActivity); 
+// gets all students
+router.get('/', controller.all);
 
 
 

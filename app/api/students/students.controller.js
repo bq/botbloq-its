@@ -334,31 +334,35 @@ exports.dataCourses = function (req, res) {
     	} else if(!student){
     		res.status(404).send('The student with id: ' + req.params.id + ' is not registrated');
     	} else {
-    		Courses.find({}, function(err, courses){
-	    		res.status(200);
-				switch(req.params.data){
-					case 'courses-done':
-						data = functions.getCoursesDone(student, courses);
-						break;
-					case 'courses-not-done':
-						data = functions.getCoursesNotDone(student, courses);
-						break;
-					case 'active-courses':
-						data = functions.getActiveCourses(student);
-						break;
-					case 'all':
-						data = {coursesDone: [], coursesNotDone: [], activeCourses: []};
-						data.coursesDone = functions.getCoursesDone(student, courses);
-						data.activeCourses = functions.getActiveCourses(student)
-						data.coursesNotDone = functions.getCoursesNotDone(student, courses);
-						break;
-					default:
-						data = 'Error: ' + req.params.data + ' is not correct';
-						res.status(400);
-						break;
-				}
-				res.send(data);
-			});
+    		if(student.active === 1){
+	    		Courses.find({}, function(err, courses){
+		    		res.status(200);
+					switch(req.params.data){
+						case 'courses-done':
+							data = functions.getCoursesDone(student, courses);
+							break;
+						case 'courses-not-done':
+							data = functions.getCoursesNotDone(student, courses);
+							break;
+						case 'active-courses':
+							data = functions.getActiveCourses(student);
+							break;
+						case 'all':
+							data = {coursesDone: [], coursesNotDone: [], activeCourses: []};
+							data.coursesDone = functions.getCoursesDone(student, courses);
+							data.activeCourses = functions.getActiveCourses(student)
+							data.coursesNotDone = functions.getCoursesNotDone(student, courses);
+							break;
+						default:
+							data = 'Error: ' + req.params.data + ' is not correct';
+							res.status(400);
+							break;
+					}
+					res.send(data);
+				});
+			} else {
+				res.status(403).send('The student with id: ' + req.params.idstd + ' is not activated');
+			}
 		}
     });
 }
