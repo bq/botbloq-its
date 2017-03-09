@@ -5,26 +5,6 @@ Learning Object Repository (basic metadata management)
 
 ----------
 
-**GET /botbloq/v1/its/loms**
--------------
-
-Retrieve the metadata of all the Learning Object (LO) stored in the repository 
-
-**Parameters**: None
-
-**Query Parameters**:
-
-**Permissions**:
-
-**Status Codes**:
-200 OK - Action successfully attempted.
-400 Bad Request - The request contains bad syntax.
-**Input**:
-
-**Return**:  
-If successful, this action returns a JSON data block containing the information for each LO metadata.
-If this action is not successful, it returns the error code. 
-
 **GET /botbloq/v1/its/loms/:id/download/:file**
 -------------
 
@@ -40,6 +20,7 @@ Download the file with the specified name linked to the id lom.
 **Permissions**:
 
 **Status Codes**:
+
 200 OK - Action successfully attempted.
 400 Bad Request - The request contains bad syntax.
 404 Not Found - Resource not found.
@@ -47,15 +28,44 @@ Download the file with the specified name linked to the id lom.
 **Input**:
 
 **Return**:  
+
 If successful, this action returns a file specified.
 If this action is not successful, it returns the error code. 
 
 
 
-**POST /botbloq/v1/its/loms**
+**GET /botbloq/v1/its/loms/:id**
+------------
+
+Retrieve the information of a LOM.
+
+**Parameters**
+
+- id: LOM ID
+
+**Query Parameters**:
+
+**Permissions**:
+
+**Status Codes**:
+
+200 OK - Action successfully attempted.
+400 Bad Request - The request contains bad syntax.
+404 Not Found - Resource not found.
+
+**Input**: 
+
+**Return**: 
+
+If successful, this action returns the corresponding JSON with the information of a LOM.
+If this action is not successful, it returns the error code. 
+
+
+
+**GET /botbloq/v1/its/loms**
 -------------
 
-The service creates a LO with  the provided metadata.
+Retrieve the information of all the Learning Object (LO) stored in the repository 
 
 **Parameters**: None
 
@@ -64,14 +74,18 @@ The service creates a LO with  the provided metadata.
 **Permissions**:
 
 **Status Codes**:
+
 200 OK - Action successfully attempted.
 400 Bad Request - The request contains bad syntax.
-**Input**: 
-A JSON lom object.
+
+**Input**:
 
 **Return**:  
-If successful, this action returns: "Added the lom with id: " and the id of the new lom.
-If this action is not successful, it returns the error code.
+
+If successful, this action returns a JSON data block containing the information for each LOM.
+If this action is not successful, it returns the error code. 
+
+
 
 **POST /botbloq/v1/its/loms/:id/upload**
 -------------
@@ -87,6 +101,7 @@ id: LOM ID.
 **Permissions**:
 
 **Status Codes**:
+
 200 OK - Action successfully attempted.
 400 Bad Request - The request contains bad syntax.
 404 Not Found - Resource not found.
@@ -96,14 +111,16 @@ id: LOM ID.
 A file specidied.
 
 **Return**:  
+
 If successful, this action returns: File: <filename.ext> uploaded successfully in the lom with id: <LOM ID>.
 If this action is not successful, it returns the error code.
- 
 
-**DELETE /botbloq/v1/its/loms**
+
+
+**POST /botbloq/v1/its/loms**
 -------------
 
-Delete all Learning Objects of the repository
+The service creates a LO with  the provided metadata.
 
 **Parameters**: None
 
@@ -112,41 +129,20 @@ Delete all Learning Objects of the repository
 **Permissions**:
 
 **Status Codes**:
+
 200 OK - Action successfully attempted.
 400 Bad Request - The request contains bad syntax.
-404 Not Found - Resource not found.
+
 **Input**: 
 
-**Return**:  Number of removed LOM (N) and the success of the operation (.ok)
+A JSON lom object.
 
-{
-” ok ” : 1 ,
-”n ” : 3
-}
+**Return**:  
+
+If successful, this action returns: "Added the lom with id: " and the id of the new lom.
+If this action is not successful, it returns the error code.
 
 
-**GET /botbloq/v1/its/loms/:id**
-------------
-
-Retrieve the metadata of a LOM
-
-**Parameters**
-
-- id: LOM ID
-
-**Query Parameters**:
-
-**Permissions**:
-
-**Status Codes**:
-200 OK - Action successfully attempted.
-400 Bad Request - The request contains bad syntax.
-404 Not Found - Resource not found.
-**Input**: 
-
-**Return**: 
-If successful, this action returns the corresponding JSON object LOM with id introduced.
-If this action is not successful, it returns the error code. 
 
 **PUT /botbloq/v1/its/loms/:id**
 -------------
@@ -162,14 +158,19 @@ Update the metadata of a LOM in  the repository.
 **Permissions**:
 
 **Status Codes**:
+
 200 OK - Action successfully attempted.
 400 Bad Request - The request contains bad syntax.
 404 Not Found - Resource not found.
+
 **Input**: 
 
 **Return**:  
+
 If successful, this action returns a JSON data block containing the information for each LOM.
 If this action is not successful, it returns the error code. 
+
+
 
 **DELETE /botbloq/v1/its/loms/:id**
 -------------
@@ -180,21 +181,53 @@ Delete all the metadata of a LO in the repository
 
 - id: LOM ID
 
+**Query Parameters**:
+
+**Permissions**:
+
+**Status Codes**:
+
+200 OK - Action successfully attempted.
+400 Bad Request - The request contains bad syntax.
+404 Not Found - Resource not found.
+
+**Input**: 
+
+**Return**:  
+
+Number of removed LOM (N) and the success of the operation (.ok)
+
+{
+” ok ” : 1 ,
+”n ” : 1
+}
+
+ 
+
+**DELETE /botbloq/v1/its/loms**
+-------------
+
+Delete all Learning Objects of the repository
+
+**Parameters**: None
 
 **Query Parameters**:
 
 **Permissions**:
 
 **Status Codes**:
+
 200 OK - Action successfully attempted.
 400 Bad Request - The request contains bad syntax.
 404 Not Found - Resource not found.
+
 **Input**: 
 
 **Return**:  
+
 Number of removed LOM (N) and the success of the operation (.ok)
 
 {
 ” ok ” : 1 ,
-”n ” : 1
+”n ” : 3
 }
