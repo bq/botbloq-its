@@ -13,7 +13,7 @@ var Objective = new Schema({
 	level: Number,
 	bloom: {
 		type: String,
-		enum: ['knoweldge', 'comprehension', 'application', 
+		enum: ['knowledge', 'comprehension', 'application', 
 		'analysis', 'sintehsis', 'evaluation']
 	}
 });
