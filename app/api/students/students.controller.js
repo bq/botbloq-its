@@ -516,7 +516,7 @@ exports.newActivity = function (req, res) {
 												array.splice(index,1) ;
 											}
 										});
-										activity = 'Course finished';
+										activity = student.knowledgeLevel;
 										res.status(200);
 										student.save(next);
 										break;
