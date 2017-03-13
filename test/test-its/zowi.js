@@ -140,7 +140,7 @@ describe('Chakram', function(){
 			lom = response.body._id;
 			return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/ok', 200)
 			.then(function (response2) {
-				expect(response2.body.course[0]).to.have.property('status', 1);
+				expect(response2.body).to.have.property('status', 1);
 		    	return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
 				.then(function(response3) {
 					expect(response3.body.general).to.have.property('title', 'sesion01');
@@ -150,7 +150,7 @@ describe('Chakram', function(){
 					
 					return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/nok', 200) 			////// 
 					.then(function (response4) {																							//////
-						expect(response4.body.course[0]).to.have.property('status', -1);													//////
+						expect(response4.body).to.have.property('status', -1);													//////
 				    	return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)								//////    testing
 						.then(function(response5) {																							//////      nok
 							expect(response5.body.general).to.have.property('title', 'sesion01');											//////
@@ -158,7 +158,7 @@ describe('Chakram', function(){
 							lom = response5.body._id;																						//////
 							return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/ok', 200)		//////
 							.then(function (response4) {																					//////
-								expect(response4.body.course[0]).to.have.property('status', 1);												//////
+								expect(response4.body).to.have.property('status', 1);												//////
 						    	return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)						//////
 								.then(function(response5) {																					//////
 									expect(response5.body.general).to.have.property('title', 'sesion02');									//////
@@ -168,7 +168,7 @@ describe('Chakram', function(){
 									
 									return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/ok', 200)
 									.then(function (response6) {
-										expect(response6.body.course[0]).to.have.property('status', 1);
+										expect(response6.body).to.have.property('status', 1);
 								    	return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
 										.then(function(response7) {
 											expect(response7.body.general).to.have.property('title', 'sesion03');
@@ -176,7 +176,7 @@ describe('Chakram', function(){
 											console.log('The system returns the fourth activity of the course');
 											return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/ok', 200)
 											.then(function (response8) {
-												expect(response8.body.course[0]).to.have.property('status', 1);
+												expect(response8.body).to.have.property('status', 1);
 										    	return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
 												.then(function(response9) {
 													expect(response9.body.general).to.have.property('title', 'sesion04');
@@ -185,7 +185,7 @@ describe('Chakram', function(){
 													lom = response9.body._id;
 													return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/ok', 200)
 													.then(function (response10) {
-														expect(response10.body.course[0]).to.have.property('status', 1);
+														expect(response10.body).to.have.property('status', 1);
 												    	return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
 														.then(function(response11) {
 															expect(response11.body.general).to.have.property('title', 'sesion05');
@@ -193,7 +193,7 @@ describe('Chakram', function(){
 															console.log('The system returns the sixth activity of the course');
 															return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/ok', 200)
 															.then(function (response12) {
-																expect(response12.body.course[0]).to.have.property('status', 1);
+																expect(response12.body).to.have.property('status', 1);
 														    	return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
 																.then(function(response13) {
 																	expect(response13.body.general).to.have.property('title', 'sesion06');
@@ -202,7 +202,7 @@ describe('Chakram', function(){
 																	
 																	return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/ok', 200)
 																	.then(function (response14) {
-																		expect(response14.body.course[0]).to.have.property('status', 1);
+																		expect(response14.body).to.have.property('status', 1);
 																    	return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
 																		.then(function(response15) {
 																			expect(response15.body.general).to.have.property('title', 'sesion07');
@@ -211,7 +211,7 @@ describe('Chakram', function(){
 																			
 																			return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/ok', 200)
 																			.then(function (response16) {
-																				expect(response16.body.course[0]).to.have.property('status', 1);
+																				expect(response16.body).to.have.property('status', 1);
 																		    	return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
 																				.then(function(response17) {
 																					expect(response17.body.general).to.have.property('title', 'sesion08');
@@ -220,7 +220,7 @@ describe('Chakram', function(){
 																					
 																					return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/ok', 200)
 																					.then(function (response18) {
-																						expect(response18.body.course[0]).to.have.property('status', 1);
+																						expect(response18.body).to.have.property('status', 1);
 																				    	return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
 																						.then(function(response19) {
 																							expect(response19.body.general).to.have.property('title', 'sesion09');
@@ -229,7 +229,7 @@ describe('Chakram', function(){
 																							
 																							return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/ok', 200)
 																							.then(function (response22) {
-																								expect(response22.body.course[0]).to.have.property('status', 1);
+																								expect(response22.body).to.have.property('status', 1);
 																						    	return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
 																								.then(function(response23) {
 																									expect(response23.body.general).to.have.property('title', 'sesion10');
@@ -238,11 +238,11 @@ describe('Chakram', function(){
 																									
 																									return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/ok', 200)
 																									.then(function (response24) {
-																										expect(response24.body.course[0]).to.have.property('status', 1);
+																										expect(response24.body).to.have.property('status', 1);
 																								    	return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
 																										.then(function(response25) {
-																											expect(response25.body).to.equal('Course finished');
-																											console.log('The system returns: Course finished');
+																											expect(response25.body[0].level).to.equal(1);
+																											console.log('Course finished');
 																											
 																											chakram.wait();
 																											

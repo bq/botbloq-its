@@ -183,7 +183,7 @@ describe('Chakram', function(){
 									
 									return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/ok', 200)
 									.then(function (response5) {
-										expect(response5.body.course[1]).to.have.property('status', 1);
+										expect(response5.body).to.have.property('status', 1);
 							   	    	return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
 										.then(function(response6) {
 											
@@ -198,8 +198,8 @@ describe('Chakram', function(){
 												.then(function(response8) {
 													
 													// testing if the system recognizes if el student has completed the course
-													expect(response8.body).to.equal('Course finished');
-													console.log('The system returns: Course finished');
+													expect(response8.body[0].level).to.equal(1);
+													console.log('Course finished');
 													
 													chakram.wait();
 												});

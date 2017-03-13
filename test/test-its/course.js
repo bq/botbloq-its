@@ -13,7 +13,7 @@ var Course = function() {
 				std_finished : [],
 				std_unenrolled : []
 			},
-			summary : 'Default course for test with name without spaces',
+			summary : 'Default course',
 			sections: []
 		};
 		return course;
@@ -28,7 +28,7 @@ var Course = function() {
 				std_finished : [],
 				std_unenrolled : []
 			},
-			summary : 'Default course for test with name without spaces',
+			summary : 'Default course',
 			sections: []
 			
 		};
@@ -38,7 +38,7 @@ var Course = function() {
 	this.generateDefaultSection = function() {
 		var section = {
 				name : 'Section_1_1',
-				summary : 'Default Section',
+				summary : 'Section summary',
 				lessons: [] 
 			};
 		return section;
@@ -47,50 +47,70 @@ var Course = function() {
 	this.generateDefaultLesson = function() {
 		var lesson = {
 				name : 'Lesson_1_1',
-				summary : 'Default Lesson',
+				summary : 'Lesson summary',
 				loms: [],
-				objectives: []
+				objectives: [{
+					code: 'CODE01',
+					description: 'objective for test',
+					level: 1,
+					bloom: 'knowledge'
+				}]
 			};
 		return lesson;
     };
 	
 	this.generateCompleteCourse = function(loms){
 		var course = {
-			name: 'courseZowi' + currentDate,
+			name: 'course_Zowi_partial',
 			code: 'COURSE' + currentDate,
 			statistics: {
 				std_enrolled : [],
 				std_finished : [],
 				std_unenrolled : []
 			},
-			summary: 'Zowi course for test',
+			summary: 'Zowi course',
 			sections: [
 				{
 					name: 'Section_1_1',
-					summary: 'Default section',
+					summary: 'Main section',
 					lessons: [
 						{
 							name: 'Lesson_1',
-							summary: 'Default lesson 1',
+							summary: 'Zowi Lesson 1',
 							learning_path: [2,1],
 							type: 'Essential',
-							objectives: [],
+							objectives: [{
+								code: 'ROBOT02',
+								description: 'Advanced concepts on robotics',
+								level: 1,
+								bloom: 'knowledge'
+							}],
 							loms: [{lom_id: loms[0]}]
 						},
 						{
 							name: 'Lesson_2',
-							summary: 'Default lesson 2',
+							summary: 'Zowi Lesson 2',
 							learning_path: [2],
 							type: 'Extension',
-							objectives: [],
+							objectives: [{
+								code: 'ROBOT02',
+								description: 'Advanced concepts on robotics',
+								level: 1,
+								bloom: 'knowledge'
+							}],
 							loms: [{lom_id: loms[1]}]
 						},
 						{
 							name: 'Lesson_3',
-							summary: 'Default lesson 3',
+							summary: 'Zowi Lesson 3',
 							learning_path: [2],
 							type: 'Reinforcement',
-							objectives: [],
+							objectives: [{
+								code: 'ROBOT02',
+								description: 'Advanced concepts on robotics',
+								level: 1,
+								bloom: 'knowledge'
+							}],
 							loms: [{lom_id: loms[2]}]
 						}
 					]
@@ -102,38 +122,53 @@ var Course = function() {
 	
 	this.generateZowiCourse = function(loms) {
 		var course = {
-			name: 'courseZowi' + currentDate,
+			name: 'course_Zowi_complete',
 			code: 'COURSE' + currentDate,
 			statistics: {
 				std_enrolled: [],
 				std_finished: [],
 				std_unenrolled: []
 			},
-			summary: 'Zowi course for test',
+			summary: 'Zowi course',
 			sections: [
 				{
 					name: 'Section_1_1',
-					summary: 'Default section',
+					summary: 'Main section',
 					lessons: [
 						{
 							name: 'Lesson_0_0',
 							summary: 'initial lesson',
 							learning_path: [],
-							objectives: [],
+							objectives: [{
+								code: 'ROBOT02',
+								description: 'Advanced concepts on robotics',
+								level: 1,
+								bloom: 'knowledge'
+							}],
 							loms: [{lom_id: loms[0]}]
 						},
 						{
 							name: 'Lesson_0_1',
 							summary: 'Zowi charla con gato',
 							learning_path: [],
-							objectives: [],
+							objectives: [{
+								code: 'ROBOT02',
+								description: 'Advanced concepts on robotics',
+								level: 1,
+								bloom: 'knowledge'
+							}],
 							loms: [{lom_id: loms[1]}]
 						},
 						{
 							name: 'Lesson_0_2',
 							summary: 'Zowi camina por la lluvia',
 							learning_path: [],
-							objectives: [],
+							objectives: [{
+								code: 'ROBOT02',
+								description: 'Advanced concepts on robotics',
+								level: 1,
+								bloom: 'knowledge'
+							}],
 							loms: [{lom_id: loms[2]}]
 						},
 						
@@ -141,21 +176,36 @@ var Course = function() {
 							name: 'Lesson_0_3',
 							summary: 'Moviendo a Zowi',
 							learning_path: [],
-							objectives: [],
+							objectives: [{
+								code: 'ROBOT02',
+								description: 'Advanced concepts on robotics',
+								level: 1,
+								bloom: 'knowledge'
+							}],
 							loms: [{lom_id: loms[3]}]
 						},
 						{
 							name: 'Lesson_0_4',
 							summary: 'Un murcielago persigue a Zowi',
 							learning_path: [],
-							objectives: [],
+							objectives: [{
+								code: 'ROBOT02',
+								description: 'Advanced concepts on robotics',
+								level: 1,
+								bloom: 'knowledge'
+							}],
 							loms: [{lom_id: loms[4]}]
 						},
 						{
 							name: 'Lesson_0_5',
 							summary: 'Zowi se alimenta',
 							learning_path: [],
-							objectives: [],
+							objectives: [{
+								code: 'ROBOT02',
+								description: 'Advanced concepts on robotics',
+								level: 1,
+								bloom: 'knowledge'
+							}],
 							loms: [{lom_id: loms[5]}]
 						},
 						
@@ -163,35 +213,60 @@ var Course = function() {
 							name: 'Lesson_0_6',
 							summary: '¿Cuantas manzanas te has comido Zowi?',
 							learning_path: [],
-							objectives: [],
+							objectives: [{
+								code: 'ROBOT02',
+								description: 'Advanced concepts on robotics',
+								level: 1,
+								bloom: 'knowledge'
+							}],
 							loms: [{lom_id: loms[6]}]
 						},
 						{
 							name: 'Lesson_0_7',
 							summary: '¡¡Lueve!!',
 							learning_path: [],
-							objectives: [],
+							objectives: [{
+								code: 'ROBOT02',
+								description: 'Advanced concepts on robotics',
+								level: 1,
+								bloom: 'knowledge'
+							}],
 							loms: [{lom_id: loms[7]}]
 						},
 						{
 							name: 'Lesson_0_8',
 							summary: 'Zowi pesca',
 							learning_path: [],
-							objectives: [],
+							objectives: [{
+								code: 'ROBOT02',
+								description: 'Advanced concepts on robotics',
+								level: 1,
+								bloom: 'knowledge'
+							}],
 							loms: [{lom_id: loms[8]}]
 						},
 						{
 							name: 'Lesson_0_9',
 							summary: 'Zowi enciende la luz',
 							learning_path: [],
-							objectives: [],
+							objectives: [{
+								code: 'ROBOT02',
+								description: 'Advanced concepts on robotics',
+								level: 1,
+								bloom: 'knowledge'
+							}],
 							loms: [{lom_id: loms[9]}]
 						},
 						{
 							name: 'Lesson_1_0',
 							summary: 'Zowi se ha vuelto un listillo',
 							learning_path: [],
-							objectives: [],
+							objectives: [{
+								code: 'ROBOT02',
+								description: 'Advanced concepts on robotics',
+								level: 1,
+								bloom: 'knowledge'
+							}],
 							loms: [{lom_id: loms[10]}]
 						}
 					]
@@ -204,18 +279,18 @@ var Course = function() {
 	this.generateBitbloqIntroduction = function(loms){
 
 		var course = {
-			name: 'courseIntroduction' + currentDate,
+			name: 'course_Bitbloq_introduction',
 			code: 'INTRO' + currentDate,
 			statistics: {
 				std_enrolled : [],
 				std_finished : [],
 				std_unenrolled : []
 			},
-			summary: 'Bitbloq introduction for test',
+			summary: 'Bitbloq introduction',
 			sections: [
 				{
 					name: 'Section_1',
-					summary: 'Default section',
+					summary: 'Main section',
 					lessons: [
 						{
 							name: 'Lesson_1',
@@ -224,9 +299,9 @@ var Course = function() {
 							type: 'Essential',
 							objectives: [{
 								code: 'ROBOT01',
-								description: '',
+								description: 'Basic Concepts on Robotics',
 								level: 1,
-								bloom:'knoweldge'
+								bloom:'knowledge'
 							}],
 							loms: [{lom_id: loms[0]}]
 						},
@@ -237,9 +312,9 @@ var Course = function() {
 							type: 'Essential',
 							objectives: [{
 								code: 'ROBOT01',
-								description: '',
+								description: 'Basic Concepts on Robotics',
 								level: 1,
-								bloom:'knoweldge'
+								bloom:'knowledge'
 							}],
 							loms: [{lom_id: loms[1]}]
 						}
@@ -254,14 +329,14 @@ var Course = function() {
 	this.generateBitbloqCourse = function(loms){
 
 		var course = {
-			name: 'courseBitbloq' + currentDate,
+			name: 'course_Bitbloq_complete',
 			code: 'COURSE' + currentDate,
 			statistics: {
 				std_enrolled : [],
 				std_finished : [],
 				std_unenrolled : []
 			},
-			summary: 'Bitbloq  course for test',
+			summary: 'Bitbloq  course',
 			sections: [
 				{
 					name: 'Section_1',
@@ -274,9 +349,9 @@ var Course = function() {
 							type: 'Essential',
 							objectives: [{
 								code: 'ROBOT01',
-								description: '',
+								description: 'Basic Concepts on Robotics',
 								level: 1,
-								bloom:'knoweldge'
+								bloom:'knowledge'
 							}],
 							loms: [{lom_id: loms[0]}]
 						},
@@ -287,9 +362,9 @@ var Course = function() {
 							type: 'Essential',
 							objectives: [{
 								code: 'ROBOT01',
-								description: '',
+								description: 'Basic Concepts on Robotics',
 								level: 1,
-								bloom:'knoweldge'
+								bloom:'knowledge'
 							}],
 							loms: [{lom_id: loms[1]}]
 						},
@@ -300,9 +375,9 @@ var Course = function() {
 							type: 'Essential',
 							objectives: [{
 								code: 'ROBOT01',
-								description: '',
+								description: 'Basic Concepts on Robotics',
 								level: 2,
-								bloom:'knoweldge'
+								bloom:'knowledge'
 							}],
 							loms: [{lom_id: loms[2]}]
 						},
@@ -313,9 +388,9 @@ var Course = function() {
 							type: 'Reinforcement',
 							objectives: [{
 								code: 'ROBOT01',
-								description: '',
+								description: 'Basic Concepts on Robotics',
 								level: 2,
-								bloom:'knoweldge'
+								bloom:'knowledge'
 							}],
 							loms: [{lom_id: loms[3]}]
 						},
@@ -326,9 +401,9 @@ var Course = function() {
 							type: 'Essential',
 							objectives: [{
 								code: 'ROBOT01',
-								description: '',
+								description: 'Basic Concepts on Robotics',
 								level: 2,
-								bloom:'knoweldge'
+								bloom:'knowledge'
 							}],
 							loms: [{lom_id: loms[4]}]
 						},
@@ -339,9 +414,9 @@ var Course = function() {
 							type: 'Essential',
 							objectives: [{
 								code: 'ROBOT01',
-								description: '',
+								description: 'Basic Concepts on Robotics',
 								level: 2,
-								bloom:'knoweldge'
+								bloom:'knowledge'
 							}],
 							loms: [{lom_id: loms[5]}]
 						},
@@ -352,9 +427,9 @@ var Course = function() {
 							type: 'Reinforcement',
 							objectives: [{
 								code: 'ROBOT01',
-								description: '',
+								description: 'Basic Concepts on Robotics',
 								level: 2,
-								bloom:'knoweldge'
+								bloom:'knowledge'
 							}],
 							loms: [{lom_id: loms[6]}]
 						},
@@ -365,9 +440,9 @@ var Course = function() {
 							type: 'Reinforcement',
 							objectives: [{
 								code: 'ROBOT01',
-								description: '',
+								description: 'Basic Concepts on Robotics',
 								level: 2,
-								bloom:'knoweldge'
+								bloom:'knowledge'
 							}],
 							loms: [{lom_id: loms[7]}]
 						},
@@ -377,9 +452,9 @@ var Course = function() {
 							learning_path: [10],
 							objectives: [{
 								code: 'ROBOT01',
-								description: '',
+								description: 'Basic Concepts on Robotics',
 								level: 2,
-								bloom:'knoweldge'
+								bloom:'knowledge'
 							}],
 							loms: [{lom_id: loms[8]}]
 						},
@@ -390,9 +465,9 @@ var Course = function() {
 							type: 'Reinforcement',
 							objectives: [{
 								code: 'ROBOT01',
-								description: '',
+								description: 'Basic Concepts on Robotics',
 								level: 2,
-								bloom:'knoweldge'
+								bloom:'knowledge'
 							}],
 							loms: [{lom_id: loms[9]}]
 						},
@@ -403,9 +478,9 @@ var Course = function() {
 							type: 'Extension',
 							objectives: [{
 								code: 'ROBOT01',
-								description: '',
+								description: 'Basic Concepts on Robotics',
 								level: 2,
-								bloom:'knoweldge'
+								bloom:'knowledge'
 							}],
 							loms: [{lom_id: loms[10]}]
 						}
