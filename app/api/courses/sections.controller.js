@@ -71,7 +71,7 @@ exports.get_section = function (req, res) {
 				}			
 				if (!bool){
 					res.status(404).send('The section with id : ' + sectionId 
-					+ ' has not been found un the course with id: ' + courseId);	
+					+ ' has not been found in the course with id: ' + courseId);	
 				}
 			} 
 		});	
@@ -131,9 +131,9 @@ exports.create_section = function(req, res) {
 
 
 exports.update_section = function(req, res) {	
-	var courseId = req.params.id,
+	var courseId = req.params.idc,
 		new_sec = req.body,
-		sectionId = new_sec.name;
+		sectionId = req.params.ids;
 	if(mongoose.Types.ObjectId.isValid(courseId)){
 		Courses.findOne({_id: courseId}, function (err, course){
 			if (err){
@@ -145,7 +145,7 @@ exports.update_section = function(req, res) {
 				var ind = CoursesFunctions.exist_section_lesson(sectionId,sections);
 				if (ind < 0){
 					res.status(404).send('The section with id : ' + sectionId +
-					' has not been found un the course with id: ' + courseId);
+					' has not been found in the course with id: ' + courseId);
 				 } else {
 					course.sections[ind] = CoursesFunctions.doUpdate(course.sections[ind] , new_sec);
 					if (res.statusCode !== 200) {
@@ -181,7 +181,7 @@ exports.delete_section = function(req,res) {
 				var ind = CoursesFunctions.exist_section_lesson(sectionId,course.sections);
 				if (ind < 0){
 					res.status(404).send('The section with id : ' + sectionId +
-					' has not been found un the course with id: ' + courseId);
+					' has not been found in the course with id: ' + courseId);
 				} else {
 					course.sections.splice(ind,1);
 

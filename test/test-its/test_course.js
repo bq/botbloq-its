@@ -165,7 +165,7 @@ describe('Chakram', function(){
 			
 		    return request.getBackend('/courses/'+idCourse+'/section/error',404).then(function (response) {
 				expect(response.body).to.equal('The section with id : ' + id + 
-				' has not been found un the course with id: ' + idCourse);
+				' has not been found in the course with id: ' + idCourse);
 				console.log('getting a not registrated section of a course');
 				
 			    return request.getBackend('/courses/'+idCourse+'/section/'+section.name,200).then(function (response) {
@@ -180,19 +180,18 @@ describe('Chakram', function(){
 	
 	it('Testing to update a section of a course and testing errors', function () {
 		section = course.generateDefaultSection();
-	    return request.putBackend('/courses/' + id + '/update_section',404, section).then(function (response) {
+	    return request.putBackend('/courses/' + id + '/section/' + id, 404, section).then(function (response) {
 			expect(response.body).to.equal('The course with id: ' + id + ' is not registrated');
 			console.log('updating a section of a not registrated course');
 			
-			section.name = id;
-		    return request.putBackend('/courses/' + idCourse + '/update_section',404, section).then(function (response) {
+		    return request.putBackend('/courses/' + idCourse + '/section/' + id, 404, section).then(function (response) {
 				expect(response.body).to.equal('The section with id : ' + id + 
-				' has not been found un the course with id: ' + idCourse);
+				' has not been found in the course with id: ' + idCourse);
 				console.log('updating a not registrated section of a course');
 				
 				section.name = 'Section_1_1';
 				section.summary = 'Updated_Resume'
-			    return request.putBackend('/courses/' + idCourse + '/update_section',200, section).then(function (response) {
+			    return request.putBackend('/courses/' + idCourse + '/section/' + section.name,200, section).then(function (response) {
 					expect(response.body.summary).to.equal(section.summary);
 					console.log('updating a section of a course');
 					
@@ -209,7 +208,7 @@ describe('Chakram', function(){
 			
 		    return request.deleteBackend('/courses/'+idCourse+'/section/'+id,404, section).then(function (response) {
 				expect(response.body).to.equal('The section with id : ' + id + 
-				' has not been found un the course with id: ' + idCourse);
+				' has not been found in the course with id: ' + idCourse);
 				console.log('deleting a not registrated section of a course');
 				
 				section.section = 'Section_1_1';
@@ -233,7 +232,7 @@ describe('Chakram', function(){
 				
 			    return request.getBackend('/courses/'+idCourse+'/section/'+id+'/lessons',404).then(function (response) {
 					expect(response.body).to.equal('The section with id : ' + id + 
-					' has not been found un the course with id: ' + idCourse);
+					' has not been found in the course with id: ' + idCourse);
 					console.log('getting all lessons of a not registrated section of a course');
 					
 				    return request.getBackend('/courses/'+idCourse+'/section/'+section.name+'/lessons',200).then(function (response) {
@@ -255,7 +254,7 @@ describe('Chakram', function(){
 		    
 		    return request.postBackend('/courses/'+ idCourse + '/section/' + id,404, lesson).then(function (response) {
 				expect(response.body).to.equal('The section with id : ' + id + 
-				' has not been found un the course with id: ' + idCourse);
+				' has not been found in the course with id: ' + idCourse);
 				console.log('creating a lesson in a not registrated section of a course');
 				
 			    return request.postBackend('/courses/'+ idCourse + '/section/' + section.name,200, lesson).then(function (response) {
@@ -280,12 +279,12 @@ describe('Chakram', function(){
 			
 		    return request.getBackend('/courses/'+idCourse+'/section/'+id+'/lesson/'+id,404).then(function (response) {
 				expect(response.body).to.equal('The section with id : ' + id + 
-				' has not been found un the course with id: ' + idCourse);
+				' has not been found in the course with id: ' + idCourse);
 				console.log('getting a lesson of a not registrated section of a course');
 				
 			    return request.getBackend('/courses/'+idCourse+'/section/'+section.name+'/lesson/'+id,404).then(function (response) {
 					expect(response.body).to.equal('The lesson with id : ' + id + 
-					' has not been found un the section with id: ' + section.name);
+					' has not been found in the section with id: ' + section.name);
 					console.log('getting a not registrated lesson of a section of a course');
 					
 				    return request.getBackend('/courses/'+idCourse+'/section/'+section.name+'/lesson/'+lesson.name,200).then(function (response) {
@@ -302,24 +301,23 @@ describe('Chakram', function(){
 	it('Testing to update a lesson of a section and a course and testing errors', function () {
 		lesson = course.generateDefaultLesson();
 
-	    return request.putBackend('/courses/' + id + '/section/' + id + '/update_lesson',404, lesson).then(function (response) {
+	    return request.putBackend('/courses/' + id + '/section/' + id + '/lesson/' + id, 404, lesson).then(function (response) {
 			expect(response.body).to.equal('The course with id: ' + id + ' is not registrated');
 			console.log('updating a lesson of a section of a not registrated course');
 			
-		    return request.putBackend('/courses/' + idCourse + '/section/' + id + '/update_lesson',404, lesson).then(function (response) {
+		    return request.putBackend('/courses/' + idCourse + '/section/' + id + '/lesson/' + id, 404, lesson).then(function (response) {
 				expect(response.body).to.equal('The section with id : ' + id + 
-				' has not been found un the course with id: ' + idCourse);
+				' has not been found in the course with id: ' + idCourse);
 				console.log('updating a lesson of a not registrated section of a course');
 				
-				lesson.name = 'Error';
-			    return request.putBackend('/courses/' + idCourse + '/section/' + section.name + '/update_lesson',404, lesson).then(function (response) {
-					expect(response.body).to.equal('The lesson with id : ' + lesson.name + 
-					' has not been found un the section with id: ' + section.name);
+			    return request.putBackend('/courses/' + idCourse + '/section/' + section.name + '/lesson/' + id, 404, lesson).then(function (response) {
+					expect(response.body).to.equal('The lesson with id : ' + id + 
+					' has not been found in the section with id: ' + section.name);
 					console.log('updating a not registrated lesson of a section and a course');
 					
 					lesson.name = 'Lesson_1_1';
 					lesson.summary = 'Updated_Summary'
-				    return request.putBackend('/courses/' + idCourse + '/section/' + section.name + '/update_lesson',200, lesson).then(function (response) {
+				    return request.putBackend('/courses/' + idCourse + '/section/' + section.name + '/lesson/' + lesson.name, 200, lesson).then(function (response) {
 						expect(response.body.summary).to.equal(lesson.summary);
 						console.log('updating a lesson of a section and a course');
 						
@@ -337,12 +335,12 @@ describe('Chakram', function(){
 			
 		    return request.deleteBackend('/courses/' + idCourse + '/section/' + id + '/lesson/' + id,404).then(function (response) {
 				expect(response.body).to.equal('The section with id : ' + id + 
-				' has not been found un the course with id: ' + idCourse);
+				' has not been found in the course with id: ' + idCourse);
 				console.log('deleting a not registrated section of a course');
 				
 			    return request.deleteBackend('/courses/' + idCourse + '/section/' + section.name + '/lesson/' + id,404).then(function (response) {
 					expect(response.body).to.equal('The lesson with id : ' + id + 
-					' has not been found un the section with id: ' + section.name);
+					' has not been found in the section with id: ' + section.name);
 					console.log('deleting a not registrated lesson of a section and a course');
 					
 				    return request.deleteBackend('/courses/' + idCourse + '/section/' + section.name + '/lesson/' + lesson.name,200).then(function (response) {
@@ -370,13 +368,13 @@ describe('Chakram', function(){
 			return request.getBackend('/courses/' + idCourse + '/section/' + id +
 			'/lesson/' + id + '/loms',404).then(function (response) {
 				expect(response.body).to.equal('The section with id : ' + id + 
-				' has not been found un the course with id: ' + idCourse);
+				' has not been found in the course with id: ' + idCourse);
 				console.log('getting all loms of a lesson of a not registrated section and a course');
 				
 				return request.getBackend('/courses/' + idCourse + '/section/' + section.name +
 				'/lesson/' + id + '/loms',404).then(function (response) {
 					expect(response.body).to.equal('The lesson with id : ' + id + 
-					' has not been found un the section with id: ' + section.name);
+					' has not been found in the section with id: ' + section.name);
 					console.log('getting all loms of a not registrated lesson of a section and a course');
 					
 					return request.getBackend('/courses/' + idCourse + '/section/' + section.name +
@@ -402,12 +400,12 @@ describe('Chakram', function(){
 				
 				return request.postBackend('/courses/' + idCourse + '/section/' + id + '/lesson/' + id + '/lom/' + id, 404).then(function (response) {
 					expect(response.body).to.equal('The section with id : ' + id + 
-					' has not been found un the course with id: ' + idCourse);
+					' has not been found in the course with id: ' + idCourse);
 					console.log('assigning a lom in a lesson of a not registrated section and a course');
 					
 					return request.postBackend('/courses/' + idCourse + '/section/' + section.name + '/lesson/' + id + '/lom/' + id, 404).then(function (response) {
 						expect(response.body).to.equal('The lesson with id : ' + id + 
-						' has not been found un the section with id: ' + section.name);
+						' has not been found in the section with id: ' + section.name);
 						console.log('assigning a lom in a not registrated lesson of a section and a course');
 						
 						return request.postBackend('/courses/' + idCourse + '/section/' + section.name + '/lesson/' + lesson.name + '/lom/' + id, 404).then(function (response) {
@@ -473,19 +471,19 @@ describe('Chakram', function(){
 			return request.deleteBackend('/courses/' + idCourse + '/section/' + id +
 			'/lesson/' + id + '/lom/' + id,404).then(function (response) {
 				expect(response.body).to.equal('The section with id : ' + id + 
-				' has not been found un the course with id: ' + idCourse);
+				' has not been found in the course with id: ' + idCourse);
 				console.log('removing a lom in a lesson of a not registrated section and a course');
 				
 				return request.deleteBackend('/courses/' + idCourse + '/section/' + section.name +
 				'/lesson/' + id + '/lom/'+ id,404).then(function (response) {
 					expect(response.body).to.equal('The lesson with id : ' + id + 
-					' has not been found un the section with id: ' + section.name);
+					' has not been found in the section with id: ' + section.name);
 					console.log('removing a lom in a not registrated lesson of a section and a course');
 					
 					return request.deleteBackend('/courses/' + idCourse + '/section/' + section.name +
 					'/lesson/' + lesson.name + '/lom/' + id,404).then(function (response) {
 						expect(response.body).to.equal('The lom with id : ' + id +
-						' has not been found un the lesson with id: ' + lesson.name);
+						' has not been found in the lesson with id: ' + lesson.name);
 						console.log('removing a not registrated lom in a lesson of a section and a course');
 						
 						return request.deleteBackend('/courses/' + idCourse + '/section/' + section.name +

@@ -13,10 +13,13 @@ var router = express.Router();
 */
 
 // GETs 
-// list all loms from a lesson
-router.get('/:course_id/section/:section_id/lesson/:lesson_id/loms', loms_ctrl.all_loms);
+
 // list the indicated lom
 router.get('/:course_id/section/:section_id/lesson/:lesson_id/lom/:lom_id', loms_ctrl.get_lom); 
+
+// list all loms from a lesson
+router.get('/:course_id/section/:section_id/lesson/:lesson_id/loms', loms_ctrl.all_loms);
+
 
 // POSTs
 // create a particular lom of a lesson
@@ -24,8 +27,6 @@ router.post('/:idc/section/:ids/lesson/:idle/lom/:idlo', loms_ctrl.assign_lom);
 
 // DELETEs a particular lom of a lesson
 router.delete('/:idc/section/:ids/lesson/:idle/lom/:idlo', loms_ctrl.delete_lom);
-
-// PUTs
 
 
 /*
@@ -49,8 +50,7 @@ router.delete('/:course_id/section/:section_id/lesson/:lesson_id', lesson_ctrl.d
 
 // PUTs
 // update a particular lesson of a course section
-router.put('/:idc/section/:ids/update_lesson', lesson_ctrl.update_lesson); 
-
+router.put('/:idc/section/:ids/lesson/:idl', lesson_ctrl.update_lesson); 
 
 
 /*
@@ -62,7 +62,6 @@ router.get('/:course_id/section/:section_id', section_ctrl.get_section); // list
 
 router.get('/:course_id/sections', section_ctrl.all_sections); // list all sections from course
 
-
 // POSTs
 router.post('/:id', section_ctrl.create_section);
 
@@ -72,7 +71,7 @@ router.delete('/:course_id/section/:section_id', section_ctrl.delete_section);
 
 // PUTs
 // of a section of a course
-router.put('/:id/update_section', section_ctrl.update_section); // update a particular section of a course
+router.put('/:idc/section/:ids', section_ctrl.update_section); // update a particular section of a course
 
 
 /*
