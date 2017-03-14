@@ -200,7 +200,7 @@ If this action is not successful, it returns the error code.
 **LOCK /botbloq/v1/its/students/:id **
 -------------
 
-Deactivate the information of a student in  the repository (logic deleted).
+Deactivate the information of a student in  the database (logic deleted).
 
 **Parameters**
 
@@ -225,7 +225,7 @@ If this action is not successful, it returns the error code.
 **UNLOCK /botbloq/v1/its/students/:id**
 -------------
 
-Activate the information of a student in  the repository.
+Activate the information of a student in  the database.
 
 **Parameters**
 
@@ -340,7 +340,7 @@ If this action is not successful, it returns the error code.
 **PUT /botbloq/v1/its/students/:id**
 -------------
 
-Update the information of a student in  the repository.
+Update the information of a student in  the database.
 
 **Parameters**
 
@@ -366,7 +366,7 @@ If this action is not successful, it returns the error code.
 **DELETE /botbloq/v1/its/students/:id**
 -------------
 
-Delete all the information about a student in the repository
+Delete all the information about a student in the database
 
 **Parameters**
 
@@ -397,7 +397,7 @@ Number of removed students (N) and the success of the operation (.ok)
 **DELETE /botbloq/v1/its/students**
 -------------
 
-Delete all students of the repository
+Delete all students of the database
 
 **Parameters**: None
 
