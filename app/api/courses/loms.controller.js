@@ -1,4 +1,4 @@
-'use strict';
+ 'use strict';
 
 /*
 Learning Objects (LO) controller
@@ -38,12 +38,12 @@ exports.all_loms = function (req, res) {
 					var inds = CoursesFunctions.exist_section_lesson(sectionId,course.sections);
 					if (inds < 0){
 						res.status(404).send('The section with id : ' + sectionId +
-						' has not been found un the course with id: ' + courseId);
+						' has not been found in the course with id: ' + courseId);
 					}else { // section exists
 						var indl = CoursesFunctions.exist_section_lesson(lessonId,course.sections[inds].lessons);
 						if (indl < 0) {
 							res.status(404).send('The lesson with id : ' + lessonId +
-							' has not been found un the section with id: ' + sectionId);
+							' has not been found in the section with id: ' + sectionId);
 						} else {
 							var lesson = course.sections[inds].lessons[indl];
 							res.status(200).send(lesson.loms);
@@ -127,12 +127,12 @@ exports.assign_lom = function(req, res) {
 					var inds = CoursesFunctions.exist_section_lesson(sectionId,course.sections);
 					if (inds < 0){
 						res.status(404).send('The section with id : ' + sectionId +
-						' has not been found un the course with id: ' + courseId);
+						' has not been found in the course with id: ' + courseId);
 					} else {					
 						var indl = CoursesFunctions.exist_section_lesson(lessonId,course.sections[inds].lessons);
 						if ( indl < 0 ){
 							res.status(404).send('The lesson with id : ' + lessonId +
-							' has not been found un the section with id: ' + sectionId);
+							' has not been found in the section with id: ' + sectionId);
 						} else {
 							var lessons = course.sections[inds].lessons;							
 							var ind = CoursesFunctions.find_lom(lomId,lessons[indl].loms);
@@ -195,18 +195,18 @@ exports.delete_lom = function(req, res) {
 				var inds = CoursesFunctions.exist_section_lesson(sectionId,course.sections);
 				if (inds < 0){
 					res.status(404).send('The section with id : ' + sectionId +
-					' has not been found un the course with id: ' + courseId);
+					' has not been found in the course with id: ' + courseId);
 				} else {					
 					var indl = CoursesFunctions.exist_section_lesson(lessonId,course.sections[inds].lessons);
 					if (indl < 0){
 						res.status(404).send('The lesson with id : ' + lessonId +
-						' has not been found un the section with id: ' + sectionId);
+						' has not been found in the section with id: ' + sectionId);
 					} else {
 						var lessons = course.sections[inds].lessons;							
 						var ind = CoursesFunctions.find_lom(lomId,lessons[indl].loms);
 						if (ind < 0){
 							res.status(404).send('The lom with id : ' + lomId +
-							' has not been found un the lesson with id: ' + lessonId);
+							' has not been found in the lesson with id: ' + lessonId);
 						} else {
 							var loms = lessons[indl].loms;
 							loms.splice(ind,1);
