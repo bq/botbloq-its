@@ -144,24 +144,40 @@ describe('Chakram', function(){
 			expect(response.body.general).to.have.property('title', 'Antes de empezar con Bitbloq 2');
 			lom = response.body._id;
 			console.log('The system returns the first lesson of the course: 1. Antes de empezar');
-			return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/ok', 200)
+			
+
+			return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/idle', 200)
 			.then(function (response2) {
-				expect(response2.body).to.have.property('status', 1);
-		    	return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
-				.then(function(response) {
-					expect(response.body.general).to.have.property('title', 'Conociendo bitbloq 2');
-					lom = response.body._id;
-					console.log('The system returns the second lesson of the course: 2. Conociendo el entorno');
+				expect(response2.body).to.equal('The activity has been paused correctly');
+				console.log('The activity has been paused');
 				
+				return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
+				.then(function(response) {
+					expect(response.body.general).to.have.property('title', 'Antes de empezar con Bitbloq 2');
+					lom = response.body._id;
+					console.log('The system returns the first lesson of the course: 1. Antes de empezar');
+
 					return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/ok', 200)
 					.then(function (response2) {
 						expect(response2.body).to.have.property('status', 1);
-			
+
 				    	return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
 						.then(function(response) {
-							expect(response.body[0].level).to.equal(1);
-							console.log('Course finished');
-							chakram.wait();
+							expect(response.body.general).to.have.property('title', 'Conociendo bitbloq 2');
+							lom = response.body._id;
+							console.log('The system returns the second lesson of the course: 2. Conociendo el entorno');
+						
+							return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/ok', 200)
+							.then(function (response2) {
+								expect(response2.body).to.have.property('status', 1);
+					
+						    	return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
+								.then(function(response) {
+									expect(response.body[0].level).to.equal(1);
+									console.log('Course finished');
+									chakram.wait();
+								});
+							});
 						});
 					});
 				});
