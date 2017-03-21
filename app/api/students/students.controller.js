@@ -167,14 +167,12 @@ exports.update = function(req, res) {
 		
 						if(res.statusCode === 200) {
 							var newStudent = functions.doUpdate(student,req.body);
-							student = _.extend(student, newStudent);
 							student.save(next);						
 						}
 					});
 				} else {
 					res.status(200);
 					var newStudent = functions.doUpdate(student,req.body);
-					student = _.extend(student, newStudent);
 					student.save(next);	
 				}
 			} else {
@@ -431,12 +429,13 @@ exports.updateActivity = function (req, res) {
 											 
 									 
 											 /**
-											  *  To calculate the duration of the activity the created_at of the activity is subtracted 
-											  *  with the created_at of the previous activity, or the created_at of the course if it is the first activity.
+											  *  To calculate the duration of the activity, the created_at is subtracted from the current 
+											  *  date and added to the previous duration (in case the activity has been paused previously).
 											  */
 											student.activity_log.find(function(element1, index1, array1){
 												if (element1.idCourse === element.idCourse && element1.idSection === element.idSection && 
 												  element1.idLesson === element.idLesson && element1.IdLom === element.IdLom){
+													
 													element1.duration = element1.duration + (Date.now() - element1.created_at);
 												}
 											});
