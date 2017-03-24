@@ -37,6 +37,21 @@ var generalSchema = new Schema({
 		type: Number,
 		default: 1
 	},
+
+	///////////////////////////////////////
+
+	description: {
+		type: String,
+		required: false
+	},
+	keyword: {
+		type: String,
+		required: false
+	},
+	ambit: {
+		type: String,
+		required: false
+	},
 	_id : false
 });
 
@@ -113,6 +128,37 @@ var technicalSchema = new Schema({
 		type: String,
 		default: 'no URL'
 	},
+
+	///////////////////////////////////////
+
+	requirements_type: {
+		type: String,
+		required: false
+	},
+	requirements_name: {
+		type: String,
+		required: false
+	},
+	requirements_minimal_version: {
+		type: String,
+		required: false
+	},
+	requirements_maximal_version: {
+		type: String,
+		required: false
+	},
+	installation_guidelines: {
+		type: String,
+		required: false
+	},
+	other_requirements: {
+		type: String,
+		required: false
+	},
+	duration: {
+		type: Number,
+		required: false
+	},
 	_id : false
 });
 
@@ -144,6 +190,29 @@ var useSchema = new Schema({
 	resource_difficulty: {
 		type: String,
 		default: 'no resource difficulty'
+	},
+
+	///////////////////////////////////////
+
+	semantic_density: {
+		type: String,
+		required: false
+	},
+	typical_age_range: {
+		type: String,
+		required: false
+	},
+	typical_learning_time: {
+		type: String,
+		required: false
+	},
+	description: {
+		type: String,
+		required: false
+	},
+	cognitive_process: {
+		type: String,
+		required: false
 	},
 	_id : false
 });
