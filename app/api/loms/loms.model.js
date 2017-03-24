@@ -14,21 +14,24 @@ var generalSchema = new Schema({
 		default: 0	
 	},
 	title: {
-		type: String
+		type: String,
+		default: 'No title'
 	},
 	language: {
 		type: String,
 		enum: [
 			'es',
 			'en'
-		]
+		],
+		default: 'en'
 	},
 	structure: {
 		type: String,
 		enum: [
 			'atomic',
 			'complex'
-		]
+		],
+		default: 'atomic'
 	},
 	aggregation_level: {
 		type: Number,
@@ -66,10 +69,12 @@ var lifecycleSchema = new Schema({
 		default: 'final'
 	},
 	contribution_type: {
-		type: String
+		type: String,
+		default: 'no type'
 	},
 	contribution_entity: {
-		type: String
+		type: String,
+		default: 'no entity'
 	},
 	contribution_date: {
 		type: Date,
@@ -81,10 +86,12 @@ var lifecycleSchema = new Schema({
 
 var metadataSchema = new Schema({
 	contribution_type: {
-		type: String
+		type: String,
+		default: 'no type'
 	},
 	contribution_entity: {
-		type: String
+		type: String,
+		default: 'no entity'
 	},
 	contribution_date: {
 		type: Date,
@@ -95,38 +102,48 @@ var metadataSchema = new Schema({
 
 var technicalSchema = new Schema({
 	format: {
-		type: String
+		type: String,
+		default: 'no format'
 	},
 	size_kb: {
-		type: Number
+		type: Number,
+		default: 100
 	},
 	url: {
-		type: String
+		type: String,
+		default: 'no URL'
 	},
 	_id : false
 });
 
 var useSchema = new Schema({
 	interactivity_type: {
-		type: String
+		type: String,
+		default: 'no interactivity type'
 	},
 	interactivity_level: {
-		type: String
+		type: String,
+		default: 'no interactivity level'
 	},
 	language: {
-		type: String
+		type: String,
+		default: 'English'
 	},	
 	resource_type: {
-		ttype: String
+		type: String,
+		default: 'no resource type'
 	},
 	resource_target: {
-		type: String
+		type: String,
+		default: 'no resource target'
 	},
 	resource_context: {
-		type: String
+		type: String,
+		default: 'no resource context'
 	},
 	resource_difficulty: {
-		type: String
+		type: String,
+		default: 'no resource difficulty'
 	},
 	_id : false
 });
@@ -134,27 +151,27 @@ var useSchema = new Schema({
 var lomSchema = new Schema({
 	general: {
 		type: generalSchema,
-		required: false,
+		required: true,
 		default: ''
 	},
 	lifecycle: {
 		type: lifecycleSchema,
-		required: false,
+		required: true,
 		default: ''
 	},
 	metadata: {
 		type: metadataSchema,
-		required: false,
+		required: true,
 		default: ''
 	},
 	technical: {
 		type: technicalSchema,
-		required: false,
+		required: true,
 		default: ''
 	},
 	use: {
 		type: useSchema,
-		required: false,
+		required: true,
 		default : ''
 	}
 });
