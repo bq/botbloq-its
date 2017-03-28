@@ -12,8 +12,11 @@ var Students = require('./students.model.js'),
 	LOMS = require('../loms/loms.model.js');
 
 var rules = require('../../res/rules.json');
-var ruleEngine = new RuleEngine();
-ruleEngine.fromJSON(rules);
+var ruleEngineGR = new RuleEngine();
+ruleEngineGR.fromJSON(rules);
+var learning_rules = require('../../res/learning_rules.json');
+var ruleEngineLS = new RuleEngine();
+ruleEngineLS.fromJSON(learning_rules);
 
 
 //ALL STUDENTS
@@ -212,7 +215,12 @@ exports.init = function (req, res) {
 		   			 	  answers[i].id_question + ' is not correct');
 					}
 				}
-				student.save(next);
+
+				ruleEngineLS.execute(student, function(result){
+					student.learningStyle.type = result.type;
+					student.save(next);
+				});
+
 			} else {
 				res.status(403).send('The student with id: ' + req.params.id + ' is not activated');
 			}
@@ -545,6 +553,8 @@ exports.newActivity = function (req, res) {
 										
 										element = ret;
 
+
+
 										if(element.status !== 2){
 											student.activity_log.push(
 												{
@@ -644,8 +654,8 @@ exports.group = function(req,res) {
 									skills: 		3
 								};
 
-				ruleEngine.execute(features, function(result){
-					student.learningStyle.type = result.group;
+				ruleEngineGR.execute(features, function(result){
+					student.learningStyle.group = result.group;
 					student.save(next);
 				});
 				
@@ -671,8 +681,9 @@ exports.remove = function (req, res) {
 			if(!student){
 				res.status(404).send('The student with id: ' + req.params.id + ' is not registrated');
 			} else{
-			    Students.remove(student, function (err, resp) {
+			    Students.remove({_id: student._id}, function (err, resp) {
 			        functions.controlErrors(err, res, resp);
+			        student.save(next);
 			    });
 			}
 	    }

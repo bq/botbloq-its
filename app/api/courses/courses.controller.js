@@ -62,9 +62,13 @@ exports.remove = function(req,res) {
 	async.waterfall([
 	    Courses.findById.bind(Courses, req.params.id),
 	    function(course, next) {
-			Courses.remove(course, function (err, resp) {
-		        CoursesFunctions.controlErrors(err, res, resp);
-		    });
+	    	if(!course){
+				res.status(404).send('The course with id: ' + req.params.id + ' is not registrated');
+			} else{
+				Courses.remove({_id: course._id}, function (err, resp) {
+			        CoursesFunctions.controlErrors(err, res, resp);
+			    });
+			}
 	    }
 	], function(err, course) {
 	    if (err) {

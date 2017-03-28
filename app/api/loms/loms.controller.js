@@ -106,7 +106,7 @@ exports.remove = function (req, res) {
 				if(!lom) {
 					res.status(404).send('The lom with id: ' + req.params.id + ' is not registrated');
 			    } else{
-					LOMS.remove(lom, function (err, resp) {
+					LOMS.remove({_id: lom._id}, function (err, resp) {
 				        functions.controlErrors(err, res,resp);
 				    });
 				}
