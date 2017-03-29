@@ -19,8 +19,8 @@ var Objective = new Schema({
 });
 
 var Lesson = new Schema({ 
-		name: String, 
-		summary: String,  
+		name: { type: String, required: true}, 
+		summary: {type: String, default: 'no summary'},  
 		objectives: [Objective],
 		learning_path: [Number],
 		type: {
@@ -33,8 +33,8 @@ var Lesson = new Schema({
 });
 
 var Section = new Schema({ 
-	name: String, 
-	summary  : String, 
+	name: {type: String, required: true}, 
+	summary  : {type: String, default: 'no summary'}, 
 	objectives: [Objective],
 	lessons  : [Lesson],
 	_id: false
@@ -49,11 +49,11 @@ var Statistics = new Schema({
 	
 var CoursesSchema = new mongoose.Schema({
 	name: { type: String, trim: true, required: true, unique: true },
-	code: { type: String },
-	summary: { type: String, trim: true },
+	code: { type: String , default: 'no code'},
+	summary: { type: String, trim: true, default: 'no summary' },
 	objectives: [Objective],
 	sections  : [Section],
-	statistics: {type: Statistics, required: true},
+	statistics: {type: Statistics, required: true, default: ''},
 	history: [String]
 	}, 
 	{ timestamps: true }

@@ -1,0 +1,13 @@
+[{
+	"condition": "function(R) {   R.when(this.learningStyle.input == 'visual');   }",
+
+	"consequence": "function(R) {   this.type = 'video';   R.stop();   }"
+},{
+	"condition": "function(R) {   R.when((this.learningStyle.input == 'verbal') && (this.learningStyle.perception == 'sensorial'));   }",
+
+	"consequence": "function(R) {   this.type = 'audio';   R.stop();   }"
+},{
+	"condition": "function(R) {   R.when((this.learningStyle.input == 'verbal') && (this.learningStyle.perception == 'sensing'));   }",
+
+	"consequence": "function(R) {   this.type = 'document';   R.stop();   }"
+}]
