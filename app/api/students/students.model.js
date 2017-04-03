@@ -34,8 +34,19 @@ var identificationSchema = new Schema({
 
 var learningStyleSchema = new Schema({
     type: {
-        type: Number,
-		required: false
+        type: String,
+		required: false,
+		enum: [
+			'video',
+			'audio',
+			'document',
+			'practice',
+			'other'
+		]
+    },
+    group: {
+    	type: Number,
+    	required: false
     },
     comprehension: {
         type: String,

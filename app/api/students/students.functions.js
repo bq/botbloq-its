@@ -2,6 +2,8 @@
 var functions2 = require('../courses/courses.functions.js');
 var Courses = require('../courses/courses.model.js');
 var _ = require('lodash');
+var LOMS = require('../loms/loms.model.js');
+var mongoose = require('mongoose');
 
 
 /**
@@ -89,6 +91,83 @@ exports.doUpdate = function(object, newObject){
 		});
 	} 
 	return object;
+}
+
+exports.selectType = function(loms, type){
+	var ret = '', cont = 0, fail = [];
+	while(ret === ''){
+		if (loms[cont].type === type){
+			ret = loms[cont].lom_id;
+		} else if( cont+1 < loms.length){
+			cont += 1;
+
+		} else {
+			switch(type){
+				case 'video':
+					if (fail.length === 1){
+						type = 'practice';
+					} else {
+						type = 'audio';
+					}
+					fail.push('video');
+					break;
+
+				case 'audio':
+					if (fail.length === 0){
+						type = 'video';
+					} else if (fail.length === 1){
+						type = 'practice';
+					} else {
+						type = 'other';
+					}
+					fail.push('audio');
+					break;
+
+				case 'practice':
+					if (fail.length === 1){
+						type = 'video';
+					} else {
+						type = 'document';
+					}
+					fail.push('practice');
+					break;
+
+				case 'document':
+					if (fail.length === 0){
+						type = 'practice';
+					} else if (fail.length === 1){
+						type = 'video';
+					} else {
+						type = 'other';
+					}
+					fail.push('document');
+					break;
+
+				default:
+					ret = loms[0].lom_id;
+					break;
+			}
+			cont = 0;
+
+		}
+	}
+	return ret;
+}
+
+exports.selectLOM = function(student, element, course){
+	var section, lesson, loms,  LOM = -1;
+
+	section = course.sections[ functions2.exist_section_lesson(element.idSection, course.sections) ];
+	lesson = section.lessons[ functions2.exist_section_lesson(element.idLesson, section.lessons) ];
+	loms = lesson.loms;
+
+	if(loms.length === 1){
+		LOM = loms[0].lom_id;
+	} else if (loms.length > 1){
+		LOM = this.selectType(loms, student.learningStyle.type);
+	}
+
+	return LOM;
 }
 
 /**
@@ -295,16 +374,12 @@ exports.nextActivity = function (element, course, student){
 		if(ret !== -1){
 			if(course.sections[0].lessons.length > indexMyLesson){
 				element.idLesson = course.sections[0].lessons[indexMyLesson].name;
-				if (course.sections[0].lessons[indexMyLesson].loms.length > 0){
-					element.idLom = course.sections[0].lessons[indexMyLesson].loms[0].lom_id;
-					course.history.push(indexMyLesson);
-					ret = element;
-			
-				}else { ret = -2; }
-		
-			} else { ret = -3; }
+				course.history.push(indexMyLesson);
+				ret = element;
+					
+			} else { ret = -2; }
 		}
-	} else { ret = -4; }
+	} else { ret = -3; }
 	
 	return ret;
 }

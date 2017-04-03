@@ -536,15 +536,10 @@ exports.newActivity = function (req, res) {
 										break;
 									case -2:
 										res.status(404);
-										activity = 'There is a lesson without loms';
-										student.save(next);
-										break;
-									case -3:
-										res.status(404);
 										activity = 'There is a section without lessons';
 										student.save(next);
 										break;
-									case -4:
+									case -3:
 										res.status(404);
 										activity = 'There is a course without sections';
 										student.save(next);
@@ -553,45 +548,52 @@ exports.newActivity = function (req, res) {
 										
 										element = ret;
 
+										var lomRet = functions.selectLOM(student, element, course);
 
+										if (lomRet !== -1){
+											element.idLom = lomRet;
 
-										if(element.status !== 2){
-											student.activity_log.push(
-												{
-													idCourse: element.idCourse,
-													idSection: element.idSection,
-													idLesson: element.idLesson,
-													idLom: element.idLom,
-													status: element.status,
-													duration: 0,
-													created_at: Date.now()
-												}
-											);
-										}
-										
-										/**
-										 *  Once the following activity is obtained, the function 
-										 *  returns the LOM information corresponding to that activity.
-										 */
-										
-										LOMS.find({_id: element.idLom}, function(err, lom) {
-											
-										    if (err) {
-										        console.log(err);
-										        res.status(err.code).send(err);
-											} else {
-							            		if(!lom){ 														
-													res.status(404);
-													activity = 'The lom: ' + element.idLom + ' is not registrated';
-												} else {
-													if(lom.length > 0){ activity = lom[0]; }
-													else{ activity = lom; }
-													
-													student.save(next);
-												}
+											if(element.status !== 2){
+												student.activity_log.push(
+													{
+														idCourse: element.idCourse,
+														idSection: element.idSection,
+														idLesson: element.idLesson,
+														idLom: element.idLom,
+														status: element.status,
+														duration: 0,
+														created_at: Date.now()
+													}
+												);
 											}
-										});	
-										break;
+											
+											/**
+											 *  Once the following activity is obtained, the function 
+											 *  returns the LOM information corresponding to that activity.
+											 */
+											
+											LOMS.find({_id: element.idLom}, function(err, lom) {
+												
+											    if (err) {
+											        console.log(err);
+											        res.status(err.code).send(err);
+												} else {
+								            		if(!lom){ 														
+														res.status(404);
+														activity = 'The lom: ' + element.idLom + ' is not registrated';
+													} else {
+														if(lom.length > 0){ activity = lom[0]; }
+														else{ activity = lom; }
+														
+														student.save(next);
+													}
+												}
+											});	
+											break;
+										} else {
+											res.status(404);
+											activity = 'There is a lesson without loms';
+										}
 									}
 								}
 							}
