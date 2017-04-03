@@ -26,13 +26,13 @@ var Student = function() {
 		return student;
 	};
 
-    this.generateAnswer = function() {
+    this.generateAnswer = function(answers) {
     	var answer = { 
-    		answers : [ 
-    		{id_question : 'ls_comp', value: 'sequential'},
-    		{id_question : 'ls_input', value: 'visual'},
-    		{id_question : 'ls_per', value: 'sensing'},
-    		{id_question : 'ls_proc', value: 'active'}
+    		answers : [
+       	    {id_question : 'ls_comp', value: answers[0]},
+    		{id_question : 'ls_input', value: answers[1]},
+    		{id_question : 'ls_per', value: answers[2]},
+    		{id_question : 'ls_proc', value: answers[3]}
     	]};
     	return answer;
     };

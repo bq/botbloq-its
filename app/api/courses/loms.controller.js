@@ -148,7 +148,8 @@ exports.assign_lom = function(req, res) {
 											res.status(404).send('The lom with id: ' + lomId + ' is not registrated');
 										} else {
 											var loms = lessons[indl].loms;
-											loms[loms.length] = {lom_id: lomId};
+											// TODO hacer funcion para traducir format a tipo
+											loms[loms.length] = {lom_id: lomId, type: lom.technical.format};
 
 											if (res.statusCode !== 200){
 												res.status(400).send('error while updating '+err);							

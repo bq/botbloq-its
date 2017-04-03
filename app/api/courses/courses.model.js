@@ -4,6 +4,7 @@ var mongoose = require('mongoose'),
       										
 var LOM = new Schema({ 
 	lom_id: String,
+	type: String,
 	_id: false 
 });
 	

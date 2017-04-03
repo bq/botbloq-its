@@ -145,7 +145,7 @@ var Course = function() {
 								level: 1,
 								bloom: 'knowledge'
 							}],
-							loms: [{lom_id: loms[0]}]
+							loms: [{lom_id: loms[0], type: 'video'}]
 						},
 						{
 							name: 'Lesson_0_1',
@@ -157,7 +157,7 @@ var Course = function() {
 								level: 1,
 								bloom: 'knowledge'
 							}],
-							loms: [{lom_id: loms[1]}]
+							loms: [{lom_id: loms[1], type: 'video'}]
 						},
 						{
 							name: 'Lesson_0_2',
@@ -169,7 +169,7 @@ var Course = function() {
 								level: 1,
 								bloom: 'knowledge'
 							}],
-							loms: [{lom_id: loms[2]}]
+							loms: [{lom_id: loms[2], type: 'video'}]
 						},
 						
 						{
@@ -182,7 +182,7 @@ var Course = function() {
 								level: 1,
 								bloom: 'knowledge'
 							}],
-							loms: [{lom_id: loms[3]}]
+							loms: [{lom_id: loms[3], type: 'video'}]
 						},
 						{
 							name: 'Lesson_0_4',
@@ -194,7 +194,7 @@ var Course = function() {
 								level: 1,
 								bloom: 'knowledge'
 							}],
-							loms: [{lom_id: loms[4]}]
+							loms: [{lom_id: loms[4], type: 'video'}]
 						},
 						{
 							name: 'Lesson_0_5',
@@ -206,7 +206,7 @@ var Course = function() {
 								level: 1,
 								bloom: 'knowledge'
 							}],
-							loms: [{lom_id: loms[5]}]
+							loms: [{lom_id: loms[5], type: 'video'}]
 						},
 						
 						{
@@ -219,7 +219,7 @@ var Course = function() {
 								level: 1,
 								bloom: 'knowledge'
 							}],
-							loms: [{lom_id: loms[6]}]
+							loms: [{lom_id: loms[6], type: 'video'}]
 						},
 						{
 							name: 'Lesson_0_7',
@@ -231,7 +231,7 @@ var Course = function() {
 								level: 1,
 								bloom: 'knowledge'
 							}],
-							loms: [{lom_id: loms[7]}]
+							loms: [{lom_id: loms[7], type: 'video'}]
 						},
 						{
 							name: 'Lesson_0_8',
@@ -243,7 +243,7 @@ var Course = function() {
 								level: 1,
 								bloom: 'knowledge'
 							}],
-							loms: [{lom_id: loms[8]}]
+							loms: [{lom_id: loms[8], type: 'video'}]
 						},
 						{
 							name: 'Lesson_0_9',
@@ -255,7 +255,7 @@ var Course = function() {
 								level: 1,
 								bloom: 'knowledge'
 							}],
-							loms: [{lom_id: loms[9]}]
+							loms: [{lom_id: loms[9], type: 'video'}]
 						},
 						{
 							name: 'Lesson_1_0',
@@ -267,7 +267,7 @@ var Course = function() {
 								level: 1,
 								bloom: 'knowledge'
 							}],
-							loms: [{lom_id: loms[10]}]
+							loms: [{lom_id: loms[10], type: 'video'}]
 						}
 					]
 				}
@@ -483,6 +483,61 @@ var Course = function() {
 								bloom:'knowledge'
 							}],
 							loms: [{lom_id: loms[10]}]
+						}
+					]	
+				}
+			]
+		}
+		return course;
+	}
+
+	this.generateComplexCourse = function(loms, types){
+
+		var course = {
+			name: 'complex_course',
+			code: 'COMPLEX' + currentDate,
+			statistics: {
+				std_enrolled : [],
+				std_finished : [],
+				std_unenrolled : []
+			},
+			summary: 'Complex course to test loms types',
+			sections: [
+				{
+					name: 'Section_Complex_1',
+					summary: 'Main section',
+					lessons: [
+						{
+							name: 'Lesson_Complex_1',
+							summary: 'First complex lesson',
+							learning_path: [1],
+							type: 'Essential',
+							objectives: [{
+								code: 'COMPLEX01',
+								description: 'complex concepts',
+								level: 1,
+								bloom:'knowledge'
+							}],
+							loms: [
+									{lom_id: loms[1], type: types[1]},
+									{lom_id: loms[2], type: types[2]},
+									{lom_id: loms[3], type: types[3]}]
+						},
+						{
+							name: 'Lesson_Complex_2',
+							summary: 'Second complex lesson',
+							learning_path: [1],
+							type: 'Essential',
+							objectives: [{
+								code: 'COMPLEX01',
+								description: 'complex concepts',
+								level: 1,
+								bloom:'knowledge'
+							}],
+							loms: [{lom_id: loms[4], type: types[4]},
+									{lom_id: loms[5], type: types[5]},
+									{lom_id: loms[6], type: types[6]},
+									{lom_id: loms[7], type: types[7]}]
 						}
 					]	
 				}

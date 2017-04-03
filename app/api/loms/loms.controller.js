@@ -35,7 +35,7 @@ exports.create = function(req, res) {
         res.writeHead(200, {
             'Content-Type': 'text/plain'
         });
-        res.end('Added the lom with id: ' + id);
+        res.end('Added the lom with type: ' + lom.technical.format + ' and id: ' + id);
     });
 };
 
