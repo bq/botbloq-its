@@ -24,6 +24,7 @@ var Lesson = new Schema({
 		summary: {type: String, default: 'no summary'},  
 		objectives: [Objective],
 		learning_path: [Number],
+		dificulty : { type: Number, default: 0},
 		type: {
 			type: String,
 			enum: ['Reinforcement', 'Essential', 'Extension'],
@@ -47,6 +48,11 @@ var Statistics = new Schema({
 	std_unenrolled : [String],
 	_id: false
 });
+
+var History = new Schema({
+	id: String,
+	lesson: String
+});
 	
 var CoursesSchema = new mongoose.Schema({
 	name: { type: String, trim: true, required: true, unique: true },
@@ -55,7 +61,7 @@ var CoursesSchema = new mongoose.Schema({
 	objectives: [Objective],
 	sections  : [Section],
 	statistics: {type: Statistics, required: true, default: ''},
-	history: [String]
+	history: [History]
 	}, 
 	{ timestamps: true }
 	);
