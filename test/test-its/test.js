@@ -111,29 +111,30 @@ describe('Chakram', function(){
 
 			
 	it('Testing enroll a student in a Course' , function() {
-		return request.putBackend('/students/'+ idStudent + '/course/' + idCourse,200)
-		.then(function(response) {
-			// test if the student is already enrolled in the course
-			expect(response.body).to.have.property('idCourse'); // return a course enrolled	
-			return request.getBackend('/students/' + idStudent, 200).then(function (response) {
-				expect(response.body).to.have.property('course'); // the student has a course	
-				return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
-				.then(function(response) {
-					expect(response.body).to.have.property('general');					
-					var lom = response.body._id;
-					return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/ok', 200)
-					.then(function (response3) {
-						//console.log(response3.body) // testing
-						chakram.wait();
+		return request.putBackend('/students/'+ idStudent + '/group',200).then(function(response3) {
+			expect(response3.body).to.have.property('group', 7);
+			return request.putBackend('/students/'+ idStudent + '/course/' + idCourse,200)
+			.then(function(response) {
+				// test if the student is already enrolled in the course
+				expect(response.body).to.have.property('idCourse'); // return a course enrolled	
+				return request.getBackend('/students/' + idStudent, 200).then(function (response) {
+					expect(response.body).to.have.property('course'); // the student has a course	
 
+					return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
+					.then(function(response) {
+						expect(response.body).to.have.property('general');					
+						var lom = response.body._id;
+						return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/ok', 200)
+						.then(function (response3) {
+							//console.log(response3.body) // testing
+							chakram.wait();
+
+						});
+						
 					});
-					
 				});
 			});
-			
-			
 		});
-
 	});
 	
 	

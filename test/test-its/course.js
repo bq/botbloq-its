@@ -39,6 +39,7 @@ var Course = function() {
 		var section = {
 				name : 'Section_1_1',
 				summary : 'Section summary',
+				objectives : [],
 				lessons: [] 
 			};
 		return section;

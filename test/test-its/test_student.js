@@ -137,29 +137,37 @@ describe('Chakram', function(){
 	
 	it('Testing to enroll and unenroll a student in a course and testing errors', function(){
 		var randomCourse = course.generateRandomCourse();
+		var randomSection = course.generateDefaultSection();
 		return request.postBackend('/courses', 200, randomCourse).then(function (response) { 
 			var message = response.body;
 	    	idCourse= message.substring(message.lastIndexOf(' ') + 1);
 			return request.getBackend('/courses/' + idCourse, 200).then(function(response2) {
 				expect(response2.body.code).to.equal(randomCourse.code);
 				console.log('Creating a course');
-				
-				return request.putBackend('/students/'+ idStudent + '/course/' + idCourse,200)
-				.then(function(response) {
-					expect(response.body.active).to.equals(-1); // return a course enrolled
-					console.log('Enrolling a student in a course');
+				return request.postBackend('/courses/' + idCourse, 200, randomSection).then(function (response) { 
+					expect(response.body).to.have.property('name', randomSection.name);
+
+					return request.putBackend('/students/'+ idStudent + '/group',200).then(function(response3) {
+						expect(response3.body).to.have.property('group', 7);
 					
-					return request.lockBackend('/students/'+ idStudent + '/course/' + idCourse,200)
-					.then(function(response) {
-						expect(response.body.active).to.equals(0); // return a course enrolled
-						console.log('Unenrolling a student in a course');
-						
-						return request.lockBackend('/students/'+ idStudent + '/course/' + idCourse,400)
+						return request.putBackend('/students/'+ idStudent + '/course/' + idCourse,200)
 						.then(function(response) {
-							expect(response.body).to.equal('The student: ' + idStudent +
-							 ' is not enrolled in the course with id: ' + idCourse);
-							console.log('Unenrolling a student in a course not registrated');
-							chakram.wait();
+							expect(response.body.active).to.equals(-1); // return a course enrolled
+							console.log('Enrolling a student in a course');
+							
+							return request.lockBackend('/students/'+ idStudent + '/course/' + idCourse,200)
+							.then(function(response) {
+								expect(response.body.active).to.equals(0); // return a course enrolled
+								console.log('Unenrolling a student in a course');
+								
+								return request.lockBackend('/students/'+ idStudent + '/course/' + idCourse,400)
+								.then(function(response) {
+									expect(response.body).to.equal('The student: ' + idStudent +
+									 ' is not enrolled in the course with id: ' + idCourse);
+									console.log('Unenrolling a student in a course not registrated');
+									chakram.wait();
+								});
+							});
 						});
 					});
 				});

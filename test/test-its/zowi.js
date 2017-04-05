@@ -118,14 +118,18 @@ describe('Chakram', function(){
 			// Testing if the course is in the database
 			return request.getBackend('/courses/' + idCourse, 200).then(function(response2) {
 				expect(response2.body.code).to.equal(zowiCourse.code);
-				
-				// enrolling the student in the course
-				return request.putBackend('/students/'+ idStudent + '/course/' + idCourse,200)
-				.then(function(response3) {
-		
-					// testing if the student is already enrolled in the course
-					expect(response3.body).to.have.property('idCourse', idCourse);
-					chakram.wait();
+
+				return request.putBackend('/students/'+ idStudent + '/group',200).then(function(response3) {
+					expect(response3.body).to.have.property('group', 7);
+
+					// enrolling the student in the course
+					return request.putBackend('/students/'+ idStudent + '/course/' + idCourse,200)
+					.then(function(response3) {
+			
+						// testing if the student is already enrolled in the course
+						expect(response3.body).to.have.property('idCourse', idCourse);
+						chakram.wait();
+					});
 				});
 			});
 		});
