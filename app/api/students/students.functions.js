@@ -4,7 +4,16 @@ var Courses = require('../courses/courses.model.js');
 var _ = require('lodash');
 var LOMS = require('../loms/loms.model.js');
 var mongoose = require('mongoose');
+var RuleEngine = require('node-rules');
 
+var studentType = [[],['medium','beginner','beginner'],['medium','medium','beginner'],
+					['medium','medium','medium'],['advanced','advanced','medium'],
+					['advanced','advanced','advanced'],['advanced','medium','medium'],
+					['medium','beginner','beginner']];
+
+var rules = require('../../res/rules.json');
+var ruleEngineGR = new RuleEngine();
+ruleEngineGR.fromJSON(rules);
 
 /**
  *  Controls callback errors and shows the solution
@@ -189,6 +198,271 @@ exports.findTypeLesson = function(lessons, type, course){
 	return ret;
 }
 
+exports.selectLessonNotCoursed = function(lessons, student){
+	var ret, indexLessons = 0, bool = false;
+	var activities = student.activity_log;
+
+	do {
+		var lesson = lessons[indexLessons];
+		var indexActivities = 0;
+
+		while(bool === false && indexActivities < activities.length){
+			var activity = activities[indexActivities];
+
+			if(lesson.name === activity.idLesson && activity.status === 1){
+				bool = true;
+			} else {
+				indexActivities += 1;
+			}
+		}
+
+		if(bool){
+			indexLessons += 1;
+			bool = false;
+		} else {
+			ret = lesson;
+		}
+
+	}while(!ret && indexLessons < lessons.length);
+
+	if(!ret){
+		ret = lessons[0];
+	}
+
+	return ret;
+}
+
+
+exports.selectActivityAdvanced = function(course, myLesson, status, student){
+	var ret = -1, posibilities;
+
+	switch(myLesson.type){
+		case 'Essential':
+			posibilities = this.findTypeLesson(myLesson.learning_path, 'Reinforcement', course);
+
+			if(posibilities.length > 0){
+
+				posibilities.sort(function(a, b){
+					return (a.dificulty - b.dificulty);
+				});
+
+				if(status === 'ok'){
+					ret = this.selectLessonNotCoursed(posibilities, student);
+				} else {
+					if(posibilities.length > 1){
+						ret = this.selectLessonNotCoursed(posibilities.shift(), student);
+					} else {
+						ret = this.selectLessonNotCoursed(posibilities, student); 
+					}
+				}
+			} else {
+				posibilities = this.findTypeLesson(myLesson.learning_path, 'Extension', course);
+
+				if(posibilities.length > 0){
+					ret = this.selectLessonNotCoursed(posibilities, student); 
+
+				} else {
+					posibilities = this.findTypeLesson(myLesson.learning_path, 'Essential', course);
+					
+					if(posibilities.length > 0){
+						ret.this.selectLessonNotCoursed(posibilities, student); 
+					} 
+				}
+			}
+			break;
+		case 'Reinforcement':
+			if(status === 'ok'){
+				posibilities = this.findTypeLesson(myLesson.learning_path, 'Extension', course);
+
+				if(posibilities.length > 0){
+					ret = this.selectLessonNotCoursed(posibilities, student); 
+				} else {
+					posibilities = this.findTypeLesson(myLesson.learning_path, 'Essential', course);
+
+					if(posibilities.length > 0){
+						ret = this.selectLessonNotCoursed(posibilities, student); 
+					} 
+				}
+			} else {
+				posibilities = this.findTypeLesson(myLesson.learning_path, 'Reinforcement', course);
+
+				if(posibilities.length > 0){
+
+					posibilities.sort(function(a, b){
+						return (a.dificulty - b.dificulty);
+					});
+
+					ret = this.selectLessonNotCoursed(posibilities, student); 
+				} else {
+					 posibilities = this.findTypeLesson(myLesson.learning_path, 'Essential', course);
+
+					 if(posibilities.length > 0){
+					 	ret = this.selectLessonNotCoursed(posibilities, student); 
+					 } 
+				}
+			}
+			break;
+
+		case 'Extension': 
+			if(status === 'ok'){
+				posibilities = this.findTypeLesson(myLesson.learning_path, 'Essential', course);
+
+				if(posibilities.length > 0){
+					ret = this.selectLessonNotCoursed(posibilities, student); 
+				} 
+			} else {
+				ret = myLesson;
+			}
+			break;
+	}
+
+	return ret;
+
+
+}
+
+exports.selectActivityMedium = function(course, myLesson, status, student){
+	var ret = -1, posibilities;
+
+	switch(myLesson.type){
+		case 'Essential':
+
+			if(status === 'ok'){
+				posibilities = this.findTypeLesson(myLesson.learning_path, 'Reinforcement', course);
+
+				if(posibilities.length > 0){
+					ret = this.selectLessonNotCoursed(posibilities, student); 
+				} else {
+					posibilities = this.findTypeLesson(myLesson.learning_path, 'Essential', course);
+					
+					if(posibilities.length > 0){
+						ret = this.selectLessonNotCoursed(posibilities, student); 
+					}
+				}
+			} else {
+				ret = myLesson;
+			}
+			break;
+
+		case 'Reinforcement':
+
+			if(status === 'ok'){
+
+				var prevLesson = student.activity_log[student.activity_log.length - 2];
+				prevLesson = functions2.exist_section_lesson(prevLesson.idLesson ,course.sections[0].lessons);
+				var typePrevLesson = course.sections[0].lessons[prevLesson].type;
+
+				if(typePrevLesson !== 'Reinforcement'){
+					posibilities = this.findTypeLesson(myLesson.learning_path, 'Reinforcement', course);
+
+					if(posibilities.length > 0){
+						ret = this.selectLessonNotCoursed(posibilities, student); 
+					} else {
+						posibilities = this.findTypeLesson(myLesson.learning_path, 'Essential', course);
+
+						if(posibilities.length > 0){
+							ret = this.selectLessonNotCoursed(posibilities, student); 
+						}
+					}
+				} else {
+					posibilities = this.findTypeLesson(myLesson.learning_path, 'Essential', course);
+
+					if(posibilities.length > 0){
+						ret = this.selectLessonNotCoursed(posibilities, student); 
+					}
+				}
+			} else {
+				ret = myLesson;
+			}
+			break;
+	}
+
+	return ret;
+
+}
+
+exports.selectActivityBeginner = function(course, myLesson, status, student){
+	var ret = -1, posibilities;
+
+	switch(myLesson.type){
+		case 'Essential':
+
+			if(status == 'ok'){
+				posibilities = this.findTypeLesson(myLesson.learning_path, 'Reinforcement', course);
+
+				if(posibilities.length > 0){
+
+					posibilities.sort(function(a, b){
+						return (b.dificulty - a.dificulty);
+					});
+
+					ret = this.selectLessonNotCoursed(posibilities, student); 
+				} else {
+					posibilities = this.findTypeLesson(myLesson.learning_path, 'Essential', course);
+
+					if(posibilities.length > 0){
+						ret = this.selectLessonNotCoursed(posibilities, student); 
+					}
+				}
+			} else {
+				ret = myLesson;
+			}
+			break;
+
+		case 'Reinforcement':
+
+			if(status = 'ok'){
+				posibilities = this.findTypeLesson(myLesson.learning_path, 'Reinforcement', course);
+
+				if(posibilities.length > 0){
+
+					posibilities.sort(function(a, b){
+						return (b.dificulty - a.dificulty);
+					});
+
+					ret = this.selectLessonNotCoursed(posibilities, student); 
+				} else {
+					posibilities = this.findTypeLesson(myLesson.learning_path, 'Essential', course);
+
+					if(posibilities.length > 0){
+						ret = this.selectLessonNotCoursed(posibilities, student); 
+					}
+				}
+			} else {
+
+				var history = [];
+				for(var i = 0; i < course.history.length; i++){
+					if(course.history[i].id === student._id){
+						history.push(course.history[i].lesson);
+					}
+				}
+				var prevLesson = this.findTypeLesson(history, 'Essential', course);
+				ret = prevLesson[prevLesson.length-1];
+			}
+
+			break;
+	}
+
+}
+
+exports.selectActivity1 = function(myLesson, course, status, student){
+	var ret;
+	switch(student.identification.type){
+		case 'advanced':
+			ret = this.selectActivityAdvanced(course, myLesson, status, student);
+			break;
+
+		case 'medium':
+			ret = this.selectActivityMedium(course, myLesson, status, student);
+			break;
+
+		case 'beginner':
+			ret = this.selectActivityBeginner(course, myLesson, status, student);
+			break;
+	}
+
+	return ret;
+}
 /**
  *  This is an auxiliary function of the following function and returns 
  *  the index of the next course activity. To calculate it uses the last 
@@ -253,7 +527,13 @@ exports.selectActivity = function(myLesson, course, status){
 				random = Math.floor(Math.random() * posibilities.length);
 				ret = posibilities[random];
 			} else {
-				posibilities = this.findTypeLesson(course.history, 'Essential', course);
+				var history= [];
+				for(var i = 0; i < course.history.length; i++){
+					if(course.history[i].id === student._id){
+						history.push(course.history[i].lesson);
+					}
+				}	
+				posibilities = this.findTypeLesson(history, 'Essential', course);
 				if (posibilities.length > 0) {
 					ret = posibilities[posibilities.length-1];
 				} else { ret = -1; }
@@ -277,7 +557,7 @@ exports.selectActivity = function(myLesson, course, status){
 	
 	if (ret !== -1) { ret = functions2.exist_section_lesson(ret.name, course.sections[0].lessons); }
 	return ret;
-}
+} 
 
 /**
  *  In this function the previous checks are carried out to look for the following activity:
@@ -374,7 +654,7 @@ exports.nextActivity = function (element, course, student){
 		if(ret !== -1){
 			if(course.sections[0].lessons.length > indexMyLesson){
 				element.idLesson = course.sections[0].lessons[indexMyLesson].name;
-				course.history.push(indexMyLesson);
+				course.history.push({id: student._id, lesson: indexMyLesson});
 				ret = element;
 					
 			} else { ret = -2; }
@@ -383,3 +663,61 @@ exports.nextActivity = function (element, course, student){
 	
 	return ret;
 }
+
+exports.assignTypeStudent = function(student, course){
+	var group;
+	var jump = 0;
+	var bool = true, n = 0, i = 0, ret;
+	var stdObjectives = student.knowledgeLevel;
+
+	if(course.sections.length > 0){
+		var lessons = course.sections[0].lessons;
+
+		if(student.learningStyle.group){
+			group = student.learningStyle.group;
+
+			if(stdObjectives.length !== 0){
+				do{
+					if(lessons[i].objectives[0].code === stdObjectives[n].code &&
+					   lessons[i].objectives[0].level === stdObjectives[n].level){
+						jump = i+1;
+						if(stdObjectives.length > (n + 1)) {
+							n++;
+						} else if (lessons.length > (i + 1)){
+							i++;
+						} else {
+							bool = false;
+						}
+					} else {
+						bool = false;
+					}
+				}while(bool === true);
+
+				if (jump > 2){ jump = 2; }
+			}
+
+			ret = studentType[ group ][ jump ];
+
+		} else {
+			ret = -1;
+		}
+
+	} else {
+		ret = -2;
+	}
+	return ret;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

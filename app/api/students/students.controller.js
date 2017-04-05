@@ -235,7 +235,7 @@ exports.init = function (req, res) {
  */
 exports.enrollment = function (req, res) {
 	var activity;
-	var newCourse;
+	var newCourse, type;
 	async.waterfall([
 	    Students.findById.bind(Students,  req.params.idstd),
 	    function(student, next) { 
@@ -244,19 +244,18 @@ exports.enrollment = function (req, res) {
 				// find a course by id
 			    if (err) {
 			        console.log(err);
-			        res.status(err.code).send(err);
+			        res.status(err.code);
+			        activity = err;
 			    } else if(!course){
-					res.status(404).send('The course with id: ' + 
-						req.params.idc + ' is not registrated');
+					res.status(404).send('The course with id: ' + req.params.idc + ' is not registrated');
 				} else {
 					if(student.active === 1){
 						var coursed = false;
 						student.course.find(function(element ,index , array){
 							if(element.idCourse === req.params.idc){
 								if (element.active === 1){ 
-									res.status(400).send('The student: ' + 
-										student._id + ' is already enrolled in the course with id: ' +
-										req.params.idc);
+									res.status(400).send('The student: ' + student._id + 
+										' is already enrolled in the course with id: ' + req.params.idc);
 								} else { 
 									element.active = 1;
 								}
@@ -266,12 +265,28 @@ exports.enrollment = function (req, res) {
 						});
 						// if student is activated and is not enrolled in the same course
 						if(!coursed){ 
-							newCourse = {idCourse: course._id, idSection: '', 
-							  idLesson: '', idLom: '', status: 0, active: -1};
+		
+							type = functions.assignTypeStudent(student, course);
 
-							student.course.push(newCourse);
-							activity = newCourse;
-							course.statistics.std_enrolled.push(student._id);
+							if(type === -1 ){
+								res.status(400).send('The student with id: ' + student._id + 
+									' does not have an assigned group.');
+
+							} else if(type === -2){
+								res.status(400).send('The course with id: ' + course._id + 
+									' does not have an assigned section.');
+
+							} else {
+								student.identification.type = type;
+
+								newCourse = {idCourse: course._id, idSection: '', 
+								idLesson: '', idLom: '', status: 0, active: -1};
+
+								student.course.push(newCourse);
+								activity = newCourse;
+								course.statistics.std_enrolled.push(student._id);
+							}
+
 							course.save();
 						}
 						student.save(next);	 
@@ -626,25 +641,29 @@ exports.group = function(req,res) {
 			} else if(student.active !== 1){
 				res.status(403).send('The student with id: ' + student._id + ' is not activated');
 			} else {
-				var courses = [], lessons = [], loms = [], status = [], durations = [];
-				var activities = student.activity_log;
-				_.forEach(activities, function(activity){
-					if(courses.indexOf(activity.idCourse) === -1){
-						courses.push(activity.idCourse);
-					}
-					if(lessons.indexOf(activity.idLesson) === -1){
-						lessons.push(activity.idLesson);
-					}
-					if(loms.indexOf(activity.idLom) === -1){
-						loms.push(activity.idLom);
-					}
-					status.push(activity.status);
-					durations.push(activity.duration);
-				});
-				var correct_loms = _.countBy(status, Math.floor);
-				correct_loms = (correct_loms['1'] * 100) / loms.length;
+				var courses = [], lessons = [], loms = [], 
+				status = [], durations = [], correct_loms = 0, averageDuration = 500;
 
-				var averageDuration = _.meanBy(durations);
+				var activities = student.activity_log;
+				if(activities.length > 0){
+					_.forEach(activities, function(activity){
+						if(courses.indexOf(activity.idCourse) === -1){
+							courses.push(activity.idCourse);
+						}
+						if(lessons.indexOf(activity.idLesson) === -1){
+							lessons.push(activity.idLesson);
+						}
+						if(loms.indexOf(activity.idLom) === -1){
+							loms.push(activity.idLom);
+						}
+						status.push(activity.status);
+						durations.push(activity.duration);
+					});
+					correct_loms = _.countBy(status, Math.floor);
+					correct_loms = (correct_loms['1'] * 100) / loms.length;
+
+					averageDuration = _.meanBy(durations);
+				}
 
 				var features = {
 									units: 			courses.length, 
@@ -652,7 +671,7 @@ exports.group = function(req,res) {
 									steps: 			loms.length, 
 									corrects_steps: correct_loms, 
 									duration: 		averageDuration, 
-									hints: 			2, 
+									hints: 			5, 
 									skills: 		3
 								};
 
