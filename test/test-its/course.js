@@ -80,6 +80,7 @@ var Course = function() {
 							summary: 'Zowi Lesson 1',
 							learning_path: [2,1],
 							type: 'Essential',
+							dificulty: 0,
 							objectives: [{
 								code: 'ROBOT02',
 								description: 'Advanced concepts on robotics',
@@ -93,6 +94,7 @@ var Course = function() {
 							summary: 'Zowi Lesson 2',
 							learning_path: [2],
 							type: 'Extension',
+							dificulty: 0,
 							objectives: [{
 								code: 'ROBOT02',
 								description: 'Advanced concepts on robotics',
@@ -106,6 +108,7 @@ var Course = function() {
 							summary: 'Zowi Lesson 3',
 							learning_path: [2],
 							type: 'Reinforcement',
+							dificulty: 0,
 							objectives: [{
 								code: 'ROBOT02',
 								description: 'Advanced concepts on robotics',
@@ -348,6 +351,7 @@ var Course = function() {
 							summary: 'Antes de empezar',
 							learning_path: [1],
 							type: 'Essential',
+							dificulty: 0,
 							objectives: [{
 								code: 'ROBOT01',
 								description: 'Basic Concepts on Robotics',
@@ -361,6 +365,7 @@ var Course = function() {
 							summary: 'Conociendo el entorno',
 							learning_path: [2],
 							type: 'Essential',
+							dificulty: 0,
 							objectives: [{
 								code: 'ROBOT01',
 								description: 'Basic Concepts on Robotics',
@@ -374,6 +379,7 @@ var Course = function() {
 							summary: '¿Que es un robot?',
 							learning_path: [5],
 							type: 'Essential',
+							dificulty: 0,
 							objectives: [{
 								code: 'ROBOT01',
 								description: 'Basic Concepts on Robotics',
@@ -387,6 +393,7 @@ var Course = function() {
 							summary: 'LED',
 							learning_path: [9, 4],
 							type: 'Reinforcement',
+							dificulty: 0,
 							objectives: [{
 								code: 'ROBOT01',
 								description: 'Basic Concepts on Robotics',
@@ -399,6 +406,7 @@ var Course = function() {
 							name: 'Lesson_5',
 							summary: 'Condicionales',
 							learning_path: [6, 10],
+							dificulty: 0,
 							type: 'Essential',
 							objectives: [{
 								code: 'ROBOT01',
@@ -413,6 +421,7 @@ var Course = function() {
 							summary: 'Algoritmos',
 							learning_path: [3, 4],
 							type: 'Essential',
+							dificulty: 0,
 							objectives: [{
 								code: 'ROBOT01',
 								description: 'Basic Concepts on Robotics',
@@ -426,6 +435,7 @@ var Course = function() {
 							summary: 'Zumbador',
 							learning_path: [7, 10],
 							type: 'Reinforcement',
+							dificulty: 0,
 							objectives: [{
 								code: 'ROBOT01',
 								description: 'Basic Concepts on Robotics',
@@ -439,6 +449,7 @@ var Course = function() {
 							summary: 'Sensor IR',
 							learning_path: [8, 10],
 							type: 'Reinforcement',
+							dificulty: 0,
 							objectives: [{
 								code: 'ROBOT01',
 								description: 'Basic Concepts on Robotics',
@@ -451,6 +462,8 @@ var Course = function() {
 							name: 'Lesson_12',
 							summary: 'Sensor luz',
 							learning_path: [10],
+							type: 'Reinforcement',
+							dificulty: 0,
 							objectives: [{
 								code: 'ROBOT01',
 								description: 'Basic Concepts on Robotics',
@@ -464,6 +477,7 @@ var Course = function() {
 							summary: 'Servo rotacion continua',
 							learning_path: [4],
 							type: 'Reinforcement',
+							dificulty: 0,
 							objectives: [{
 								code: 'ROBOT01',
 								description: 'Basic Concepts on Robotics',
@@ -477,6 +491,7 @@ var Course = function() {
 							summary: 'Logica booleana',
 							learning_path: [10],
 							type: 'Extension',
+							dificulty: 0,
 							objectives: [{
 								code: 'ROBOT01',
 								description: 'Basic Concepts on Robotics',

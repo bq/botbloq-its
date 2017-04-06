@@ -120,7 +120,7 @@ describe('Chakram', function(){
 				expect(response2.body.code).to.equal(zowiCourse.code);
 
 				return request.putBackend('/students/'+ idStudent + '/group',200).then(function(response3) {
-					expect(response3.body).to.have.property('group', 7);
+					expect(response3.body).to.have.property('group', 1);
 
 					// enrolling the student in the course
 					return request.putBackend('/students/'+ idStudent + '/course/' + idCourse,200)

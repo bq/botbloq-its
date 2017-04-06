@@ -112,7 +112,7 @@ describe('Chakram', function(){
 			
 	it('Testing enroll a student in a Course' , function() {
 		return request.putBackend('/students/'+ idStudent + '/group',200).then(function(response3) {
-			expect(response3.body).to.have.property('group', 7);
+			expect(response3.body).to.have.property('group', 1);
 			return request.putBackend('/students/'+ idStudent + '/course/' + idCourse,200)
 			.then(function(response) {
 				// test if the student is already enrolled in the course

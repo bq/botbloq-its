@@ -148,7 +148,7 @@ describe('Chakram', function(){
 					expect(response.body).to.have.property('name', randomSection.name);
 
 					return request.putBackend('/students/'+ idStudent + '/group',200).then(function(response3) {
-						expect(response3.body).to.have.property('group', 7);
+						expect(response3.body).to.have.property('group', 1);
 					
 						return request.putBackend('/students/'+ idStudent + '/course/' + idCourse,200)
 						.then(function(response) {
