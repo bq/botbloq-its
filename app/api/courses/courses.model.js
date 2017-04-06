@@ -51,7 +51,8 @@ var Statistics = new Schema({
 
 var History = new Schema({
 	id: String,
-	lesson: String
+	lesson: Number,
+	_id: false
 });
 	
 var CoursesSchema = new mongoose.Schema({

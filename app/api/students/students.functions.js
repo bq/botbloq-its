@@ -6,10 +6,10 @@ var LOMS = require('../loms/loms.model.js');
 var mongoose = require('mongoose');
 var RuleEngine = require('node-rules');
 
-var studentType = [[],['medium','beginner','beginner'],['medium','medium','beginner'],
-					['medium','medium','medium'],['advanced','advanced','medium'],
-					['advanced','advanced','advanced'],['advanced','medium','medium'],
-					['medium','beginner','beginner']];
+var studentType = [[], ['beginner','beginner','medium'], ['beginner','medium','medium'], 
+					['medium','medium','medium'], ['medium','advanced','advanced'], 
+					['advanced','advanced','advanced'], ['medium','medium','advanced'], 
+					['beginner','beginner','medium']];
 
 var rules = require('../../res/rules.json');
 var ruleEngineGR = new RuleEngine();
@@ -246,7 +246,7 @@ exports.selectActivityAdvanced = function(course, myLesson, status, student){
 					return (a.dificulty - b.dificulty);
 				});
 
-				if(status === 'ok'){
+				if(status === 1){
 					ret = this.selectLessonNotCoursed(posibilities, student);
 				} else {
 					if(posibilities.length > 1){
@@ -265,13 +265,13 @@ exports.selectActivityAdvanced = function(course, myLesson, status, student){
 					posibilities = this.findTypeLesson(myLesson.learning_path, 'Essential', course);
 					
 					if(posibilities.length > 0){
-						ret.this.selectLessonNotCoursed(posibilities, student); 
+						ret = this.selectLessonNotCoursed(posibilities, student); 
 					} 
 				}
 			}
 			break;
 		case 'Reinforcement':
-			if(status === 'ok'){
+			if(status === 1){
 				posibilities = this.findTypeLesson(myLesson.learning_path, 'Extension', course);
 
 				if(posibilities.length > 0){
@@ -304,7 +304,7 @@ exports.selectActivityAdvanced = function(course, myLesson, status, student){
 			break;
 
 		case 'Extension': 
-			if(status === 'ok'){
+			if(status === 1){
 				posibilities = this.findTypeLesson(myLesson.learning_path, 'Essential', course);
 
 				if(posibilities.length > 0){
@@ -327,7 +327,7 @@ exports.selectActivityMedium = function(course, myLesson, status, student){
 	switch(myLesson.type){
 		case 'Essential':
 
-			if(status === 'ok'){
+			if(status === 1){
 				posibilities = this.findTypeLesson(myLesson.learning_path, 'Reinforcement', course);
 
 				if(posibilities.length > 0){
@@ -337,7 +337,7 @@ exports.selectActivityMedium = function(course, myLesson, status, student){
 					
 					if(posibilities.length > 0){
 						ret = this.selectLessonNotCoursed(posibilities, student); 
-					}
+					} 
 				}
 			} else {
 				ret = myLesson;
@@ -346,7 +346,7 @@ exports.selectActivityMedium = function(course, myLesson, status, student){
 
 		case 'Reinforcement':
 
-			if(status === 'ok'){
+			if(status === 1){
 
 				var prevLesson = student.activity_log[student.activity_log.length - 2];
 				prevLesson = functions2.exist_section_lesson(prevLesson.idLesson ,course.sections[0].lessons);
@@ -362,14 +362,20 @@ exports.selectActivityMedium = function(course, myLesson, status, student){
 
 						if(posibilities.length > 0){
 							ret = this.selectLessonNotCoursed(posibilities, student); 
-						}
+						} 
 					}
 				} else {
 					posibilities = this.findTypeLesson(myLesson.learning_path, 'Essential', course);
 
 					if(posibilities.length > 0){
 						ret = this.selectLessonNotCoursed(posibilities, student); 
-					}
+					} else {
+							posibilities = this.findTypeLesson(myLesson.learning_path, 'Reinforcement', course);
+
+							if(posibilities.length > 0){
+								ret = this.selectLessonNotCoursed(posibilities, student); 
+							}
+						}
 				}
 			} else {
 				ret = myLesson;
@@ -387,10 +393,13 @@ exports.selectActivityBeginner = function(course, myLesson, status, student){
 	switch(myLesson.type){
 		case 'Essential':
 
-			if(status == 'ok'){
+			if(status === 1){
 				posibilities = this.findTypeLesson(myLesson.learning_path, 'Reinforcement', course);
 
-				if(posibilities.length > 0){
+				if(posibilities.length === 1){
+					ret = posibilities[0];
+
+				} else if(posibilities.length > 1){
 
 					posibilities.sort(function(a, b){
 						return (b.dificulty - a.dificulty);
@@ -411,10 +420,15 @@ exports.selectActivityBeginner = function(course, myLesson, status, student){
 
 		case 'Reinforcement':
 
-			if(status = 'ok'){
+			if(status === 1){
+
 				posibilities = this.findTypeLesson(myLesson.learning_path, 'Reinforcement', course);
 
-				if(posibilities.length > 0){
+				if(posibilities.length === 1){
+
+					ret = posibilities[0];
+
+				} else if(posibilities.length > 1){
 
 					posibilities.sort(function(a, b){
 						return (b.dificulty - a.dificulty);
@@ -432,7 +446,7 @@ exports.selectActivityBeginner = function(course, myLesson, status, student){
 
 				var history = [];
 				for(var i = 0; i < course.history.length; i++){
-					if(course.history[i].id === student._id){
+					if(student._id.equals(course.history[i].id)){
 						history.push(course.history[i].lesson);
 					}
 				}
@@ -442,10 +456,11 @@ exports.selectActivityBeginner = function(course, myLesson, status, student){
 
 			break;
 	}
+	return ret;
 
 }
 
-exports.selectActivity1 = function(myLesson, course, status, student){
+exports.selectActivity = function(myLesson, course, status, student){
 	var ret;
 	switch(student.identification.type){
 		case 'advanced':
@@ -460,104 +475,9 @@ exports.selectActivity1 = function(myLesson, course, status, student){
 			ret = this.selectActivityBeginner(course, myLesson, status, student);
 			break;
 	}
-
-	return ret;
-}
-/**
- *  This is an auxiliary function of the following function and returns 
- *  the index of the next course activity. To calculate it uses the last 
- *  activity performed, its type and its status.
- */
-
-exports.selectActivity = function(myLesson, course, status){
-	var ret, posibilities, random;
-	switch(myLesson.type){
-		
-	/**
-	 *  If the activity is of type 'Essential':
-	 *   - with 'ok' status: first returns the activity of type 'Reinforcement', 
-	 *     and if there is no, returns the following 'Essential'.
-	 *
-	 *   - with status 'nok': first returns the activity of type 'Reinforcement', 
-	 * 	   and if there is no, returns the same 'Essential' activity.
-	 */
-		
-	case 'Essential':
-		posibilities = this.findTypeLesson(myLesson.learning_path, 'Reinforcement', course);
-		if (posibilities.length > 0){
-			random = Math.floor(Math.random() * posibilities.length);
-			ret = posibilities[random];
-		} else {
-			if(status === -1){ ret = myLesson; }
-			else {
-				posibilities = this.findTypeLesson(myLesson.learning_path, 'Essential', course);
-				if (posibilities.length > 0){
-					random = Math.floor(Math.random() * posibilities.length);
-					ret = posibilities[random];
-				} else {ret = -1; }
-			}
-		}
-		break;
-		
-	/**
-	 *  If the activity is of type 'Reinforcement':
-	 *   - with 'ok' status: first returns the activity of type 'Extension', 
-	 *     and if there is no, returns the following 'Essential'.
-	 *
-     *   - with status 'nok': first returns the activity of type 'Reinforcement', 
-	 * 	   and if there is no, returns the activity of type 'Essential' above.
-	 */
-		
-	case 'Reinforcement':
-		if(status === 1){
-			posibilities = this.findTypeLesson(myLesson.learning_path, 'Extension', course);
-			if (posibilities.length > 0){
-				random = Math.floor(Math.random() * posibilities.length);
-				ret = posibilities[random];
-			} else {
-				posibilities = this.findTypeLesson(myLesson.learning_path, 'Essential', course);
-				if (posibilities.length > 0){
-					random = Math.floor(Math.random() * posibilities.length);
-					ret = posibilities[random];
-				} else { ret = -1; }
-			}
-		} else {
-			posibilities = this.findTypeLesson(myLesson.learning_path, 'Reinforcement', course);
-			if (posibilities.length > 0){
-				random = Math.floor(Math.random() * posibilities.length);
-				ret = posibilities[random];
-			} else {
-				var history= [];
-				for(var i = 0; i < course.history.length; i++){
-					if(course.history[i].id === student._id){
-						history.push(course.history[i].lesson);
-					}
-				}	
-				posibilities = this.findTypeLesson(history, 'Essential', course);
-				if (posibilities.length > 0) {
-					ret = posibilities[posibilities.length-1];
-				} else { ret = -1; }
-			}
-		}
-		break;
-		
-   	/**
-   	 *  If the activity is of type 'Extension':
-   	 *  Both ok and nok returns the following 'Essential' activity. 
-   	 */
-		
-	case 'Extension':
-		posibilities = this.findTypeLesson(myLesson.learning_path, 'Essential', course);
-		if (posibilities.length > 0){
-			random = Math.floor(Math.random() * posibilities.length);
-			ret = posibilities[random];
-		} else { ret = -1; }
-		break;
-	}
-	
 	if (ret !== -1) { ret = functions2.exist_section_lesson(ret.name, course.sections[0].lessons); }
 	return ret;
-} 
+}
 
 /**
  *  In this function the previous checks are carried out to look for the following activity:
@@ -596,7 +516,7 @@ exports.nextActivity = function (element, course, student){
 				if(myLesson.learning_path[0] === indexMyLesson){
 					ret = -1;
 				} else {
-					indexMyLesson = this.selectActivity(myLesson, course, element.status);
+					indexMyLesson = this.selectActivity(myLesson, course, element.status, student);
 					if(indexMyLesson === -1) { ret = -1;}
 				}
 			} else {
@@ -650,7 +570,6 @@ exports.nextActivity = function (element, course, student){
 		 *  included in the history of the course, so that they are reflected in order 
 		 *  the activities that the student has been doing.
 		 */
-		
 		if(ret !== -1){
 			if(course.sections[0].lessons.length > indexMyLesson){
 				element.idLesson = course.sections[0].lessons[indexMyLesson].name;
@@ -660,7 +579,7 @@ exports.nextActivity = function (element, course, student){
 			} else { ret = -2; }
 		}
 	} else { ret = -3; }
-	
+
 	return ret;
 }
 
@@ -679,7 +598,7 @@ exports.assignTypeStudent = function(student, course){
 			if(stdObjectives.length !== 0){
 				do{
 					if(lessons[i].objectives[0].code === stdObjectives[n].code &&
-					   lessons[i].objectives[0].level === stdObjectives[n].level){
+					   lessons[i].objectives[0].level <= stdObjectives[n].level){
 						jump = i+1;
 						if(stdObjectives.length > (n + 1)) {
 							n++;

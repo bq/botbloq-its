@@ -279,6 +279,8 @@ exports.enrollment = function (req, res) {
 							} else {
 								student.identification.type = type;
 
+								console.log('tipo: ' + type);
+
 								newCourse = {idCourse: course._id, idSection: '', 
 								idLesson: '', idLom: '', status: 0, active: -1};
 
@@ -672,7 +674,7 @@ exports.group = function(req,res) {
 									corrects_steps: correct_loms, 
 									duration: 		averageDuration, 
 									hints: 			5, 
-									skills: 		3
+									skills: 		student.knowledgeLevel.length
 								};
 
 				ruleEngineGR.execute(features, function(result){
