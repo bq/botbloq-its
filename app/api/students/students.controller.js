@@ -251,6 +251,10 @@ exports.enrollment = function (req, res) {
 				} else {
 					if(student.active === 1){
 						var coursed = false;
+						/* 
+							Se busca el nuevo curso en los cursos en los que esta matriculado el estudiante 
+							para comprobar que no está matriculado en el previamente.
+						*/
 						student.course.find(function(element ,index , array){
 							if(element.idCourse === req.params.idc){
 								if (element.active === 1){ 
@@ -265,7 +269,10 @@ exports.enrollment = function (req, res) {
 						});
 						// if student is activated and is not enrolled in the same course
 						if(!coursed){ 
-		
+							/*
+								Si no está matriculado en el curso con anterioridad, se le asigna el tipo
+								de estudiante para ese curso y se matricula 
+							*/
 							type = functions.assignTypeStudent(student, course);
 
 							if(type === -1 ){
@@ -347,6 +354,11 @@ exports.unenrollment = function (req, res) {
 		functions.controlErrors(err, res, activity);
 	});
 }
+
+/*
+	Función para obtener los cursos finalizados, cursos no finalizados 
+	y los cursos activos de un estudiante.
+*/
 
 exports.dataCourses = function (req, res) {
 	var data = [];
@@ -540,6 +552,10 @@ exports.newActivity = function (req, res) {
 
 									switch (ret){
 									case -1:
+										/*
+											Se incluye el curso finalizado en las estadísticas 
+											del estudiante.
+										*/
 										course.statistics.std_finished.push(student._id);
 										course.statistics.std_enrolled.find(function(element, index, array){
 											if(student._id.equals(element)){
@@ -564,7 +580,10 @@ exports.newActivity = function (req, res) {
 									default:	
 										
 										element = ret;
-
+										/*
+											Si se devuelve la siguiente actividad de curso, se selecciona
+											el tipo de LOM más acorde con el tipo de estudiante.
+										*/
 										var lomRet = functions.selectLOM(student, element, course);
 
 										if (lomRet !== -1){
@@ -634,7 +653,9 @@ exports.newActivity = function (req, res) {
 	});
 };
 
-
+/* 
+	Función para agrupar a un estudiante según sus resultados académicos
+*/
 exports.group = function(req,res) {
 	async.waterfall([Students.findById.bind(Students, req.params.id),
 		function(student, next) {
@@ -647,6 +668,14 @@ exports.group = function(req,res) {
 				status = [], durations = [], correct_loms = 0, averageDuration = 500;
 
 				var activities = student.activity_log;
+
+				/*
+					Si el estudiante ya ha realizado algún curso y tiene resultados académicos, 
+					se calculan los indicadores para obtener su grupo a traves de las reglas de decisión.
+
+					Si el estudiante no ha realizado ningún curso previo y no tiene resultados académicos, 
+					se le asigna el grupo inicial o principiante.
+				*/
 				if(activities.length > 0){
 					_.forEach(activities, function(activity){
 						if(courses.indexOf(activity.idCourse) === -1){

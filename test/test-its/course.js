@@ -333,14 +333,14 @@ var Course = function() {
 	this.generateBitbloqCourse = function(loms){
 
 		var course = {
-			name: 'course_Bitbloq_complete',
+			name: 'course_Bitbloq_partial',
 			code: 'COURSE' + currentDate,
 			statistics: {
 				std_enrolled : [],
 				std_finished : [],
 				std_unenrolled : []
 			},
-			summary: 'Bitbloq  course',
+			summary: 'Bitbloq course partial',
 			sections: [
 				{
 					name: 'Section_1',
@@ -499,6 +499,365 @@ var Course = function() {
 								bloom:'knowledge'
 							}],
 							loms: [{lom_id: loms[10]}]
+						}
+					]	
+				}
+			]
+		}
+		return course;
+	}
+
+	this.generateCompleteBitbloqCourse = function(loms){
+
+		var course = {
+			name: 'course_Bitbloq_complete',
+			code: 'COURSE' + currentDate,
+			statistics: {
+				std_enrolled : [],
+				std_finished : [],
+				std_unenrolled : []
+			},
+			summary: 'Bitbloq course complete',
+			sections: [
+				{
+					name: 'Section_1',
+					summary: 'Default section',
+					lessons: [
+						{
+							name: 'Lesson_1',
+							summary: 'Antes de empezar',
+							learning_path: [2],
+							type: 'Essential',
+							dificulty: 0,
+							objectives: [{
+								code: 'ROBOT01',
+								description: 'Basic Concepts on Robotics',
+								level: 1,
+								bloom:'knowledge'
+							}],
+							loms: [{lom_id: loms[0]}]
+						},
+						{
+							name: 'Lesson_2',
+							summary: 'Conociendo el entorno',
+							learning_path: [7],
+							type: 'Essential',
+							dificulty: 0,
+							objectives: [{
+								code: 'ROBOT01',
+								description: 'Basic Concepts on Robotics',
+								level: 1,
+								bloom:'knowledge'
+							}],
+							loms: [{lom_id: loms[1]}]
+						},
+						{
+							name: 'Lesson_3',
+							summary: '¿Que es un robot?',
+							learning_path: [1],
+							type: 'Essential',
+							dificulty: 0,
+							objectives: [{
+								code: 'ROBOT01',
+								description: 'Basic Concepts on Robotics',
+								level: 2,
+								bloom:'knowledge'
+							}],
+							loms: [{lom_id: loms[2]}]
+						},
+						{
+							name: 'Lesson_4',
+							summary: 'LED',
+							learning_path: [14, 4],
+							type: 'Reinforcement',
+							dificulty: 1,
+							objectives: [{
+								code: 'ROBOT01',
+								description: 'Basic Concepts on Robotics',
+								level: 2,
+								bloom:'knowledge'
+							}],
+							loms: [{lom_id: loms[3]}]
+						},
+						{
+							name: 'Lesson_5',
+							summary: 'Condicionales',
+							learning_path: [8, 9, 11 ,19, 6],
+							dificulty: 0,
+							type: 'Essential',
+							objectives: [{
+								code: 'ROBOT01',
+								description: 'Basic Concepts on Robotics',
+								level: 2,
+								bloom:'knowledge'
+							}],
+							loms: [{lom_id: loms[4]}]
+						},
+						{
+							name: 'Lesson_6',
+							summary: 'Puerto serie',
+							learning_path: [12],
+							dificulty: 0,
+							type: 'Extension',
+							objectives: [{
+								code: 'ROBOT01',
+								description: 'Basic Concepts on Robotics',
+								level: 2,
+								bloom:'knowledge'
+							}],
+							loms: [{lom_id: loms[5]}]
+						},
+						{
+							name: 'Lesson_7',
+							summary: 'Variables',
+							learning_path: [10, 13, 5, 16, 12],
+							type: 'Essential',
+							dificulty: 0,
+							objectives: [{
+								code: 'ROBOT01',
+								description: 'Basic Concepts on Robotics',
+								level: 2,
+								bloom:'knowledge'
+							}],
+							loms: [{lom_id: loms[6]}]
+						},
+						{
+							name: 'Lesson_8',
+							summary: 'Algoritmos',
+							learning_path: [3, 14, 4],
+							type: 'Essential',
+							dificulty: 0,
+							objectives: [{
+								code: 'ROBOT01',
+								description: 'Basic Concepts on Robotics',
+								level: 2,
+								bloom:'knowledge'
+							}],
+							loms: [{lom_id: loms[7]}]
+						},
+						{
+							name: 'Lesson_9',
+							summary: 'Zumbador',
+							learning_path: [9, 11, 19, 6],
+							type: 'Reinforcement',
+							dificulty: 0,
+							objectives: [{
+								code: 'ROBOT01',
+								description: 'Basic Concepts on Robotics',
+								level: 2,
+								bloom:'knowledge'
+							}],
+							loms: [{lom_id: loms[8]}]
+						},
+						{
+							name: 'Lesson_10',
+							summary: 'Sensor IR',
+							learning_path: [8, 11, 19, 6],
+							type: 'Reinforcement',
+							dificulty: 1,
+							objectives: [{
+								code: 'ROBOT01',
+								description: 'Basic Concepts on Robotics',
+								level: 2,
+								bloom:'knowledge'
+							}],
+							loms: [{lom_id: loms[9]}]
+						},
+						{
+							name: 'Lesson_11',
+							summary: 'Potenciometro (mapear)',
+							learning_path: [13, 5, 16, 12],
+							type: 'Reinforcement',
+							dificulty: 0,
+							objectives: [{
+								code: 'ROBOT01',
+								description: 'Basic Concepts on Robotics',
+								level: 2,
+								bloom:'knowledge'
+							}],
+							loms: [{lom_id: loms[10]}]
+						},
+						{
+							name: 'Lesson_12',
+							summary: 'Sensor luz',
+							learning_path: [8, 9, 19, 6],
+							type: 'Reinforcement',
+							dificulty: 2,
+							objectives: [{
+								code: 'ROBOT01',
+								description: 'Basic Concepts on Robotics',
+								level: 2,
+								bloom:'knowledge'
+							}],
+							loms: [{lom_id: loms[11]}]
+						},
+						{
+							name: 'Lesson_13',
+							summary: 'Bucles',
+							learning_path: [15, 23, 17],
+							type: 'Essential',
+							dificulty: 0,
+							objectives: [{
+								code: 'ROBOT01',
+								description: 'Basic Concepts on Robotics',
+								level: 2,
+								bloom:'knowledge'
+							}],
+							loms: [{lom_id: loms[12]}]
+						},
+						{
+							name: 'Lesson_14',
+							summary: 'Miniservo (mapear)',
+							learning_path: [10, 5, 16, 12],
+							type: 'Reinforcement',
+							dificulty: 0,
+							objectives: [{
+								code: 'ROBOT01',
+								description: 'Basic Concepts on Robotics',
+								level: 2,
+								bloom:'knowledge'
+							}],
+							loms: [{lom_id: loms[13]}]
+						},
+						{
+							name: 'Lesson_15',
+							summary: 'Servo rotacion continua',
+							learning_path: [3, 4],
+							type: 'Reinforcement',
+							dificulty: 2,
+							objectives: [{
+								code: 'ROBOT01',
+								description: 'Basic Concepts on Robotics',
+								level: 2,
+								bloom:'knowledge'
+							}],
+							loms: [{lom_id: loms[14]}]
+						},
+						{
+							name: 'Lesson_16',
+							summary: 'Maquina de estados',
+							learning_path: [23, 17],
+							type: 'Extension',
+							dificulty: 0,
+							objectives: [{
+								code: 'ROBOT01',
+								description: 'Basic Concepts on Robotics',
+								level: 2,
+								bloom:'knowledge'
+							}],
+							loms: [{lom_id: loms[15]}]
+						},
+						{
+							name: 'Lesson_17',
+							summary: 'Sensor de ultrasonidos',
+							learning_path: [10, 13, 6, 12],
+							type: 'Reinforcement',
+							dificulty: 0,
+							objectives: [{
+								code: 'ROBOT01',
+								description: 'Basic Concepts on Robotics',
+								level: 2,
+								bloom:'knowledge'
+							}],
+							loms: [{lom_id: loms[16]}]
+						},
+						{
+							name: 'Lesson_18',
+							summary: 'Funciones sin retorno',
+							learning_path: [22, 18, 20, 21],
+							type: 'Essential',
+							dificulty: 0,
+							objectives: [{
+								code: 'ROBOT01',
+								description: 'Basic Concepts on Robotics',
+								level: 2,
+								bloom:'knowledge'
+							}],
+							loms: [{lom_id: loms[17]}]
+						},
+						{
+							name: 'Lesson_19',
+							summary: 'Funciones con retorno',
+							learning_path: [22, 20, 21],
+							type: 'Extension',
+							dificulty: 0,
+							objectives: [{
+								code: 'ROBOT01',
+								description: 'Basic Concepts on Robotics',
+								level: 2,
+								bloom:'knowledge'
+							}],
+							loms: [{lom_id: loms[18]}]
+						},
+						{
+							name: 'Lesson_20',
+							summary: 'Logica booleana',
+							learning_path: [6],
+							type: 'Extension',
+							dificulty: 0,
+							objectives: [{
+								code: 'ROBOT01',
+								description: 'Basic Concepts on Robotics',
+								level: 2,
+								bloom:'knowledge'
+							}],
+							loms: [{lom_id: loms[19]}]
+						},
+						{
+							name: 'Lesson_21',
+							summary: 'LCD',
+							learning_path: [22, 18, 21],
+							type: 'Extension',
+							dificulty: 0,
+							objectives: [{
+								code: 'ROBOT01',
+								description: 'Basic Concepts on Robotics',
+								level: 2,
+								bloom:'knowledge'
+							}],
+							loms: [{lom_id: loms[20]}]
+						},
+						{
+							name: 'Lesson_22',
+							summary: 'Joystick (Arrays)',
+							learning_path: [22, 18, 20],
+							type: 'Extension',
+							dificulty: 0,
+							objectives: [{
+								code: 'ROBOT01',
+								description: 'Basic Concepts on Robotics',
+								level: 2,
+								bloom:'knowledge'
+							}],
+							loms: [{lom_id: loms[21]}]
+						},
+						{
+							name: 'Lesson_23',
+							summary: 'Melodias',
+							learning_path: [18, 20, 21],
+							type: 'Essential',
+							dificulty: 0,
+							objectives: [{
+								code: 'ROBOT01',
+								description: 'Basic Concepts on Robotics',
+								level: 2,
+								bloom:'knowledge'
+							}],
+							loms: [{lom_id: loms[22]}]
+						},
+						{
+							name: 'Lesson_24',
+							summary: 'Botonera',
+							learning_path: [15, 17],
+							type: 'Extension',
+							dificulty: 0,
+							objectives: [{
+								code: 'ROBOT01',
+								description: 'Basic Concepts on Robotics',
+								level: 2,
+								bloom:'knowledge'
+							}],
+							loms: [{lom_id: loms[23]}]
 						}
 					]	
 				}

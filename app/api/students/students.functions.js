@@ -80,6 +80,9 @@ exports.getActiveCourses = function(student){
 	return activeCourses;
 }
 
+/**
+ *	Función para realizar la actualización de un estudiante.
+ */
 exports.doUpdate = function(object, newObject){
 	var result, result2;
 	result = _.keysIn(newObject);
@@ -101,7 +104,16 @@ exports.doUpdate = function(object, newObject){
 	} 
 	return object;
 }
-
+/**
+ * 	Función para seleccionar el tipo de LOM disponible más acorde con 
+ * 	el tipo de estudiante que lo solicita.
+ *
+ *  Orden de preferencias de los tipos de LOM:
+ *	Video -> Audio -> Ejercicio -> PDF -> otro
+ *	Audio -> Video -> Ejercicio -> PDF -> otro
+ *	PDF -> Ejercicio -> Video -> Audio -> otro
+ *	Ejercicio -> PDF -> Video -> Audio -> otro
+ */
 exports.selectType = function(loms, type){
 	var ret = '', cont = 0, fail = [];
 	while(ret === ''){
@@ -163,6 +175,9 @@ exports.selectType = function(loms, type){
 	return ret;
 }
 
+/**
+ *	Función para asignar al estudiante el LOM más adecuado con respecto a su tipo. 
+ */
 exports.selectLOM = function(student, element, course){
 	var section, lesson, loms,  LOM = -1;
 
@@ -198,27 +213,42 @@ exports.findTypeLesson = function(lessons, type, course){
 	return ret;
 }
 
-exports.selectLessonNotCoursed = function(lessons, student){
-	var ret, indexLessons = 0, bool = false;
+/** 
+ *	Función que analiza si un estudiante ya ha cursado correctamente una lección con anterioridad.
+ */
+exports.isCursed = function(lesson, student){
+	var ret = false, bool = false;
+	var indexActivities = 0;
 	var activities = student.activity_log;
+
+	while(bool === false && indexActivities < activities.length){
+		var activity = activities[indexActivities];
+
+		if(lesson.name === activity.idLesson && activity.status === 1){
+			bool = true;
+		} else {
+			indexActivities += 1;
+		}
+	}
+
+	if(bool){
+		ret = true;
+	} 
+
+	return ret;
+}
+/**
+ *	Función que selecciona de un grupo de lecciones la primera lección que no ha sido
+ *	cursada correctamente por el estudiante.
+ */
+exports.selectLessonNotCoursed = function(lessons, student){
+	var ret, indexLessons = 0;
 
 	do {
 		var lesson = lessons[indexLessons];
-		var indexActivities = 0;
 
-		while(bool === false && indexActivities < activities.length){
-			var activity = activities[indexActivities];
-
-			if(lesson.name === activity.idLesson && activity.status === 1){
-				bool = true;
-			} else {
-				indexActivities += 1;
-			}
-		}
-
-		if(bool){
+		if(this.isCursed(lesson, student)){
 			indexLessons += 1;
-			bool = false;
 		} else {
 			ret = lesson;
 		}
@@ -232,27 +262,42 @@ exports.selectLessonNotCoursed = function(lessons, student){
 	return ret;
 }
 
-
+/**
+ *	Función que devuelve la siguiente actividad de un curso a un estudiante 'Advanced'.
+ */
 exports.selectActivityAdvanced = function(course, myLesson, status, student){
 	var ret = -1, posibilities;
 
 	switch(myLesson.type){
+
+		/**
+		 *	Básica:
+		 *	Si ok: Devolver la siguiente actividad por refuerzo más dificil, si no hay, devolver
+		 *	la siguiente ampliación sin cursar, y si no hay, devolver la siguiente básica.
+		 *
+		 *	Si nok: Devolver la siguiente actividad por refuerzo menos difícil, si no hay, devolver
+		 *	la siguiente ampliación sin cursar, y si no hay, devolver la siguiente básica.
+		 */
 		case 'Essential':
 			posibilities = this.findTypeLesson(myLesson.learning_path, 'Reinforcement', course);
 
 			if(posibilities.length > 0){
 
 				posibilities.sort(function(a, b){
-					return (a.dificulty - b.dificulty);
+					return (b.dificulty - a.dificulty);
 				});
 
 				if(status === 1){
 					ret = this.selectLessonNotCoursed(posibilities, student);
+				
 				} else {
 					if(posibilities.length > 1){
-						ret = this.selectLessonNotCoursed(posibilities.shift(), student);
+						console.log(posibilities.shift());
+						ret = this.selectLessonNotCoursed(posibilities, student);
+				
 					} else {
 						ret = this.selectLessonNotCoursed(posibilities, student); 
+				
 					}
 				}
 			} else {
@@ -260,6 +305,16 @@ exports.selectActivityAdvanced = function(course, myLesson, status, student){
 
 				if(posibilities.length > 0){
 					ret = this.selectLessonNotCoursed(posibilities, student); 
+
+					if(this.isCursed(ret, student)){
+						posibilities = this.findTypeLesson(myLesson.learning_path, 'Essential', course);
+					
+						if(posibilities.length > 0){
+							ret = this.selectLessonNotCoursed(posibilities, student); 
+						} else {
+							ret = -1;
+						}
+					}
 
 				} else {
 					posibilities = this.findTypeLesson(myLesson.learning_path, 'Essential', course);
@@ -270,6 +325,13 @@ exports.selectActivityAdvanced = function(course, myLesson, status, student){
 				}
 			}
 			break;
+		/**
+		 *	Refuerzo:
+		 *	Si ok: Devolver la siguiente extensión, si no hay, devolver la siguiente Básica.
+		 * 
+		 *	Si nok: Devolver la siguiente por refuerzo más difícil no cursada, si no hay, 
+		 *	devolver la siguiente básica. 
+		 */
 		case 'Reinforcement':
 			if(status === 1){
 				posibilities = this.findTypeLesson(myLesson.learning_path, 'Extension', course);
@@ -287,12 +349,21 @@ exports.selectActivityAdvanced = function(course, myLesson, status, student){
 				posibilities = this.findTypeLesson(myLesson.learning_path, 'Reinforcement', course);
 
 				if(posibilities.length > 0){
-
 					posibilities.sort(function(a, b){
-						return (a.dificulty - b.dificulty);
+						return (b.dificulty - a.dificulty);
 					});
 
 					ret = this.selectLessonNotCoursed(posibilities, student); 
+
+					if(this.isCursed(ret, student)){
+						posibilities = this.findTypeLesson(myLesson.learning_path, 'Essential', course);
+
+						if(posibilities.length > 0){
+							ret = this.selectLessonNotCoursed(posibilities, student); 
+						} else {
+							ret = -1;
+						}
+					}
 				} else {
 					 posibilities = this.findTypeLesson(myLesson.learning_path, 'Essential', course);
 
@@ -302,14 +373,36 @@ exports.selectActivityAdvanced = function(course, myLesson, status, student){
 				}
 			}
 			break;
-
+		/**
+		 *	Ampliación:
+		 *	Si ok: Devolver la siguiente ampliación no cursada, si no hay, devolver la siguiente básica
+		 *
+		 *	Si nok: Repetir la misma ampliación.
+		 */
 		case 'Extension': 
 			if(status === 1){
-				posibilities = this.findTypeLesson(myLesson.learning_path, 'Essential', course);
+				posibilities = this.findTypeLesson(myLesson.learning_path, 'Extension', course);
 
 				if(posibilities.length > 0){
 					ret = this.selectLessonNotCoursed(posibilities, student); 
-				} 
+
+					if(this.isCursed(ret, student)){
+						posibilities = this.findTypeLesson(myLesson.learning_path, 'Essential', course);
+
+						if(posibilities.length > 0){
+							ret = this.selectLessonNotCoursed(posibilities, student); 
+						} else {
+							ret = -1;
+						}
+					}
+
+				} else {
+					posibilities = this.findTypeLesson(myLesson.learning_path, 'Essential', course);
+
+					if(posibilities.length > 0){
+						ret = this.selectLessonNotCoursed(posibilities, student); 
+					}
+				}
 			} else {
 				ret = myLesson;
 			}
@@ -320,11 +413,20 @@ exports.selectActivityAdvanced = function(course, myLesson, status, student){
 
 
 }
-
+/**
+ *	Función que devuelve la siguiente actividad de un curso a un estudiante 'Medium'.
+ */
 exports.selectActivityMedium = function(course, myLesson, status, student){
 	var ret = -1, posibilities;
 
 	switch(myLesson.type){
+		/**
+		 *	Básica:
+		 *	Si ok: Devuelve la siguiente por refuerzo de dificultad aleatoria, si no hay, 
+		 *	devuelve la siguiente Básica.
+		 *
+		 *	Si nok: Repite la misma básica.
+		 */
 		case 'Essential':
 
 			if(status === 1){
@@ -343,11 +445,16 @@ exports.selectActivityMedium = function(course, myLesson, status, student){
 				ret = myLesson;
 			}
 			break;
-
+		/**
+		 *	Refuerzo:
+		 *	Si ok: Devuelve la siguiente refuerzo (si no lleva 2 por refuerzo seguidas), si no hay, 
+		 *	devuelve la siguiente básica
+		 *
+		 *	Si nok: Repite la misma refuerzo.
+		 */
 		case 'Reinforcement':
 
 			if(status === 1){
-
 				var prevLesson = student.activity_log[student.activity_log.length - 2];
 				prevLesson = functions2.exist_section_lesson(prevLesson.idLesson ,course.sections[0].lessons);
 				var typePrevLesson = course.sections[0].lessons[prevLesson].type;
@@ -369,11 +476,16 @@ exports.selectActivityMedium = function(course, myLesson, status, student){
 
 					if(posibilities.length > 0){
 						ret = this.selectLessonNotCoursed(posibilities, student); 
+					
 					} else {
 							posibilities = this.findTypeLesson(myLesson.learning_path, 'Reinforcement', course);
 
 							if(posibilities.length > 0){
 								ret = this.selectLessonNotCoursed(posibilities, student); 
+
+								if(this.isCursed(ret, student)){
+									ret = -1;
+								}
 							}
 						}
 				}
@@ -386,11 +498,20 @@ exports.selectActivityMedium = function(course, myLesson, status, student){
 	return ret;
 
 }
-
+/**
+ *	Función que devuelve la siguiente actividad de un curso a un estudiante 'Beginner'.
+ */
 exports.selectActivityBeginner = function(course, myLesson, status, student){
 	var ret = -1, posibilities;
 
 	switch(myLesson.type){
+		/**
+		 *	Básica:
+		 *	Si ok: devuelve la siguiente refuerzo no cursada más fácil, si no hay, 
+		 *	devuelve la siguiente básica.
+		 *
+		 *	Si nok: Repite la misma básica.
+		 */
 		case 'Essential':
 
 			if(status === 1){
@@ -400,12 +521,12 @@ exports.selectActivityBeginner = function(course, myLesson, status, student){
 					ret = posibilities[0];
 
 				} else if(posibilities.length > 1){
-
 					posibilities.sort(function(a, b){
-						return (b.dificulty - a.dificulty);
+						return (a.dificulty - b.dificulty);
 					});
 
 					ret = this.selectLessonNotCoursed(posibilities, student); 
+				
 				} else {
 					posibilities = this.findTypeLesson(myLesson.learning_path, 'Essential', course);
 
@@ -417,24 +538,38 @@ exports.selectActivityBeginner = function(course, myLesson, status, student){
 				ret = myLesson;
 			}
 			break;
-
+		/**
+		 *	Refuerzo:
+		 *	Si ok: devuelve la siguiente refuerzo no cursada más fácil, si no hay, devuelve la siguiente
+		 *	básica.
+		 *
+		 *	Si nok: devuelve la última actividad básica realizada por el estudiante.
+		 */
 		case 'Reinforcement':
 
 			if(status === 1){
-
 				posibilities = this.findTypeLesson(myLesson.learning_path, 'Reinforcement', course);
 
 				if(posibilities.length === 1){
-
 					ret = posibilities[0];
 
 				} else if(posibilities.length > 1){
-
 					posibilities.sort(function(a, b){
-						return (b.dificulty - a.dificulty);
+						return (a.dificulty - b.dificulty);
 					});
 
 					ret = this.selectLessonNotCoursed(posibilities, student); 
+
+					if(this.isCursed(ret, student)){
+						posibilities = this.findTypeLesson(myLesson.learning_path, 'Essential', course);
+
+						if(posibilities.length > 0){
+							ret = this.selectLessonNotCoursed(posibilities, student); 
+						} else {
+							ret = -1;
+						}
+					}
+
 				} else {
 					posibilities = this.findTypeLesson(myLesson.learning_path, 'Essential', course);
 
@@ -443,13 +578,14 @@ exports.selectActivityBeginner = function(course, myLesson, status, student){
 					}
 				}
 			} else {
-
 				var history = [];
+
 				for(var i = 0; i < course.history.length; i++){
 					if(student._id.equals(course.history[i].id)){
 						history.push(course.history[i].lesson);
 					}
 				}
+
 				var prevLesson = this.findTypeLesson(history, 'Essential', course);
 				ret = prevLesson[prevLesson.length-1];
 			}
@@ -459,7 +595,9 @@ exports.selectActivityBeginner = function(course, myLesson, status, student){
 	return ret;
 
 }
-
+/**
+ *	Función para seleccionar la siguiente actividad del estudiante.
+ */
 exports.selectActivity = function(myLesson, course, status, student){
 	var ret;
 	switch(student.identification.type){
@@ -582,7 +720,10 @@ exports.nextActivity = function (element, course, student){
 
 	return ret;
 }
-
+/**
+ *	Función que asigna al estudiante un tipo en el nuevo curso matriculado, según sus
+ *	resultados académicos (capacidad) y sus conocimientos previos (salto).
+ */
 exports.assignTypeStudent = function(student, course){
 	var group;
 	var jump = 0;
@@ -593,6 +734,10 @@ exports.assignTypeStudent = function(student, course){
 		var lessons = course.sections[0].lessons;
 
 		if(student.learningStyle.group){
+			/**
+			 *	Si el estudiante tiene un grupo asignado, se calculan los conocimientos 
+			 *	previos (salto) y se le asigna un tipo de estudiante para el nuevo curso.
+			 */
 			group = student.learningStyle.group;
 
 			if(stdObjectives.length !== 0){
@@ -618,6 +763,9 @@ exports.assignTypeStudent = function(student, course){
 			ret = studentType[ group ][ jump ];
 
 		} else {
+			/**
+			 *	Si el estudiante no tiene un grupo asignado, se solicitará asignarlo.
+			 */
 			ret = -1;
 		}
 
