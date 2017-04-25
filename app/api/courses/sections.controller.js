@@ -101,19 +101,13 @@ exports.create_section = function(req, res) {
 				var sections = course.sections;
 				if (CoursesFunctions.exist_section_lesson(sectionId,sections) !== -1){
 					res.status(400).send('Error section already exist');
-				}
-				else {
+				} else {
 					// if there were no sections before OR
 					// the new section does not already exists
 					// then we have to insert it in the array			
 					// push the new section at the end of the sections array					
 					sections.push(new_sec);
-					
-					if (res.statusCode !== 200){ 
-						res.status(400).send('error while updating '+err);
-					} else {
-						res.status(200).send(sections[sections.length-1]);
-					}
+					res.status(200).send(sections[sections.length-1]);
 					course.save();
 				}
 			}

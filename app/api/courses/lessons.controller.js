@@ -146,22 +146,18 @@ exports.create_lesson = function(req, res) {
 				res.status(404).send('The course with id: ' + courseId + ' is not registrated');
 			} else {
 				var inds = CoursesFunctions.exist_section_lesson(sectionId,course.sections);
-				if (inds < 0){
+				if (inds === -1){
 					res.status(404).send('The section with id : ' + sectionId +
 					' has not been found in the course with id: ' + courseId);
 				} else {					
 					var indl = CoursesFunctions.exist_section_lesson(lessonId,course.sections[inds].lessons);
-					if ( indl >= 0 ){
+					if ( indl !== -1 ){
 						res.status(400).send('Error lesson already exist');
 					} else {
 						var lessons = course.sections[inds].lessons;
-						lessons.push(new_lec);
 						
-						if (res.statusCode !== 200){
-							res.status(400).send('error while updating '+err);
-						} else { 
-							res.status(200).send(lessons[lessons.length-1]); 
-						}
+						lessons.push(new_lec);
+						res.status(200).send(lessons[lessons.length-1]); 
 						course.save();
 					}
 				}	

@@ -144,11 +144,11 @@ describe('Chakram', function(){
 			expect(response.body).to.equal('The course with id: ' + id + ' is not registrated');
 			console.log('creating a sections in a not registrated course');
 			
-		    return request.postBackend('/courses/' + idCourse,200, section).then(function (response) {
+		    return request.postBackend('/courses/' + idCourse, 200, section).then(function (response) {
 				expect(response.body.name).to.equal(section.name);
 				console.log('creating a section in a course');
 				
-			    return request.postBackend('/courses/' + idCourse,400, section).then(function (response) {
+			    return request.postBackend('/courses/' + idCourse, 400, section).then(function (response) {
 					expect(response.body).to.equal('Error section already exist');
 					console.log('creating a repeat section in a course');
 					
@@ -226,6 +226,7 @@ describe('Chakram', function(){
 		console.log('-------------- lessons testing ---------------');
 		section = course.generateDefaultSection();
 	    return request.postBackend('/courses/' + idCourse,200, section).then(function (response) {
+	    	console.log('including a section in a course');
 		    return request.getBackend('/courses/'+id+'/section/'+id+'/lessons',404).then(function (response) {
 				expect(response.body).to.equal('The course with id: ' + id + ' is not registrated');
 				console.log('getting all lessons of a section of a not registrated course');

@@ -187,46 +187,57 @@ describe('Chakram', function(){
 											lom = response.body._id;
 											console.log('The system returns the fourth lesson of the course: 4. LED');
 													
-											return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/ok', 200)
+											return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/nok', 200)
 											.then(function (response2) {
-												expect(response2.body).to.have.property('status', 1);
+												expect(response2.body).to.have.property('status', -1);
 										    	return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
 												.then(function(response) {
-													expect(response.body.general).to.have.property('title', 'Si tú me dices ven… lo dejo todo, o no. Las sentencias condicionales y el pulsador.');
+													expect(response.body.general).to.have.property('title', '¡Muévete! El servo de rotación continua');
 													lom = response.body._id;
-													console.log('The system returns the fifth lesson of the course: 5. Condicionales');
+													console.log('The system returns the fifteenth lesson of the course: 15. El servo de rotación continua');
 													
 													return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/ok', 200)
 													.then(function (response2) {
 														expect(response2.body).to.have.property('status', 1);
 												    	return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
 														.then(function(response) {
-															expect(response.body.general).to.have.property('title', 'Piruru piii… Programando el zumbador');
+															expect(response.body.general).to.have.property('title', 'Si tú me dices ven… lo dejo todo, o no. Las sentencias condicionales y el pulsador.');
 															lom = response.body._id;
-															console.log('The system returns the ninth lesson of the course: 9. El zumbador');
+															console.log('The system returns the fifth lesson of the course: 5. Condicionales');
 															
 															return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/ok', 200)
 															.then(function (response2) {
 																expect(response2.body).to.have.property('status', 1);
 														    	return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
 																.then(function(response) {
-																	expect(response.body.general).to.have.property('title', '¡Elemental, querido Watson! La lógica booleana');
+																	expect(response.body.general).to.have.property('title', 'Piruru piii… Programando el zumbador');
 																	lom = response.body._id;
-																	console.log('The system returns the twentieth lesson of the course: 20. Logica booleana');
+																	console.log('The system returns the ninth lesson of the course: 9. El zumbador');
 																	
 																	return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/ok', 200)
 																	.then(function (response2) {
 																		expect(response2.body).to.have.property('status', 1);
 																    	return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
 																		.then(function(response) {
-																			expect(response.body[1].level).to.equal(2);
-																			console.log('Course finished');
+																			expect(response.body.general).to.have.property('title', '¡Elemental, querido Watson! La lógica booleana');
+																			lom = response.body._id;
+																			console.log('The system returns the twentieth lesson of the course: 20. Logica booleana');
 																			
-																			chakram.wait();
+																			return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/ok', 200)
+																			.then(function (response2) {
+																				expect(response2.body).to.have.property('status', 1);
+																		    	return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
+																				.then(function(response) {
+																					expect(response.body[1].level).to.equal(2);
+																					console.log('Course finished');
+																					
+																					chakram.wait();
+																				});
+																			});
 																		});
+
 																	});
 																});
-
 															});
 														});
 													});

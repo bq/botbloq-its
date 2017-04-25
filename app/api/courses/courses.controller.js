@@ -94,32 +94,25 @@ exports.reset  = function(req, res){
 exports.create = function(req, res) {
 	var bool = false;
 	if (req.body.name){
-		Courses.find({}, function(err, courses) {
+		Courses.findOne({name: req.body.name}, function(err, course) {
 			if(err){
 				console.log(err);
 	        	res.status(err.code).send(err);
-			} else {
-				for(var i = 0; i< courses.length; i++){
-					if(courses[i].name === req.body.name){
-						bool = true;
+			} else if(!course){
+			    Courses.create(req.body, function (err1, course1) {
+					if (err1) {
+						console.log(err1);
+						res.status(err1.code).send(err1);
 					}
-				}
-				if(bool === false){
-				    Courses.create(req.body, function (err, course) {
-						if (err) {
-							console.log(err);
-							res.status(err.code).send(err);
-						}
-						console.log('Course created!');
-						var idCse = course._id;
-						res.writeHead(200, {
-							'Content-Type': 'text/plain'
-						});
-						res.end('Added the course with id: ' + idCse);
+					console.log('Course created!');
+					var idCse = course1._id;
+					res.writeHead(200, {
+						'Content-Type': 'text/plain'
 					});
-				} else {
-					res.status(403).send('A course with the same name already exists');
-				}
+					res.end('Added the course with id: ' + idCse);
+				});
+			} else {
+				res.status(403).send('A course with the same name already exists');
 			}
 		});
 	} else {

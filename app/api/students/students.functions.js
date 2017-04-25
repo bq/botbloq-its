@@ -81,7 +81,7 @@ exports.getActiveCourses = function(student){
 }
 
 /**
- *	Función para realizar la actualización de un estudiante.
+ *	Función para realizar la actualización de un estudiante sin eliminar datos.
  */
 exports.doUpdate = function(object, newObject){
 	var result, result2;

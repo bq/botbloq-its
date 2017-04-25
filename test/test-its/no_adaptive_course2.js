@@ -40,7 +40,7 @@ describe('Chakram', function(){
 
 	it('Testing to create a new student', function () {
 		console.log('------------------------------------------');
-		console.log('---------- no_adaptive_course ------------');
+		console.log('---------- no_adaptive_course2 -----------');
 		console.log('------------------------------------------');
  	    var randomStudent = student.generateRandomStudent('pepe','pepe@gmail.com');
     	// create student
