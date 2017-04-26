@@ -95,6 +95,36 @@ If successful, this action assign the indicated LOM into the lesson.
 If this action is not successful, it returns the error code. 
 
 ---------------------------------------
+**POST /botbloq/v1/its/courses/:idc/section/:ids/lesson/:idle/asign_loms**
+---------------------------------------
+
+- assign the array LOM of the input into the lesson.
+
+**Parameters**: 
+
+- idc: id of the course to be assigned the LOMs.
+- ids: name of the section to be assigned the LOMs.
+- idle: name of the lesson to be assigned the LOMs.
+
+**Query Parameters**:
+
+**Permissions**:
+
+**Status Codes**:
+
+200 OK - Action successfully attempted.
+404 Not Found - course, section, lesson or LOM not found.
+400 Bad Request - The LOMs already assigned in the lesson.
+
+**Input**:
+
+An array with the LOMs id.
+
+**Return**:  
+If successful, this action assign the array LOM into the lesson.
+If this action is not successful, it returns the error code. 
+
+---------------------------------------
 **DELETE /botbloq/v1/its/courses/:idc/section/:ids/lesson/:idle/lom/:idlo**
 ---------------------------------------
 
