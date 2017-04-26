@@ -1,129 +1,277 @@
 [{
-	"condition": "function(R) {   R.when((this.units <= 12.5) && (this.skills <= 2.24732613564) && (this.steps <= 4.11111116409));   }",
+	"condition": "function(R) {   R.when((this.problems <= 11.0833339691) && (this.skills <= 2.24732613564) && (this.steps <= 4.11111116409));   }",
 
 	"consequence": "function(R) {   this.group = 1;   R.stop();   }"
 },{
-	"condition": "function(R) {   R.when((this.units <= 12.5) && (this.skills <= 2.24732613564) && (this.steps > 4.11111116409));   }",
+	"condition": "function(R) {   R.when((this.problems <= 11.0833339691) && (this.skills <= 2.24732613564) && (this.steps > 4.11111116409));   }",
 
-	"consequence": "function(R) {   this.group = 4;   R.stop();   }"
+	"consequence": "function(R) {   this.group = 7;   R.stop();   }"
 },{
-	"condition": "function(R) {   R.when((this.units <= 12.5) && (this.skills > 2.24732613564) && (this.problems <= 4.58333301544) && (this.corrects_steps <= 51.7123260498));   }",
+	"condition": "function(R) {   R.when((this.problems <= 11.0833339691) && (this.skills > 2.24732613564) && (this.corrects_steps <= 63.1867637634) && (this.units <= 1.5) && (this.corrects_steps <= 53.5714263916));   }",
 
-	"consequence": "function(R) {   this.group = 4;   R.stop();   }"
+	"consequence": "function(R) {   this.group = 7;   R.stop();   }"
 },{
-	"condition": "function(R) {   R.when((this.units <= 12.5) && (this.skills > 2.24732613564) && (this.problems <= 4.58333301544) && (this.corrects_steps > 51.7123260498) && (this.skills <= 11.0) && (this.corrects_steps <= 75.1923065186) && (this.steps <= 36.6666641235) && (this.duration <= 230.125) && (this.duration <= 177.46484375));   }",
+	"condition": "function(R) {   R.when((this.problems <= 11.0833339691) && (this.skills > 2.24732613564) && (this.corrects_steps <= 63.1867637634) && (this.units <= 1.5) && (this.corrects_steps > 53.5714263916) && (this.steps <= 21.5));   }",
 
 	"consequence": "function(R) {   this.group = 1;   R.stop();   }"
 },{
-	"condition": "function(R) {   R.when((this.units <= 12.5) && (this.skills > 2.24732613564) && (this.problems <= 4.58333301544) && (this.corrects_steps > 51.7123260498) && (this.skills <= 11.0) && (this.corrects_steps <= 75.1923065186) && (this.steps <= 36.6666641235) && (this.duration <= 230.125) && (this.duration > 177.46484375));   }",
+	"condition": "function(R) {   R.when((this.problems <= 11.0833339691) && (this.skills > 2.24732613564) && (this.corrects_steps <= 63.1867637634) && (this.units <= 1.5) && (this.corrects_steps > 53.5714263916) && (this.steps > 21.5) && (this.steps <= 105.0));   }",
+
+	"consequence": "function(R) {   this.group = 7;   R.stop();   }"
+},{
+	"condition": "function(R) {   R.when((this.problems <= 11.0833339691) && (this.skills > 2.24732613564) && (this.corrects_steps <= 63.1867637634) && (this.units > 1.5));   }",
+
+	"consequence": "function(R) {   this.group = 1;   R.stop();   }"
+},{
+	"condition": "function(R) {   R.when((this.problems <= 11.0833339691) && (this.skills > 2.24732613564) && (this.corrects_steps > 63.1867637634) && (this.skills <= 9.89999961853) && (this.units <= 6.5) && (this.problems <= 3.25) && (this.corrects_steps <= 75.1923065186) && (this.steps <= 36.6666641235));   }",
+
+	"consequence": "function(R) {   this.group = 1;   R.stop();   }"
+},{
+	"condition": "function(R) {   R.when((this.problems <= 11.0833339691) && (this.skills > 2.24732613564) && (this.corrects_steps > 63.1867637634) && (this.skills <= 9.89999961853) && (this.units <= 6.5) && (this.problems <= 3.25) && (this.corrects_steps <= 75.1923065186) && (this.steps > 36.6666641235));   }",
+
+	"consequence": "function(R) {   this.group = 7;   R.stop();   }"
+},{
+	"condition": "function(R) {   R.when((this.problems <= 11.0833339691) && (this.skills > 2.24732613564) && (this.corrects_steps > 63.1867637634) && (this.skills <= 9.89999961853) && (this.units <= 6.5) && (this.problems <= 3.25) && (this.corrects_steps > 75.1923065186) && (this.corrects_steps <= 94.444442749) && (this.duration <= 1069.66674805));   }",
 
 	"consequence": "function(R) {   this.group = 2;   R.stop();   }"
 },{
-	"condition": "function(R) {   R.when((this.units <= 12.5) && (this.skills > 2.24732613564) && (this.problems <= 4.58333301544) && (this.corrects_steps > 51.7123260498) && (this.skills <= 11.0) && (this.corrects_steps <= 75.1923065186) && (this.steps <= 36.6666641235) && (this.duration > 230.125));   }",
+	"condition": "function(R) {   R.when((this.problems <= 11.0833339691) && (this.skills > 2.24732613564) && (this.corrects_steps > 63.1867637634) && (this.skills <= 9.89999961853) && (this.units <= 6.5) && (this.problems <= 3.25) && (this.corrects_steps > 75.1923065186) && (this.corrects_steps <= 94.444442749) && (this.duration > 1069.66674805));   }",
 
 	"consequence": "function(R) {   this.group = 1;   R.stop();   }"
 },{
-	"condition": "function(R) {   R.when((this.units <= 12.5) && (this.skills > 2.24732613564) && (this.problems <= 4.58333301544) && (this.corrects_steps > 51.7123260498) && (this.skills <= 11.0) && (this.corrects_steps <= 75.1923065186) && (this.steps > 36.6666641235));   }",
+	"condition": "function(R) {   R.when((this.problems <= 11.0833339691) && (this.skills > 2.24732613564) && (this.corrects_steps > 63.1867637634) && (this.skills <= 9.89999961853) && (this.units <= 6.5) && (this.problems <= 3.25) && (this.corrects_steps > 75.1923065186) && (this.corrects_steps > 94.444442749));   }",
 
-	"consequence": "function(R) {   this.group = 4;   R.stop();   }"
+	"consequence": "function(R) {   this.group = 1;   R.stop();   }"
 },{
-	"condition": "function(R) {   R.when((this.units <= 12.5) && (this.skills > 2.24732613564) && (this.problems <= 4.58333301544) && (this.corrects_steps > 51.7123260498) && (this.skills <= 11.0) && (this.corrects_steps > 75.1923065186) && (this.corrects_steps <= 97.1698150635) && (this.steps <= 16.6666679382));   }",
+	"condition": "function(R) {   R.when((this.problems <= 11.0833339691) && (this.skills > 2.24732613564) && (this.corrects_steps > 63.1867637634) && (this.skills <= 9.89999961853) && (this.units <= 6.5) && (this.problems > 3.25) && (this.problems <= 9.29166603088) && (this.hints <= 10.4758768082) && (this.skills <= 7.75) && (this.problems <= 5.16666698456) && (this.corrects_steps <= 69.5402297974));   }",
+
+	"consequence": "function(R) {   this.group = 1;   R.stop();   }"
+},{
+	"condition": "function(R) {   R.when((this.problems <= 11.0833339691) && (this.skills > 2.24732613564) && (this.corrects_steps > 63.1867637634) && (this.skills <= 9.89999961853) && (this.units <= 6.5) && (this.problems > 3.25) && (this.problems <= 9.29166603088) && (this.hints <= 10.4758768082) && (this.skills <= 7.75) && (this.problems <= 5.16666698456) && (this.corrects_steps > 69.5402297974));   }",
 
 	"consequence": "function(R) {   this.group = 2;   R.stop();   }"
 },{
-	"condition": "function(R) {   R.when((this.units <= 12.5) && (this.skills > 2.24732613564) && (this.problems <= 4.58333301544) && (this.corrects_steps > 51.7123260498) && (this.skills <= 11.0) && (this.corrects_steps > 75.1923065186) && (this.corrects_steps <= 97.1698150635) && (this.steps > 16.6666679382) && (this.skills <= 7.5));   }",
+	"condition": "function(R) {   R.when((this.problems <= 11.0833339691) && (this.skills > 2.24732613564) && (this.corrects_steps > 63.1867637634) && (this.skills <= 9.89999961853) && (this.units <= 6.5) && (this.problems > 3.25) && (this.problems <= 9.29166603088) && (this.hints <= 10.4758768082) && (this.skills <= 7.75) && (this.problems > 5.16666698456));   }",
 
 	"consequence": "function(R) {   this.group = 2;   R.stop();   }"
 },{
-	"condition": "function(R) {   R.when((this.units <= 12.5) && (this.skills > 2.24732613564) && (this.problems <= 4.58333301544) && (this.corrects_steps > 51.7123260498) && (this.skills <= 11.0) && (this.corrects_steps > 75.1923065186) && (this.corrects_steps <= 97.1698150635) && (this.steps > 16.6666679382) && (this.skills > 7.5));   }",
+	"condition": "function(R) {   R.when((this.problems <= 11.0833339691) && (this.skills > 2.24732613564) && (this.corrects_steps > 63.1867637634) && (this.skills <= 9.89999961853) && (this.units <= 6.5) && (this.problems > 3.25) && (this.problems <= 9.29166603088) && (this.hints <= 10.4758768082) && (this.skills > 7.75) && (this.skills <= 7.9571428299));   }",
+
+	"consequence": "function(R) {   this.group = 3;   R.stop();   }"
+},{
+	"condition": "function(R) {   R.when((this.problems <= 11.0833339691) && (this.skills > 2.24732613564) && (this.corrects_steps > 63.1867637634) && (this.skills <= 9.89999961853) && (this.units <= 6.5) && (this.problems > 3.25) && (this.problems <= 9.29166603088) && (this.hints <= 10.4758768082) && (this.skills > 7.75) && (this.skills > 7.9571428299));   }",
+
+	"consequence": "function(R) {   this.group = 2;   R.stop();   }"
+},{
+	"condition": "function(R) {   R.when((this.problems <= 11.0833339691) && (this.skills > 2.24732613564) && (this.corrects_steps > 63.1867637634) && (this.skills <= 9.89999961853) && (this.units <= 6.5) && (this.problems > 3.25) && (this.problems <= 9.29166603088) && (this.hints > 10.4758768082));   }",
 
 	"consequence": "function(R) {   this.group = 1;   R.stop();   }"
 },{
-	"condition": "function(R) {   R.when((this.units <= 12.5) && (this.skills > 2.24732613564) && (this.problems <= 4.58333301544) && (this.corrects_steps > 51.7123260498) && (this.skills <= 11.0) && (this.corrects_steps > 75.1923065186) && (this.corrects_steps > 97.1698150635));   }",
+	"condition": "function(R) {   R.when((this.problems <= 11.0833339691) && (this.skills > 2.24732613564) && (this.corrects_steps > 63.1867637634) && (this.skills <= 9.89999961853) && (this.units <= 6.5) && (this.problems > 3.25) && (this.problems > 9.29166603088) && (this.duration <= 303.043701172) && (this.skills <= 7.94736814499) && (this.duration <= 188.860565186));   }",
 
-	"consequence": "function(R) {   this.group = 1;   R.stop();   }"
+	"consequence": "function(R) {   this.group = 2;   R.stop();   }"
 },{
-	"condition": "function(R) {   R.when((this.units <= 12.5) && (this.skills > 2.24732613564) && (this.problems <= 4.58333301544) && (this.corrects_steps > 51.7123260498) && (this.skills > 11.0) && (this.duration <= 7329.49902344));   }",
+	"condition": "function(R) {   R.when((this.problems <= 11.0833339691) && (this.skills > 2.24732613564) && (this.corrects_steps > 63.1867637634) && (this.skills <= 9.89999961853) && (this.units <= 6.5) && (this.problems > 3.25) && (this.problems > 9.29166603088) && (this.duration <= 303.043701172) && (this.skills <= 7.94736814499) && (this.duration > 188.860565186) && (this.duration <= 255.998443604));   }",
+
+	"consequence": "function(R) {   this.group = 3;   R.stop();   }"
+},{
+	"condition": "function(R) {   R.when((this.problems <= 11.0833339691) && (this.skills > 2.24732613564) && (this.corrects_steps > 63.1867637634) && (this.skills <= 9.89999961853) && (this.units <= 6.5) && (this.problems > 3.25) && (this.problems > 9.29166603088) && (this.duration <= 303.043701172) && (this.skills <= 7.94736814499) && (this.duration > 188.860565186) && (this.duration > 255.998443604) && (this.corrects_steps <= 82.813911438));   }",
+
+	"consequence": "function(R) {   this.group = 2;   R.stop();   }"
+},{
+	"condition": "function(R) {   R.when((this.problems <= 11.0833339691) && (this.skills > 2.24732613564) && (this.corrects_steps > 63.1867637634) && (this.skills <= 9.89999961853) && (this.units <= 6.5) && (this.problems > 3.25) && (this.problems > 9.29166603088) && (this.duration <= 303.043701172) && (this.skills <= 7.94736814499) && (this.duration > 188.860565186) && (this.duration > 255.998443604) && (this.corrects_steps > 82.813911438) && (this.skills <= 6.61363601685));   }",
+
+	"consequence": "function(R) {   this.group = 2;   R.stop();   }"
+},{
+	"condition": "function(R) {   R.when((this.problems <= 11.0833339691) && (this.skills > 2.24732613564) && (this.corrects_steps > 63.1867637634) && (this.skills <= 9.89999961853) && (this.units <= 6.5) && (this.problems > 3.25) && (this.problems > 9.29166603088) && (this.duration <= 303.043701172) && (this.skills <= 7.94736814499) && (this.duration > 188.860565186) && (this.duration > 255.998443604) && (this.corrects_steps > 82.813911438) && (this.skills > 6.61363601685));   }",
+
+	"consequence": "function(R) {   this.group = 3;   R.stop();   }"
+},{
+	"condition": "function(R) {   R.when((this.problems <= 11.0833339691) && (this.skills > 2.24732613564) && (this.corrects_steps > 63.1867637634) && (this.skills <= 9.89999961853) && (this.units <= 6.5) && (this.problems > 3.25) && (this.problems > 9.29166603088) && (this.duration <= 303.043701172) && (this.skills > 7.94736814499));   }",
+
+	"consequence": "function(R) {   this.group = 3;   R.stop();   }"
+},{
+	"condition": "function(R) {   R.when((this.problems <= 11.0833339691) && (this.skills > 2.24732613564) && (this.corrects_steps > 63.1867637634) && (this.skills <= 9.89999961853) && (this.units <= 6.5) && (this.problems > 3.25) && (this.problems > 9.29166603088) && (this.duration > 303.043701172) && (this.skills <= 9.27750396729) && (this.corrects_steps <= 87.2093048096));   }",
+
+	"consequence": "function(R) {   this.group = 2;   R.stop();   }"
+},{
+	"condition": "function(R) {   R.when((this.problems <= 11.0833339691) && (this.skills > 2.24732613564) && (this.corrects_steps > 63.1867637634) && (this.skills <= 9.89999961853) && (this.units <= 6.5) && (this.problems > 3.25) && (this.problems > 9.29166603088) && (this.duration > 303.043701172) && (this.skills <= 9.27750396729) && (this.corrects_steps > 87.2093048096) && (this.problems <= 9.58333396912));   }",
+
+	"consequence": "function(R) {   this.group = 3;   R.stop();   }"
+},{
+	"condition": "function(R) {   R.when((this.problems <= 11.0833339691) && (this.skills > 2.24732613564) && (this.corrects_steps > 63.1867637634) && (this.skills <= 9.89999961853) && (this.units <= 6.5) && (this.problems > 3.25) && (this.problems > 9.29166603088) && (this.duration > 303.043701172) && (this.skills <= 9.27750396729) && (this.corrects_steps > 87.2093048096) && (this.problems > 9.58333396912));   }",
+
+	"consequence": "function(R) {   this.group = 2;   R.stop();   }"
+},{
+	"condition": "function(R) {   R.when((this.problems <= 11.0833339691) && (this.skills > 2.24732613564) && (this.corrects_steps > 63.1867637634) && (this.skills <= 9.89999961853) && (this.units <= 6.5) && (this.problems > 3.25) && (this.problems > 9.29166603088) && (this.duration > 303.043701172) && (this.skills > 9.27750396729));   }",
+
+	"consequence": "function(R) {   this.group = 3;   R.stop();   }"
+},{
+	"condition": "function(R) {   R.when((this.problems <= 11.0833339691) && (this.skills > 2.24732613564) && (this.corrects_steps > 63.1867637634) && (this.skills <= 9.89999961853) && (this.units > 6.5) && (this.problems <= 8.34375));   }",
+
+	"consequence": "function(R) {   this.group = 2;   R.stop();   }"
+},{
+	"condition": "function(R) {   R.when((this.problems <= 11.0833339691) && (this.skills > 2.24732613564) && (this.corrects_steps > 63.1867637634) && (this.skills <= 9.89999961853) && (this.units > 6.5) && (this.problems > 8.34375) && (this.units <= 12.5));   }",
+
+	"consequence": "function(R) {   this.group = 3;   R.stop();   }"
+},{
+	"condition": "function(R) {   R.when((this.problems <= 11.0833339691) && (this.skills > 2.24732613564) && (this.corrects_steps > 63.1867637634) && (this.skills <= 9.89999961853) && (this.units > 6.5) && (this.problems > 8.34375) && (this.units > 12.5) && (this.units <= 19.0));   }",
 
 	"consequence": "function(R) {   this.group = 4;   R.stop();   }"
 },{
-	"condition": "function(R) {   R.when((this.units <= 12.5) && (this.skills > 2.24732613564) && (this.problems <= 4.58333301544) && (this.corrects_steps > 51.7123260498) && (this.skills > 11.0) && (this.duration > 7329.49902344));   }",
+	"condition": "function(R) {   R.when((this.problems <= 11.0833339691) && (this.skills > 2.24732613564) && (this.corrects_steps > 63.1867637634) && (this.skills <= 9.89999961853) && (this.units > 6.5) && (this.problems > 8.34375) && (this.units > 12.5) && (this.units > 19.0));   }",
 
 	"consequence": "function(R) {   this.group = 5;   R.stop();   }"
 },{
-	"condition": "function(R) {   R.when((this.units <= 12.5) && (this.skills > 2.24732613564) && (this.problems > 4.58333301544) && (this.skills <= 10.2426900864) && (this.corrects_steps <= 60.6585693359) && (this.problems <= 12.75));   }",
-
-	"consequence": "function(R) {   this.group = 1;   R.stop();   }"
-},{
-	"condition": "function(R) {   R.when((this.units <= 12.5) && (this.skills > 2.24732613564) && (this.problems > 4.58333301544) && (this.skills <= 10.2426900864) && (this.corrects_steps <= 60.6585693359) && (this.problems > 12.75) && (this.problems <= 18.226190567));   }",
-
-	"consequence": "function(R) {   this.group = 2;   R.stop();   }"
-},{
-	"condition": "function(R) {   R.when((this.units <= 12.5) && (this.skills > 2.24732613564) && (this.problems > 4.58333301544) && (this.skills <= 10.2426900864) && (this.corrects_steps <= 60.6585693359) && (this.problems > 12.75) && (this.problems > 18.226190567) && (this.corrects_steps <= 58.940574646));   }",
-
-	"consequence": "function(R) {   this.group = 4;   R.stop();   }"
-},{
-	"condition": "function(R) {   R.when((this.units <= 12.5) && (this.skills > 2.24732613564) && (this.problems > 4.58333301544) && (this.skills <= 10.2426900864) && (this.corrects_steps <= 60.6585693359) && (this.problems > 12.75) && (this.problems > 18.226190567) && (this.corrects_steps > 58.940574646));   }",
-
-	"consequence": "function(R) {   this.group = 2;   R.stop();   }"
-},{
-	"condition": "function(R) {   R.when((this.units <= 12.5) && (this.skills > 2.24732613564) && (this.problems > 4.58333301544) && (this.skills <= 10.2426900864) && (this.corrects_steps > 60.6585693359) && (this.duration <= 62.8588180542));   }",
-
-	"consequence": "function(R) {   this.group = 4;   R.stop();   }"
-},{
-	"condition": "function(R) {   R.when((this.units <= 12.5) && (this.skills > 2.24732613564) && (this.problems > 4.58333301544) && (this.skills <= 10.2426900864) && (this.corrects_steps > 60.6585693359) && (this.duration > 62.8588180542) && (this.problems <= 5.75) && (this.corrects_steps <= 67.1875));   }",
-
-	"consequence": "function(R) {   this.group = 1;   R.stop();   }"
-},{
-	"condition": "function(R) {   R.when((this.units <= 12.5) && (this.skills > 2.24732613564) && (this.problems > 4.58333301544) && (this.skills <= 10.2426900864) && (this.corrects_steps > 60.6585693359) && (this.duration > 62.8588180542) && (this.problems <= 5.75) && (this.corrects_steps > 67.1875));   }",
-
-	"consequence": "function(R) {   this.group = 2;   R.stop();   }"
-},{
-	"condition": "function(R) {   R.when((this.units <= 12.5) && (this.skills > 2.24732613564) && (this.problems > 4.58333301544) && (this.skills <= 10.2426900864) && (this.corrects_steps > 60.6585693359) && (this.duration > 62.8588180542) && (this.problems > 5.75) && (this.units <= 11.5));   }",
-
-	"consequence": "function(R) {   this.group = 2;   R.stop();   }"
-},{
-	"condition": "function(R) {   R.when((this.units <= 12.5) && (this.skills > 2.24732613564) && (this.problems > 4.58333301544) && (this.skills <= 10.2426900864) && (this.corrects_steps > 60.6585693359) && (this.duration > 62.8588180542) && (this.problems > 5.75) && (this.units > 11.5) && (this.problems <= 17.75));   }",
-
-	"consequence": "function(R) {   this.group = 2;   R.stop();   }"
-},{
-	"condition": "function(R) {   R.when((this.units <= 12.5) && (this.skills > 2.24732613564) && (this.problems > 4.58333301544) && (this.skills <= 10.2426900864) && (this.corrects_steps > 60.6585693359) && (this.duration > 62.8588180542) && (this.problems > 5.75) && (this.units > 11.5) && (this.problems > 17.75));   }",
+	"condition": "function(R) {   R.when((this.problems <= 11.0833339691) && (this.skills > 2.24732613564) && (this.corrects_steps > 63.1867637634) && (this.skills > 9.89999961853) && (this.skills <= 13.0) && (this.duration <= 433.840911865));   }",
 
 	"consequence": "function(R) {   this.group = 3;   R.stop();   }"
 },{
-	"condition": "function(R) {   R.when((this.units <= 12.5) && (this.skills > 2.24732613564) && (this.problems > 4.58333301544) && (this.skills > 10.2426900864) && (this.skills <= 11.1602563858) && (this.corrects_steps <= 69.8760375977));   }",
+	"condition": "function(R) {   R.when((this.problems <= 11.0833339691) && (this.skills > 2.24732613564) && (this.corrects_steps > 63.1867637634) && (this.skills > 9.89999961853) && (this.skills <= 13.0) && (this.duration > 433.840911865));   }",
 
 	"consequence": "function(R) {   this.group = 1;   R.stop();   }"
 },{
-	"condition": "function(R) {   R.when((this.units <= 12.5) && (this.skills > 2.24732613564) && (this.problems > 4.58333301544) && (this.skills > 10.2426900864) && (this.skills <= 11.1602563858) && (this.corrects_steps > 69.8760375977) && (this.hints <= 3.49255943298) && (this.corrects_steps <= 72.5));   }",
+	"condition": "function(R) {   R.when((this.problems <= 11.0833339691) && (this.skills > 2.24732613564) && (this.corrects_steps > 63.1867637634) && (this.skills > 9.89999961853) && (this.skills > 13.0));   }",
+
+	"consequence": "function(R) {   this.group = 7;   R.stop();   }"
+},{
+	"condition": "function(R) {   R.when((this.problems > 11.0833339691) && (this.units <= 12.5) && (this.units <= 3.5) && (this.steps <= 8.51201915741) && (this.problems <= 17.25) && (this.problems <= 15.5));   }",
 
 	"consequence": "function(R) {   this.group = 2;   R.stop();   }"
 },{
-	"condition": "function(R) {   R.when((this.units <= 12.5) && (this.skills > 2.24732613564) && (this.problems > 4.58333301544) && (this.skills > 10.2426900864) && (this.skills <= 11.1602563858) && (this.corrects_steps > 69.8760375977) && (this.hints <= 3.49255943298) && (this.corrects_steps > 72.5));   }",
-
-	"consequence": "function(R) {   this.group = 1;   R.stop();   }"
-},{
-	"condition": "function(R) {   R.when((this.units <= 12.5) && (this.skills > 2.24732613564) && (this.problems > 4.58333301544) && (this.skills > 10.2426900864) && (this.skills <= 11.1602563858) && (this.corrects_steps > 69.8760375977) && (this.hints > 3.49255943298));   }",
+	"condition": "function(R) {   R.when((this.problems > 11.0833339691) && (this.units <= 12.5) && (this.units <= 3.5) && (this.steps <= 8.51201915741) && (this.problems <= 17.25) && (this.problems > 15.5) && (this.hints <= 2.26828241348));   }",
 
 	"consequence": "function(R) {   this.group = 2;   R.stop();   }"
 },{
-	"condition": "function(R) {   R.when((this.units <= 12.5) && (this.skills > 2.24732613564) && (this.problems > 4.58333301544) && (this.skills > 10.2426900864) && (this.skills > 11.1602563858));   }",
-
-	"consequence": "function(R) {   this.group = 1;   R.stop();   }"
-},{
-	"condition": "function(R) {   R.when((this.units > 12.5) && (this.units <= 28.5) && (this.skills <= 7.81074810028));   }",
+	"condition": "function(R) {   R.when((this.problems > 11.0833339691) && (this.units <= 12.5) && (this.units <= 3.5) && (this.steps <= 8.51201915741) && (this.problems <= 17.25) && (this.problems > 15.5) && (this.hints > 2.26828241348));   }",
 
 	"consequence": "function(R) {   this.group = 3;   R.stop();   }"
 },{
-	"condition": "function(R) {   R.when((this.units > 12.5) && (this.units <= 28.5) && (this.skills > 7.81074810028) && (this.skills <= 7.83152770996));   }",
-
-	"consequence": "function(R) {   this.group = 2;   R.stop();   }"
-},{
-	"condition": "function(R) {   R.when((this.units > 12.5) && (this.units <= 28.5) && (this.skills > 7.81074810028) && (this.skills > 7.83152770996));   }",
+	"condition": "function(R) {   R.when((this.problems > 11.0833339691) && (this.units <= 12.5) && (this.units <= 3.5) && (this.steps <= 8.51201915741) && (this.problems > 17.25) && (this.problems <= 26.75));   }",
 
 	"consequence": "function(R) {   this.group = 3;   R.stop();   }"
 },{
-	"condition": "function(R) {   R.when((this.units > 12.5) && (this.units > 28.5));   }",
+	"condition": "function(R) {   R.when((this.problems > 11.0833339691) && (this.units <= 12.5) && (this.units <= 3.5) && (this.steps <= 8.51201915741) && (this.problems > 17.25) && (this.problems > 26.75));   }",
+
+	"consequence": "function(R) {   this.group = 7;   R.stop();   }"
+},{
+	"condition": "function(R) {   R.when((this.problems > 11.0833339691) && (this.units <= 12.5) && (this.units <= 3.5) && (this.steps > 8.51201915741) && (this.steps <= 17.672618866) && (this.corrects_steps <= 73.973449707) && (this.skills <= 10.0871343613) && (this.units <= 2.5) && (this.hints <= 10.014705658));   }",
+
+	"consequence": "function(R) {   this.group = 2;   R.stop();   }"
+},{
+	"condition": "function(R) {   R.when((this.problems > 11.0833339691) && (this.units <= 12.5) && (this.units <= 3.5) && (this.steps > 8.51201915741) && (this.steps <= 17.672618866) && (this.corrects_steps <= 73.973449707) && (this.skills <= 10.0871343613) && (this.units <= 2.5) && (this.hints > 10.014705658) && (this.skills <= 5.61852502823));   }",
+
+	"consequence": "function(R) {   this.group = 7;   R.stop();   }"
+},{
+	"condition": "function(R) {   R.when((this.problems > 11.0833339691) && (this.units <= 12.5) && (this.units <= 3.5) && (this.steps > 8.51201915741) && (this.steps <= 17.672618866) && (this.corrects_steps <= 73.973449707) && (this.skills <= 10.0871343613) && (this.units <= 2.5) && (this.hints > 10.014705658) && (this.skills > 5.61852502823));   }",
+
+	"consequence": "function(R) {   this.group = 3;   R.stop();   }"
+},{
+	"condition": "function(R) {   R.when((this.problems > 11.0833339691) && (this.units <= 12.5) && (this.units <= 3.5) && (this.steps > 8.51201915741) && (this.steps <= 17.672618866) && (this.corrects_steps <= 73.973449707) && (this.skills <= 10.0871343613) && (this.units > 2.5));   }",
+
+	"consequence": "function(R) {   this.group = 3;   R.stop();   }"
+},{
+	"condition": "function(R) {   R.when((this.problems > 11.0833339691) && (this.units <= 12.5) && (this.units <= 3.5) && (this.steps > 8.51201915741) && (this.steps <= 17.672618866) && (this.corrects_steps <= 73.973449707) && (this.skills > 10.0871343613));   }",
+
+	"consequence": "function(R) {   this.group = 1;   R.stop();   }"
+},{
+	"condition": "function(R) {   R.when((this.problems > 11.0833339691) && (this.units <= 12.5) && (this.units <= 3.5) && (this.steps > 8.51201915741) && (this.steps <= 17.672618866) && (this.corrects_steps > 73.973449707) && (this.skills <= 5.19407892227));   }",
+
+	"consequence": "function(R) {   this.group = 2;   R.stop();   }"
+},{
+	"condition": "function(R) {   R.when((this.problems > 11.0833339691) && (this.units <= 12.5) && (this.units <= 3.5) && (this.steps > 8.51201915741) && (this.steps <= 17.672618866) && (this.corrects_steps > 73.973449707) && (this.skills > 5.19407892227) && (this.corrects_steps <= 87.5264892578) && (this.corrects_steps <= 75.0796203613) && (this.hints <= 4.23214292526));   }",
+
+	"consequence": "function(R) {   this.group = 1;   R.stop();   }"
+},{
+	"condition": "function(R) {   R.when((this.problems > 11.0833339691) && (this.units <= 12.5) && (this.units <= 3.5) && (this.steps > 8.51201915741) && (this.steps <= 17.672618866) && (this.corrects_steps > 73.973449707) && (this.skills > 5.19407892227) && (this.corrects_steps <= 87.5264892578) && (this.corrects_steps <= 75.0796203613) && (this.hints > 4.23214292526));   }",
+
+	"consequence": "function(R) {   this.group = 3;   R.stop();   }"
+},{
+	"condition": "function(R) {   R.when((this.problems > 11.0833339691) && (this.units <= 12.5) && (this.units <= 3.5) && (this.steps > 8.51201915741) && (this.steps <= 17.672618866) && (this.corrects_steps > 73.973449707) && (this.skills > 5.19407892227) && (this.corrects_steps <= 87.5264892578) && (this.corrects_steps > 75.0796203613));   }",
+
+	"consequence": "function(R) {   this.group = 3;   R.stop();   }"
+},{
+	"condition": "function(R) {   R.when((this.problems > 11.0833339691) && (this.units <= 12.5) && (this.units <= 3.5) && (this.steps > 8.51201915741) && (this.steps <= 17.672618866) && (this.corrects_steps > 73.973449707) && (this.skills > 5.19407892227) && (this.corrects_steps > 87.5264892578) && (this.problems <= 13.8333330154));   }",
+
+	"consequence": "function(R) {   this.group = 2;   R.stop();   }"
+},{
+	"condition": "function(R) {   R.when((this.problems > 11.0833339691) && (this.units <= 12.5) && (this.units <= 3.5) && (this.steps > 8.51201915741) && (this.steps <= 17.672618866) && (this.corrects_steps > 73.973449707) && (this.skills > 5.19407892227) && (this.corrects_steps > 87.5264892578) && (this.problems > 13.8333330154));   }",
+
+	"consequence": "function(R) {   this.group = 3;   R.stop();   }"
+},{
+	"condition": "function(R) {   R.when((this.problems > 11.0833339691) && (this.units <= 12.5) && (this.units <= 3.5) && (this.steps > 8.51201915741) && (this.steps > 17.672618866));   }",
+
+	"consequence": "function(R) {   this.group = 1;   R.stop();   }"
+},{
+	"condition": "function(R) {   R.when((this.problems > 11.0833339691) && (this.units <= 12.5) && (this.units > 3.5) && (this.corrects_steps <= 51.1038742065) && (this.steps <= 14.440826416));   }",
+
+	"consequence": "function(R) {   this.group = 7;   R.stop();   }"
+},{
+	"condition": "function(R) {   R.when((this.problems > 11.0833339691) && (this.units <= 12.5) && (this.units > 3.5) && (this.corrects_steps <= 51.1038742065) && (this.steps > 14.440826416));   }",
+
+	"consequence": "function(R) {   this.group = 1;   R.stop();   }"
+},{
+	"condition": "function(R) {   R.when((this.problems > 11.0833339691) && (this.units <= 12.5) && (this.units > 3.5) && (this.corrects_steps > 51.1038742065) && (this.problems <= 12.0625) && (this.units <= 5.5) && (this.hints <= 1.09375));   }",
+
+	"consequence": "function(R) {   this.group = 3;   R.stop();   }"
+},{
+	"condition": "function(R) {   R.when((this.problems > 11.0833339691) && (this.units <= 12.5) && (this.units > 3.5) && (this.corrects_steps > 51.1038742065) && (this.problems <= 12.0625) && (this.units <= 5.5) && (this.hints > 1.09375) && (this.steps <= 6.600877285));   }",
+
+	"consequence": "function(R) {   this.group = 3;   R.stop();   }"
+},{
+	"condition": "function(R) {   R.when((this.problems > 11.0833339691) && (this.units <= 12.5) && (this.units > 3.5) && (this.corrects_steps > 51.1038742065) && (this.problems <= 12.0625) && (this.units <= 5.5) && (this.hints > 1.09375) && (this.steps > 6.600877285) && (this.problems <= 11.2250003815));   }",
+
+	"consequence": "function(R) {   this.group = 3;   R.stop();   }"
+},{
+	"condition": "function(R) {   R.when((this.problems > 11.0833339691) && (this.units <= 12.5) && (this.units > 3.5) && (this.corrects_steps > 51.1038742065) && (this.problems <= 12.0625) && (this.units <= 5.5) && (this.hints > 1.09375) && (this.steps > 6.600877285) && (this.problems > 11.2250003815));   }",
+
+	"consequence": "function(R) {   this.group = 2;   R.stop();   }"
+},{
+	"condition": "function(R) {   R.when((this.problems > 11.0833339691) && (this.units <= 12.5) && (this.units > 3.5) && (this.corrects_steps > 51.1038742065) && (this.problems <= 12.0625) && (this.units > 5.5));   }",
+
+	"consequence": "function(R) {   this.group = 3;   R.stop();   }"
+},{
+	"condition": "function(R) {   R.when((this.problems > 11.0833339691) && (this.units <= 12.5) && (this.units > 3.5) && (this.corrects_steps > 51.1038742065) && (this.problems > 12.0625) && (this.units <= 11.5));   }",
+
+	"consequence": "function(R) {   this.group = 3;   R.stop();   }"
+},{
+	"condition": "function(R) {   R.when((this.problems > 11.0833339691) && (this.units <= 12.5) && (this.units > 3.5) && (this.corrects_steps > 51.1038742065) && (this.problems > 12.0625) && (this.units > 11.5) && (this.problems <= 17.75));   }",
+
+	"consequence": "function(R) {   this.group = 3;   R.stop();   }"
+},{
+	"condition": "function(R) {   R.when((this.problems > 11.0833339691) && (this.units <= 12.5) && (this.units > 3.5) && (this.corrects_steps > 51.1038742065) && (this.problems > 12.0625) && (this.units > 11.5) && (this.problems > 17.75));   }",
 
 	"consequence": "function(R) {   this.group = 4;   R.stop();   }"
+},{
+	"condition": "function(R) {   R.when((this.problems > 11.0833339691) && (this.units > 12.5) && (this.units <= 18.5) && (this.skills <= 7.81074810028) && (this.corrects_steps <= 67.0314941406) && (this.corrects_steps <= 64.4277114868));   }",
+
+	"consequence": "function(R) {   this.group = 4;   R.stop();   }"
+},{
+	"condition": "function(R) {   R.when((this.problems > 11.0833339691) && (this.units > 12.5) && (this.units <= 18.5) && (this.skills <= 7.81074810028) && (this.corrects_steps <= 67.0314941406) && (this.corrects_steps > 64.4277114868));   }",
+
+	"consequence": "function(R) {   this.group = 5;   R.stop();   }"
+},{
+	"condition": "function(R) {   R.when((this.problems > 11.0833339691) && (this.units > 12.5) && (this.units <= 18.5) && (this.skills <= 7.81074810028) && (this.corrects_steps > 67.0314941406));   }",
+
+	"consequence": "function(R) {   this.group = 4;   R.stop();   }"
+},{
+	"condition": "function(R) {   R.when((this.problems > 11.0833339691) && (this.units > 12.5) && (this.units <= 18.5) && (this.skills > 7.81074810028) && (this.duration <= 291.295043945) && (this.corrects_steps <= 74.4437026978));   }",
+
+	"consequence": "function(R) {   this.group = 5;   R.stop();   }"
+},{
+	"condition": "function(R) {   R.when((this.problems > 11.0833339691) && (this.units > 12.5) && (this.units <= 18.5) && (this.skills > 7.81074810028) && (this.duration <= 291.295043945) && (this.corrects_steps > 74.4437026978));   }",
+
+	"consequence": "function(R) {   this.group = 4;   R.stop();   }"
+},{
+	"condition": "function(R) {   R.when((this.problems > 11.0833339691) && (this.units > 12.5) && (this.units <= 18.5) && (this.skills > 7.81074810028) && (this.duration > 291.295043945));   }",
+
+	"consequence": "function(R) {   this.group = 3;   R.stop();   }"
+},{
+	"condition": "function(R) {   R.when((this.problems > 11.0833339691) && (this.units > 12.5) && (this.units > 18.5) && (this.units <= 28.5));   }",
+
+	"consequence": "function(R) {   this.group = 5;   R.stop();   }"
+},{
+	"condition": "function(R) {   R.when((this.problems > 11.0833339691) && (this.units > 12.5) && (this.units > 18.5) && (this.units > 28.5));   }",
+
+	"consequence": "function(R) {   this.group = 6;   R.stop();   }"
 }]

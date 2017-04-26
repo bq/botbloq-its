@@ -22,8 +22,12 @@ router.get('/:course_id/section/:section_id/lesson/:lesson_id/loms', loms_ctrl.a
 
 
 // POSTs
+
 // create a particular lom of a lesson
 router.post('/:idc/section/:ids/lesson/:idle/lom/:idlo', loms_ctrl.assign_lom);
+
+// create a particular lom of a lesson
+router.post('/:idc/section/:ids/lesson/:idle/asign_loms', loms_ctrl.assign_loms);
 
 // DELETEs a particular lom of a lesson
 router.delete('/:idc/section/:ids/lesson/:idle/lom/:idlo', loms_ctrl.delete_lom);

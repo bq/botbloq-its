@@ -174,6 +174,71 @@ exports.assign_lom = function(req, res) {
 	}
 };
 
+// Exporting assign_loms function
+// It verifies if the course, section, and lesson exist. 
+// If loms already exist, it sets an error
+// If loms doesn't exist previously, it assign the news loms
+
+
+exports.assign_loms = function(req, res) {	
+	var courseId = req.params.idc,
+		sectionId = req.params.ids,
+		lessonId = req.params.idle,
+		newLoms = req.body;
+	if(mongoose.Types.ObjectId.isValid(courseId)){
+		Courses.findOne({_id: courseId}, function (err, course){
+			if (err){
+				console.log(err);
+				res.status(err.code).send(err);
+			} else{
+				if (!course) {
+					res.status(404).send('The course with id: ' + courseId + ' is not registrated');
+				} else {
+					var inds = CoursesFunctions.exist_section_lesson(sectionId,course.sections);
+					if (inds < 0){
+						res.status(404).send('The section with id : ' + sectionId +
+						' has not been found in the course with id: ' + courseId);
+					} else {					
+						var indl = CoursesFunctions.exist_section_lesson(lessonId,course.sections[inds].lessons);
+						if ( indl < 0 ){
+							res.status(404).send('The lesson with id : ' + lessonId +
+							' has not been found in the section with id: ' + sectionId);
+						} else {
+							var lessons = course.sections[inds].lessons;
+
+							LOMS.find({_id: { $in: newLoms }}, function(err, loms){
+								if(err){
+									console.log(err);
+									res.status(err.code).send(err);
+								} else if(!loms){
+									res.status(404).send('The loms with id: ' + newLoms + ' is not registrated');
+								} else {
+
+									var allLoms = lessons[indl].loms;
+
+									_.forEach(loms, function(value){
+										allLoms.push({lom_id: value._id, type: value.technical.format});
+									});	
+									// TODO hacer funcion para traducir format a tipo
+
+									if (res.statusCode !== 200){
+										res.status(400).send('error while updating '+err);							
+									} else {
+										res.status(200).send(allLoms);
+									}
+									course.save();
+								}	
+							});
+						}
+					}	
+				}
+			}	
+		});
+	} else {
+		res.status(404).send('The course with id: ' + courseId + ' is not registrated');
+	}
+};
+
 // Exporting delete_lom function 
 // It verifies if the course, section, lesson, and lom exist.
 // If the course, section, or lesson does not exist, it sends an error message
