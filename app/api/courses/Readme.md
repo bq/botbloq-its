@@ -95,7 +95,7 @@ If successful, this action assign the indicated LOM into the lesson.
 If this action is not successful, it returns the error code. 
 
 ---------------------------------------
-**POST /botbloq/v1/its/courses/:idc/section/:ids/lesson/:idle/asign_loms**
+**POST /botbloq/v1/its/courses/:idc/section/:ids/lesson/:idle/assign_loms**
 ---------------------------------------
 
 - assign the array LOM of the input into the lesson.
