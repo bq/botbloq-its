@@ -81,6 +81,64 @@ exports.getActiveCourses = function(student){
 }
 
 /**
+ *	Returns lasts courses included
+ */
+exports.getLastCourses = function(student, courses){
+	var lastCourses = [];
+
+	courses.sort(function(a, b){
+		return (b.createdAt - a.createdAt);
+	});
+
+	_.forEach(courses, function(key){
+		lastCourses.push(key._id);
+	});
+
+	if(lastCourses.length > 3){
+		return lastCourses.slice(0, 0+3);
+	} else {
+		return lastCourses;
+	}
+}
+
+/**
+ *	Returns related courses to the student
+ */
+exports.getRelatedCourses = function(student, courses){
+	var relatedCourses = [], bool = true;
+
+	_.forEach(courses, function(course){
+		var indl = 0, inds = 0;
+		while(bool === true){
+
+			if(student.knowledgeLevel.length > inds){
+				if(course.sections.length > 0){
+					if(course.sections[0].lessons[indl].objectives[0].code === student.knowledgeLevel[inds].code){
+						relatedCourses.push(course._id);
+						bool = false;
+					} else {
+						inds++;
+					}
+				} else {
+					bool = false;
+				}
+			} else {
+				inds = 0;
+				if(course.sections[0].lessons.length > indl){
+					indl++;
+				} else {
+					bool = false;
+				}
+			}
+		}
+		bool = true;
+
+	});
+
+	return relatedCourses;
+}
+
+/**
  *	Función para realizar la actualización de un estudiante sin eliminar datos.
  */
 exports.doUpdate = function(object, newObject){

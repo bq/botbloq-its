@@ -9,8 +9,14 @@ var router = express.Router();
 
 /////////////////////////////// GETs
 
+// gets a specific lesson for the course
+router.get('/:idstd/course/:idc/section/:ids/lesson/:idl', controller.getLesson); 
+
 // gets a new activity for the enrolled course
 router.get('/:idstd/course/:idc', controller.newActivity); 
+
+// gets a student knowledgeLevel
+router.get('/:id/knowledge', controller.getKnowledge); 
 
 // gets a list with course information of a student
 router.get('/:id/:data', controller.dataCourses);

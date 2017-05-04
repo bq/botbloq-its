@@ -382,11 +382,20 @@ exports.dataCourses = function (req, res) {
 						case 'active-courses':
 							data = functions.getActiveCourses(student);
 							break;
+						case 'last-included':
+							data = functions.getLastCourses(student, courses);
+							break;
+						case 'related-courses':
+							data = functions.getRelatedCourses(student, courses);
+							break;
 						case 'all':
-							data = {coursesDone: [], coursesNotDone: [], activeCourses: []};
+							data = {coursesDone: [], coursesNotDone: [], activeCourses: [], lastIncluded: [],
+								relatedCourses: []};
 							data.coursesDone = functions.getCoursesDone(student, courses);
 							data.activeCourses = functions.getActiveCourses(student)
 							data.coursesNotDone = functions.getCoursesNotDone(student, courses);
+							data.lastIncluded = functions.getLastCourses(student, courses);
+							data.relatedCourses = functions.getRelatedCourses(student, courses);
 							break;
 						default:
 							data = 'Error: ' + req.params.data + ' is not correct';
@@ -745,6 +754,93 @@ exports.remove = function (req, res) {
 			res.status(err.code).send(err);
 		} else {
 		 	res.sendStatus(200);
+		}
+	});
+};
+
+
+
+/**
+ * Returns an student knowledge Level by id
+ */
+exports.getKnowledge = function (req, res) {
+	var finder;
+	if(mongoose.Types.ObjectId.isValid(req.params.id)){
+		finder = {_id: req.params.id};
+	} else {
+		finder = {'identification.email': req.params.id};
+	}
+
+	Students.findOne(finder, function(err, student) {
+		if(err){
+			console.log(err);
+			res.status(err.code).send(err);
+		}else if(!student){
+			res.status(404).send('The student with id o email: ' + req.params.id + ' is not registrated');
+		} else {
+			if(student.active === 1){
+				if(res.statusCode === 200){
+					res.json(student.knowledgeLevel);
+				} else {
+					res.sendStatus(res.statusCode);
+				}
+			} else {
+				res.status(403).send('The student with id: ' + req.params.id + ' is not activated');
+			}
+		}
+	});
+};
+
+
+/**
+ * Returns a specific lesson by id
+ */
+exports.getLesson = function (req, res) {
+	var finder, courseId = req.params.idc, sectionId = req.params.ids, lessonId = req.params.idl;
+	if(mongoose.Types.ObjectId.isValid(req.params.idstd)){
+		finder = {_id: req.params.idstd};
+	} else {
+		finder = {'identification.email': req.params.idstd};
+	}
+
+	Students.findOne(finder, function(err, student) {
+		if(err){
+			console.log(err);
+			res.status(err.code).send(err);
+		}else if(!student){
+			res.status(404).send('The student with id o email: ' + req.params.idstd + ' is not registrated');
+		} else {
+			if(student.active === 1){
+
+				if(mongoose.Types.ObjectId.isValid(courseId)){
+					Courses.findOne({_id: courseId}, function(err, course) {
+				        if (err) {
+				        	console.log(err);
+							res.status(err.code).send(err);				
+						} else if(!course){
+							res.status(404).send('The course with id: ' + courseId + ' is not registrated');
+						} else {
+							var inds = functions2.exist_section_lesson(sectionId,course.sections);
+							if (inds < 0){
+								res.status(404).send('The section with id : ' + sectionId +
+								' has not been found in the course with id: ' + courseId);
+							} else {	// section exists
+								var indl = functions2.exist_section_lesson(lessonId,course.sections[inds].lessons);
+								if (indl < 0) {
+									res.status(404).send('The lesson with id : ' + lessonId +
+									' has not been found in the section with id: ' + sectionId);
+								} else {
+									res.status(200).send(course.sections[inds].lessons[indl]);	
+								}	
+							}   
+						} 			 
+					});
+				} else {
+					res.status(404).send('The course with id: ' + courseId + ' is not registrated');
+				}
+			} else {
+				res.status(403).send('The student with id: ' + req.params.idstd + ' is not activated');
+			}
 		}
 	});
 };
