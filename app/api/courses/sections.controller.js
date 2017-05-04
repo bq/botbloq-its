@@ -192,4 +192,40 @@ exports.delete_section = function(req,res) {
 		res.status(404).send('The course with id: ' + courseId + ' is not registrated'); 
 	}
 };
+
+
+
+// Exporting function get_section
+// list the objectives of the indicated section from a course
+// If the section does not exists, prints a message
+exports.get_sectionObjectives = function (req, res) {		
+	var courseId = req.params.course_id;
+	var sectionId = req.params.section_id;
+	if(mongoose.Types.ObjectId.isValid(courseId)){
+		Courses.findOne({_id: courseId}, function(err, course) {
+			if (err){
+				res.sendStatus(err);
+			} else if (!course) {
+					res.status(404).send('The course with id: ' + courseId + ' is not registrated');   
+			} else {
+				var sections = course.sections;
+				var len = sections.length;
+				var bool = false;
+				for (var i = 0; i < len; i++) {
+					var elem = sections[i];
+					if (elem.name === sectionId){
+						res.status(200).send(elem.objectives);
+						bool = true;
+					}
+				}			
+				if (!bool){
+					res.status(404).send('The section with id : ' + sectionId 
+					+ ' has not been found in the course with id: ' + courseId);	
+				}
+			} 
+		});	
+	} else {
+		res.status(404).send('The course with id: ' + courseId + ' is not registrated');
+	}
+};
 	

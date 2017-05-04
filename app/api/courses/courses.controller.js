@@ -19,6 +19,7 @@ var Courses = require('./courses.model.js'),
     config = require('../../res/config.js'),
     CoursesFunctions = require('./courses.functions.js'),
     async = require('async'),
+    fs = require('fs'), 
     mongoose = require('mongoose'),
     _ = require('lodash');
 	
@@ -161,9 +162,63 @@ exports.update = function(req, res) {
 };
 
 
+// Exporting get function
+// list the objectives of the course specified by its id
+// If there are none with this id, then it returns an empty list []
+exports.getObjectives = function (req, res){
+	var courseId = req.params.id;
+	if(mongoose.Types.ObjectId.isValid(courseId)){
+		Courses.findOne({_id: courseId}, function(err, course) {
+	        if (err) {
+	        	console.log(err);
+				res.status(err.code).send(err);				
+			} else if(!course){
+				res.status(404).send('The course with id: ' + courseId + ' is not registrated');
+			} else {
+				res.status(200).json(course.objectives); 
+			} 			 
+		});
+	} else {
+		res.status(404).send('The course with id: ' + courseId + ' is not registrated');
+	}
+};
 
 
+/**
+ * Include photo in a course
+ */
+exports.includePhoto =  function (req, res) {
+	Courses.findOne({_id: req.params.id}, function(err, course){
+		if(!course) { 
+			res.status(404).send('The course with id: '+  req.params.id +' is not registrated');
+		} else {
+			fs.stat(__dirname + '/../../res/files/photos/' + req.params.id, function(err, stats){
+				if(err) { fs.mkdir(__dirname + '/../../res/files/photos/' + req.params.id); }
+			});
+			var file = __dirname + '/../../res/files/photos/' + req.params.id + '/' + req.file.originalname;
+			course.photo = file;
+			fs.readFile( req.file.path, function (err, data) {
+				if(!data) {res.status(400).send('No data to upload');
+				} else {
+					fs.writeFile(file, data, function (err) {
+						if( err ){
+							console.error( err );
+					        res.status(404).send(err);
+						    res.end('Sorry, the photo: '+  req.file.originalname + 
+							' couldn\'t be uploaded in the course with id: ' + req.params.id);
 
+						}else{
+						    res.end('Photo: '+  req.file.originalname + 
+							' uploaded successfully in the course with id: ' + req.params.id);
+						}
+					});
+				}
+			});
+			course.save();
+		}
+			 
+	});
+};
 
 
 

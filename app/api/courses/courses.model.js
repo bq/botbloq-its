@@ -24,6 +24,7 @@ var Lesson = new Schema({
 		summary: {type: String, default: 'no summary'},  
 		objectives: [Objective],
 		learning_path: [Number],
+		photo: String,
 		dificulty : { type: Number, default: 0},
 		type: {
 			type: String,
@@ -61,6 +62,7 @@ var CoursesSchema = new mongoose.Schema({
 	summary: { type: String, trim: true, default: 'no summary' },
 	objectives: [Objective],
 	sections  : [Section],
+	photo: String,
 	statistics: {type: Statistics, required: true, default: ''},
 	history: [History]
 	}, 

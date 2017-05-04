@@ -5,8 +5,10 @@ var controller = require('./courses.controller.js');
 var section_ctrl = require('./sections.controller.js');
 var lesson_ctrl = require('./lessons.controller.js');
 var loms_ctrl = require('./loms.controller.js');
+var multer = require('multer');
 
 var router = express.Router();
+var upload = multer({ dest: '/tmp' });
 
 /*
 **************LOMS******************************
@@ -39,6 +41,8 @@ router.delete('/:idc/section/:ids/lesson/:idle/lom/:idlo', loms_ctrl.delete_lom)
 
 // GETs 
 
+// list the objectives of the indicated lesson
+router.get('/:course_id/section/:section_id/lesson/:lesson_id/objectives', lesson_ctrl.get_lessonObjectives); 
 // list the indicated lesson
 router.get('/:course_id/section/:section_id/lesson/:lesson_id', lesson_ctrl.get_lesson); 
 // list all lessons from a course section
@@ -46,6 +50,9 @@ router.get('/:course_id/section/:section_id/lessons', lesson_ctrl.all_lessons);
 
 
 // POSTs
+
+// POSTs
+router.post('/:idc/section/:ids/lesson/:idl/includePhoto',upload.single('file'), lesson_ctrl.includePhoto); // include a photo in a lesson
 // create a particular lesson of a course section
 router.post('/:idc/section/:ids', lesson_ctrl.create_lesson); 
 
@@ -62,6 +69,8 @@ router.put('/:idc/section/:ids/lesson/:idl', lesson_ctrl.update_lesson);
 */
 
 // GETs
+router.get('/:course_id/section/:section_id/objectives', section_ctrl.get_sectionObjectives); // list the objectives of the indicated section
+
 router.get('/:course_id/section/:section_id', section_ctrl.get_section); // list the indicated section
 
 router.get('/:course_id/sections', section_ctrl.all_sections); // list all sections from course
@@ -83,11 +92,16 @@ router.put('/:idc/section/:ids', section_ctrl.update_section); // update a parti
 */
 
 // GETs
+router.get('/:id/objectives', controller.getObjectives); // list the objectives of the indicated course 
+
 router.get('/:id', controller.get); // list the indicated course 
+
 router.get('/', controller.all); // list all courses
 
 
 // POSTs
+router.post('/:id/includePhoto',upload.single('file'), controller.includePhoto); // include a photo in a course
+
 router.post('/', controller.create); // create a Course by the object
 
 // PUTs
