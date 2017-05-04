@@ -180,6 +180,39 @@ exports.downloadFile = function(req, res, next){
 
 
 
+/**
+ * Include photo in a lom
+ */
+exports.includePhoto =  function (req, res) {
+	LOMS.findById(req.params.id, function(err, lom){
+		if(!lom) { 
+			res.status(404).send('The lom with id: '+  req.params.id +' is not registrated');
+		} else {
+			fs.stat(__dirname + '/../../res/files/photos/' + req.params.id, function(err, stats){
+				if(err) { fs.mkdir(__dirname + '/../../res/files/photos/' + req.params.id); }
+			});
+			var file = __dirname + '/../../res/files/photos/' + req.params.id + '/' + req.file.originalname;
+			lom.photo = file;
+			fs.readFile( req.file.path, function (err, data) {
+				if(!data) {res.status(400).send('No data to upload');
+				} else {
+					fs.writeFile(file, data, function (err) {
+						if( err ){
+							console.error( err );
+					        res.status(404).send(err);
+						    res.end('Sorry, the photo: '+  req.file.originalname + 
+							' couldn\'t be uploaded in the lom with id: ' + req.params.id);
 
-
+						}else{
+						    res.end('Photo: '+  req.file.originalname + 
+							' uploaded successfully in the lom with id: ' + req.params.id);
+						}
+					});
+				}
+			});
+			lom.save();
+		}
+			 
+	});
+};
 

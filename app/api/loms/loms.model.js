@@ -242,6 +242,9 @@ var lomSchema = new Schema({
 		type: useSchema,
 		required: true,
 		default : ''
+	},
+	photo: {
+		type: String
 	}
 });
 

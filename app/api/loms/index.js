@@ -24,6 +24,9 @@ router.get('/', controller.all);
 
 /////////////////////////// POSTS
 
+// uploads a photo in a lom
+router.post('/:id/includePhoto', upload.single('file'), controller.includePhoto);
+
 // uploads a file in a lom
 router.post('/:id/upload', upload.single('file'), controller.uploadFile);
 
