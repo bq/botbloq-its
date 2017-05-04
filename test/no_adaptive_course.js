@@ -5,7 +5,7 @@ var chakram = require('chakram'),
 	student = new Student(),
     Course = require('./course.js'),
 	course = new Course(),
-	lomModel = require('../../app/api/loms/loms.model.js'),
+	lomModel = require('../app/api/loms/loms.model.js'),
 	LOM = require('./lom.js'),
 	lom = new LOM(),
     Request = require('./request.js'),
@@ -40,7 +40,7 @@ describe('Chakram', function(){
 
 	it('Testing to create a new student', function () {
 		console.log('------------------------------------------');
-		console.log('--------------- bitbloq2 -----------------');
+		console.log('---------- no_adaptive_course ------------');
 		console.log('------------------------------------------');
  	    var randomStudent = student.generateRandomStudent('pepe','pepe@gmail.com');
     	// create student
@@ -63,7 +63,7 @@ describe('Chakram', function(){
 	 });
 	 
   	it('Testing to create the bitbloq2 LOMS ', function(){
-  		var message, path = '../../app/res/LOM-JSON/partial/';
+  		var message, path = '../app/res/LOM-JSON/partial/';
   		var loms = lom.generateBitbloqLOMS(path);
 	    return request.postBackend('/loms',200,loms[0]).then(function (response) {
   	    	message = response.body;
@@ -129,10 +129,15 @@ describe('Chakram', function(){
 	 				// enrolling the student in the course
 	 				return request.putBackend('/students/'+ idStudent + '/course/' + idCourse,200)
 	 				.then(function(response3) {
-			
 	 					// testing if the student is already enrolled in the course
 	 					expect(response3.body).to.have.property('idCourse', idCourse);
-	 					chakram.wait();
+	 					var updatedStudent = {identification: {type: 'advanced'}};
+	 					return request.putBackend('/students/'+ idStudent,200, updatedStudent)
+	 						.then(function(response3) {
+	 							expect(response3.body.identification).to.have.property('type','advanced');
+	 							console.log('students type changed to advanced');
+	 							chakram.wait();
+						});
 	 				});
 	 			});
  			});
@@ -154,127 +159,83 @@ describe('Chakram', function(){
 					expect(response.body.general).to.have.property('title', 'Conociendo bitbloq 2');
 					lom = response.body._id;
 					console.log('The system returns the second lesson of the course: 2. Conociendo el entorno');
-					
-					return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/nok', 200)
+							
+					return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/ok', 200)
 					.then(function (response2) {
-						expect(response2.body).to.have.property('status', -1);
+						expect(response2.body).to.have.property('status', 1);
 				    	return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
 						.then(function(response) {
-							expect(response.body.general).to.have.property('title', 'Conociendo bitbloq 2');
+							expect(response.body.general).to.have.property('title', '¿Que es un robot? Conociendo sensores y actuadores');
 							lom = response.body._id;
-							console.log('The system returns the same lesson because it did not finish correctly ');
+							console.log('The system returns the third lesson of the course: 3. Que es un robot');
 							
 							return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/ok', 200)
 							.then(function (response2) {
 								expect(response2.body).to.have.property('status', 1);
 						    	return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
 								.then(function(response) {
-									expect(response.body.general).to.have.property('title', '¿Que es un robot? Conociendo sensores y actuadores');
+									expect(response.body.general).to.have.property('title', '¡Aprende a pensar como un robot! Los algoritmos');
 									lom = response.body._id;
-									console.log('The system returns the third lesson of the course: 3. Que es un robot');
+									console.log('The system returns the eighth lesson of the course: 8. Algoritmos');
 									
 									return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/ok', 200)
 									.then(function (response2) {
 										expect(response2.body).to.have.property('status', 1);
 								    	return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
 										.then(function(response) {
-											expect(response.body.general).to.have.property('title', '¡Aprende a pensar como un robot! Los algoritmos');
+											expect(response.body.general).to.have.property('title', 'Y la luz se hizo: programando los LED en bitbloq 2');
 											lom = response.body._id;
-											console.log('The system returns the eighth lesson of the course: 8. Algoritmos');
-											
-											return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/ok', 200)
+											console.log('The system returns the fourth lesson of the course: 4. LED');
+													
+											return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/nok', 200)
 											.then(function (response2) {
-												expect(response2.body).to.have.property('status', 1);
+												expect(response2.body).to.have.property('status', -1);
 										    	return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
 												.then(function(response) {
-													expect(response.body.general).to.have.property('title', 'Y la luz se hizo: programando los LED en bitbloq 2');
+													expect(response.body.general).to.have.property('title', '¡Muévete! El servo de rotación continua');
 													lom = response.body._id;
-													console.log('The system returns the fourth lesson of the course: 4. LED');
+													console.log('The system returns the fifteenth lesson of the course: 15. El servo de rotación continua');
 													
-													return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/nok', 200)
+													return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/ok', 200)
 													.then(function (response2) {
-														expect(response2.body).to.have.property('status', -1);
+														expect(response2.body).to.have.property('status', 1);
 												    	return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
 														.then(function(response) {
-															expect(response.body.general).to.have.property('title', '¡Aprende a pensar como un robot! Los algoritmos');
+															expect(response.body.general).to.have.property('title', 'Si tú me dices ven… lo dejo todo, o no. Las sentencias condicionales y el pulsador.');
 															lom = response.body._id;
-															console.log('The system returns the eighth lesson of the course: 8. Algoritmos, the previuos basic activity');
+															console.log('The system returns the fifth lesson of the course: 5. Condicionales');
 															
 															return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/ok', 200)
 															.then(function (response2) {
 																expect(response2.body).to.have.property('status', 1);
 														    	return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
 																.then(function(response) {
-																	expect(response.body.general).to.have.property('title', 'Y la luz se hizo: programando los LED en bitbloq 2');
+																	expect(response.body.general).to.have.property('title', 'Piruru piii… Programando el zumbador');
 																	lom = response.body._id;
-																	console.log('The system returns the fourth lesson of the course: 4. LED');
+																	console.log('The system returns the ninth lesson of the course: 9. El zumbador');
 																	
 																	return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/ok', 200)
 																	.then(function (response2) {
 																		expect(response2.body).to.have.property('status', 1);
 																    	return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
 																		.then(function(response) {
-																			expect(response.body.general).to.have.property('title', '¡Muévete! El servo de rotación continua');
+																			expect(response.body.general).to.have.property('title', '¡Elemental, querido Watson! La lógica booleana');
 																			lom = response.body._id;
-																			console.log('The system returns the fifteenth lesson of the course: 15. El servo de rotación continua');
+																			console.log('The system returns the twentieth lesson of the course: 20. Logica booleana');
 																			
 																			return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/ok', 200)
 																			.then(function (response2) {
 																				expect(response2.body).to.have.property('status', 1);
 																		    	return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
 																				.then(function(response) {
-																					expect(response.body.general).to.have.property('title', 'Si tú me dices ven… lo dejo todo, o no. Las sentencias condicionales y el pulsador.');
-																					lom = response.body._id;
-																					console.log('The system returns the fifth lesson of the course: 5. Condicionales');
-
-																					return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/ok', 200)
-																					.then(function (response2) {
-																						expect(response2.body).to.have.property('status', 1);
-																				    	return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
-																						.then(function(response) {
-																							expect(response.body.general).to.have.property('title', 'Piruru piii… Programando el zumbador');
-																							lom = response.body._id;
-																							console.log('The system returns the nineth lesson of the course: 9. Zumbador');
-																							
-																							return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/ok', 200)
-																							.then(function (response2) {
-																								expect(response2.body).to.have.property('status', 1);
-																						    	return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
-																								.then(function(response) {
-																									expect(response.body.general).to.have.property('title', 'O blanco o negro. El sensor infrarrojo.');
-																									lom = response.body._id;
-																									console.log('The system returns the tenth lesson of the course: 10. Sensor IR');
-																									
-																									return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/ok', 200)
-																									.then(function (response2) {
-																										expect(response2.body).to.have.property('status', 1);
-																								    	return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
-																										.then(function(response) {
-																											expect(response.body.general).to.have.property('title', 'Ve hacia la luz robotín… programando el sensor de luz');
-																											lom = response.body._id;
-																											console.log('The system returns the twelve lesson of the course: 12. Sensor Luz');
-																											
-																											return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/ok', 200)
-																											.then(function (response2) {
-																												expect(response2.body).to.have.property('status', 1);
-																										    	return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
-																												.then(function(response) {
-																													expect(response.body[1].level).to.equal(2);
-																													console.log('Course finished');
-																													
-																													chakram.wait();
-																												});
-																											});
-																										});
-
-																									});
-																								});
-																							});
-																						});
-																					});
+																					expect(response.body[1].level).to.equal(2);
+																					console.log('Course finished');
+																					
+																					chakram.wait();
 																				});
 																			});
-																		});	
+																		});
+
 																	});
 																});
 															});

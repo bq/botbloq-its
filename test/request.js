@@ -7,7 +7,7 @@ var chakram = require('chakram'),
 var Request = function() {
 
     
-    this.config = require('../../app/res/config/config.json');
+    this.config = require('../app/res/config/config.json');
     var host = this.config.host; // 
 
 

@@ -5,7 +5,7 @@ var chakram = require('chakram'),
 	student = new Student(),
     Course = require('./course.js'),
 	course = new Course(),
-	lomModel = require('../../app/api/loms/loms.model.js'),
+	lomModel = require('../app/api/loms/loms.model.js'),
 	LOM = require('./lom.js'),
 	lom = new LOM(),
     Request = require('./request.js'),
@@ -63,7 +63,7 @@ describe('Chakram', function(){
 	 });
 	 
   	it('Testing to create the bitbloq2 LOMS ', function(){
-  		var message, path = '../../app/res/LOM-JSON/complete/';
+  		var message, path = '../app/res/LOM-JSON/complete/';
   		var loms = lom.generateBitbloqLOMS(path);
 	    return request.postBackend('/loms',200,loms[0]).then(function (response) {
   	    	message = response.body;

@@ -1,6 +1,6 @@
 'use strict';
 var mongoose = require('mongoose'),
-lomModel = require('../../app/api/loms/loms.model.js'),
+lomModel = require('../app/api/loms/loms.model.js'),
 fs = require('fs');
 
 
