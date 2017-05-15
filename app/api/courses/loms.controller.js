@@ -148,8 +148,9 @@ exports.assign_lom = function(req, res) {
 											res.status(404).send('The lom with id: ' + lomId + ' is not registrated');
 										} else {
 											var loms = lessons[indl].loms;
-											// TODO hacer funcion para traducir format a tipo
-											loms[loms.length] = {lom_id: lomId, type: lom.technical.format};
+
+											var typeLOM = CoursesFunctions.translateFormat(lom.technical.format);
+											loms[loms.length] = {lom_id: lomId, type: typeLOM};
 
 											if (res.statusCode !== 200){
 												res.status(400).send('error while updating '+err);							
@@ -217,7 +218,9 @@ exports.assign_loms = function(req, res) {
 									var allLoms = lessons[indl].loms;
 
 									_.forEach(loms, function(value){
-										allLoms.push({lom_id: value._id, type: value.technical.format});
+										var typeLOM = CoursesFunctions.translateFormat(value.technical.format);
+
+										allLoms.push({lom_id: value._id, type: typeLOM});
 									});	
 									// TODO hacer funcion para traducir format a tipo
 

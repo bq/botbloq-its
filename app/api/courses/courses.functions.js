@@ -85,3 +85,26 @@ exports.doUpdate = function(object, newObject){
 	return object;
 }
 
+exports.translateFormat = function(format){
+	var type = 'other';
+	
+	if(format.includes('audio')){
+		type = 'audio';
+	} else if(format.includes('video')){
+		type = 'video';
+	} else if(format.includes('text') || format.includes('image')){
+		type = 'document';
+	} else if(format.includes('application')){
+		if(format.includes('word') || format.includes('powerpoint')){
+			type = 'document';
+		} else if(format.includes('youtube')){
+			type = 'video';
+		} else {
+			type = 'exercise';
+		}
+	}
+
+	return type;
+
+}
+
