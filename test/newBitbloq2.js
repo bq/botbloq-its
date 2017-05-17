@@ -298,7 +298,6 @@ describe('Chakram', function(){
 																});
 															});
 														});
-
 													});
 												});
 											});

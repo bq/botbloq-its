@@ -516,8 +516,9 @@ exports.selectActivityMedium = function(course, myLesson, status, student){
 				var prevLesson = student.activity_log[student.activity_log.length - 2];
 				prevLesson = functions2.exist_section_lesson(prevLesson.idLesson ,course.sections[0].lessons);
 				var typePrevLesson = course.sections[0].lessons[prevLesson].type;
+				var indexMyLesson = functions2.exist_section_lesson(myLesson.name ,course.sections[0].lessons);
 
-				if(typePrevLesson !== 'Reinforcement'){
+				if(typePrevLesson !== 'Reinforcement' || indexMyLesson === prevLesson){
 					posibilities = this.findTypeLesson(myLesson.learning_path, 'Reinforcement', course);
 
 					if(posibilities.length > 0){
@@ -832,6 +833,168 @@ exports.assignTypeStudent = function(student, course){
 	}
 	return ret;
 }
+
+exports.adaptativeMode = function(student, course){
+	var bool = false, 
+		activitiesCoursed = student.activity_log,
+		activityIndex = activitiesCoursed.length-1;
+
+	var arrayEasy = [], 
+		arrayMedium = [], 
+		arrayHard = [];
+
+	if(activitiesCoursed.length > 0){
+		while(bool !== true){
+			var activity = activitiesCoursed[activityIndex];
+			var lesson = functions2.exist_section_lesson(activity.idLesson, course.sections[0].lessons);
+			lesson = course.sections[0].lessons[lesson];
+			
+			if(lesson.dificulty === 0){
+				arrayEasy.push(activity);
+			} else if (lesson.dificulty === 1){
+				arrayMedium.push(activity);
+			} else {
+				arrayHard.push(activity);
+				bool = true;
+			}
+
+			if(lesson.type === 'Essential'){
+				bool = true;
+			}
+			activityIndex -= 1;
+		}
+
+		switch(student.identification.type){
+
+			case 'beginner':
+				student = this.adaptBeginner(student, course, arrayMedium, arrayEasy);
+				break;
+
+			case 'medium':
+				student = this.adaptMedium(student, course, arrayMedium, arrayEasy);
+				break;
+
+			case 'advanced':
+				student = this.adaptAdvanced(student, course, arrayHard, arrayMedium, arrayEasy);
+				break; 
+		}
+	}
+
+
+	return student;
+}
+
+exports.adaptBeginner = function(student, course, arrayMedium, arrayEasy){
+	var newType = true;
+
+	if(arrayEasy.length > 0){
+		_.forEach(arrayEasy, function(activity){
+			if(activity.status === -1){
+				newType = false;
+			}
+		});
+
+		if(newType){
+			student.identification.type = 'medium';
+		}
+	}
+
+	return student;
+}
+
+exports.adaptMedium = function(student, course, arrayMedium, arrayEasy){
+	var newType1 = true;
+	var newType2 = true;
+	if(arrayEasy.length > 0){
+		_.forEach(arrayEasy, function(activity){
+			if(activity.status === -1){
+				newType1 = false;
+			}
+		});
+
+		if(newType1){
+			if(arrayMedium.length > 0){
+				_.forEach(arrayMedium, function(activity){
+					if(activity.status === -1){
+						newType2 = false;
+					}
+				});
+
+				if(newType2){
+					student.identification.type = 'advanced';
+				}
+			}
+
+		} else {
+			student.identification.type = 'beginner';
+		}
+	}
+	return student;
+}
+
+exports.adaptAdvanced = function(student, course, arrayHard, arrayMedium, arrayEasy){
+	var newType1 = true;
+	var newType2 = true;
+	var newType3 = [];
+
+	if(arrayEasy.length > 0){
+		_.forEach(arrayEasy, function(activity){
+			if(activity.status === -1){
+				newType1 = false;
+			}
+		});
+
+		if(newType1){
+
+			if(arrayMedium.length > 0){
+				_.forEach(arrayMedium, function(activity){
+					if(activity.status === -1){
+						newType2 = false;
+					}
+				});
+
+				if(newType2){
+					if(arrayHard.length > 0){
+						_.forEach(arrayHard, function(activity){
+							if(activity.status === 1){
+								newType3.push(activity);
+							}
+						});
+
+						console.log('eeeeeee: ' + newType3.length + '  oooooo: ' + newType3.length * 2.0);
+
+						if(newType3.length * 2.0 < arrayHard.length){
+							student.identification.type = 'medium';
+						}
+					}
+				} else {
+					student.identification.type = 'medium';
+				}
+			}
+
+		} else {
+			student.identification.type = 'medium';
+		}
+	}
+
+	return student;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

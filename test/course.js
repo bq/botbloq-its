@@ -300,6 +300,7 @@ var Course = function() {
 							name: 'Lesson_1',
 							summary: 'Antes de empezar',
 							learning_path: [1],
+							dificulty: 0,
 							type: 'Essential',
 							objectives: [{
 								code: 'ROBOT01',
@@ -313,6 +314,7 @@ var Course = function() {
 							name: 'Lesson_2',
 							summary: 'Conociendo el entorno',
 							learning_path: [1],
+							dificulty: 0,
 							type: 'Essential',
 							objectives: [{
 								code: 'ROBOT01',
@@ -365,7 +367,7 @@ var Course = function() {
 							summary: 'Conociendo el entorno',
 							learning_path: [2],
 							type: 'Essential',
-							dificulty: 0,
+							dificulty: 1,
 							objectives: [{
 								code: 'ROBOT01',
 								description: 'Basic Concepts on Robotics',
@@ -379,7 +381,7 @@ var Course = function() {
 							summary: '¿Que es un robot?',
 							learning_path: [5],
 							type: 'Essential',
-							dificulty: 0,
+							dificulty: 2,
 							objectives: [{
 								code: 'ROBOT01',
 								description: 'Basic Concepts on Robotics',
@@ -406,7 +408,7 @@ var Course = function() {
 							name: 'Lesson_5',
 							summary: 'Condicionales',
 							learning_path: [6, 10],
-							dificulty: 0,
+							dificulty: 2,
 							type: 'Essential',
 							objectives: [{
 								code: 'ROBOT01',
@@ -421,7 +423,7 @@ var Course = function() {
 							summary: 'Algoritmos',
 							learning_path: [3, 4],
 							type: 'Essential',
-							dificulty: 0,
+							dificulty: 1,
 							objectives: [{
 								code: 'ROBOT01',
 								description: 'Basic Concepts on Robotics',
@@ -463,7 +465,7 @@ var Course = function() {
 							summary: 'Sensor luz',
 							learning_path: [10],
 							type: 'Reinforcement',
-							dificulty: 0,
+							dificulty: 1,
 							objectives: [{
 								code: 'ROBOT01',
 								description: 'Basic Concepts on Robotics',
@@ -477,7 +479,7 @@ var Course = function() {
 							summary: 'Servo rotacion continua',
 							learning_path: [4],
 							type: 'Reinforcement',
-							dificulty: 0,
+							dificulty: 1,
 							objectives: [{
 								code: 'ROBOT01',
 								description: 'Basic Concepts on Robotics',
@@ -491,7 +493,7 @@ var Course = function() {
 							summary: 'Logica booleana',
 							learning_path: [10],
 							type: 'Extension',
-							dificulty: 0,
+							dificulty: 2,
 							objectives: [{
 								code: 'ROBOT01',
 								description: 'Basic Concepts on Robotics',

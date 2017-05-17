@@ -483,6 +483,7 @@ exports.updateActivity = function (req, res) {
 												  element1.idLesson === element.idLesson && element1.IdLom === element.IdLom){
 													
 													element1.duration = element1.duration + (Date.now() - element1.created_at);
+													element1.status = element.status;
 												}
 											});
 										}
@@ -590,6 +591,18 @@ exports.newActivity = function (req, res) {
 										
 										element = ret;
 										/*
+											Si la actividad devuelta es Básica, se recalcula el tipo del
+											estudiante.
+										*/
+
+										var lesson = functions2.exist_section_lesson(element.idLesson, course.sections[0].lessons);
+										lesson = course.sections[0].lessons[lesson];
+
+										if(lesson.type === 'Essential'){
+											student = functions.adaptativeMode(student, course);
+										}
+
+										/*
 											Si se devuelve la siguiente actividad de curso, se selecciona
 											el tipo de LOM más acorde con el tipo de estudiante.
 										*/
@@ -597,6 +610,7 @@ exports.newActivity = function (req, res) {
 
 										if (lomRet !== -1){
 											element.idLom = lomRet;
+
 
 											if(element.status !== 2){
 												student.activity_log.push(
