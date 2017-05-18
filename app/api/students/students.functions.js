@@ -470,6 +470,7 @@ exports.selectActivityAdvanced = function(course, myLesson, status, student){
 
 
 }
+
 /**
  *	Función que devuelve la siguiente actividad de un curso a un estudiante 'Medium'.
  */
@@ -556,6 +557,7 @@ exports.selectActivityMedium = function(course, myLesson, status, student){
 	return ret;
 
 }
+
 /**
  *	Función que devuelve la siguiente actividad de un curso a un estudiante 'Beginner'.
  */
@@ -653,6 +655,7 @@ exports.selectActivityBeginner = function(course, myLesson, status, student){
 	return ret;
 
 }
+
 /**
  *	Función para seleccionar la siguiente actividad del estudiante.
  */
@@ -678,7 +681,6 @@ exports.selectActivity = function(myLesson, course, status, student){
 /**
  *  In this function the previous checks are carried out to look for the following activity:
  */
-
 exports.nextActivity = function (element, course, student){
 	var ret = 0, indexMyLesson = 0, myLesson;
 		
@@ -778,6 +780,7 @@ exports.nextActivity = function (element, course, student){
 
 	return ret;
 }
+
 /**
  *	Función que asigna al estudiante un tipo en el nuevo curso matriculado, según sus
  *	resultados académicos (capacidad) y sus conocimientos previos (salto).
@@ -833,15 +836,19 @@ exports.assignTypeStudent = function(student, course){
 	return ret;
 }
 
+/**
+ *	Funcion para recalcular el tipo del estudiante despues de cada bloque de actividades realizado.
+ */
 exports.adaptativeMode = function(student, course){
 	var bool = false, 
 		activitiesCoursed = student.activity_log,
 		activityIndex = activitiesCoursed.length-1;
 
-	var arrayEasy = [], 
-		arrayMedium = [], 
-		arrayHard = [];
+	var activities = {easy: [], medium: [], hard: []};
 
+	/**
+	 *	Se dividen las actividades cursadas según su dificultad
+	 */
 	if(activitiesCoursed.length > 0){
 		while(bool !== true){
 			var activity = activitiesCoursed[activityIndex];
@@ -849,11 +856,11 @@ exports.adaptativeMode = function(student, course){
 			lesson = course.sections[0].lessons[lesson];
 			
 			if(lesson.dificulty === 0){
-				arrayEasy.push(activity);
+				activities.easy.push(activity);
 			} else if (lesson.dificulty === 1){
-				arrayMedium.push(activity);
+				activities.medium.push(activity);
 			} else {
-				arrayHard.push(activity);
+				activities.hard.push(activity);
 				bool = true;
 			}
 
@@ -863,18 +870,20 @@ exports.adaptativeMode = function(student, course){
 			activityIndex -= 1;
 		}
 
+		/**
+		 *	Segun el tipo actual del estudiante se llama a una u otra funcion.
+		 */
 		switch(student.identification.type){
-
 			case 'beginner':
-				student = this.adaptBeginner(student, course, arrayMedium, arrayEasy);
+				student = this.adaptBeginner(student, course, activities);
 				break;
 
 			case 'medium':
-				student = this.adaptMedium(student, course, arrayMedium, arrayEasy);
+				student = this.adaptMedium(student, course, activities);
 				break;
 
 			case 'advanced':
-				student = this.adaptAdvanced(student, course, arrayHard, arrayMedium, arrayEasy);
+				student = this.adaptAdvanced(student, course, activities);
 				break; 
 		}
 	}
@@ -883,26 +892,29 @@ exports.adaptativeMode = function(student, course){
 	return student;
 }
 
-exports.adaptBeginner = function(student, course, arrayMedium, arrayEasy){
+/**
+ *	Funcion para calcular el tipo de un estudiante beginner despues de un bloque de actividades.
+ */
+exports.adaptBeginner = function(student, course, activities){
 	var newType1 = true;
 	var newType2 = [];
 
-	if(arrayEasy.length > 0){
-		_.forEach(arrayEasy, function(activity){
+	if(activities.easy.length > 0){
+		_.forEach(activities.easy, function(activity){
 			if(activity.status === -1){
 				newType1 = false;
 			}
 		});
 
 		if(newType1){
-			if(arrayMedium.length > 0){
-				_.forEach(arrayMedium, function(activity){
+			if(activities.medium.length > 0){
+				_.forEach(activities.medium, function(activity){
 					if(activity.status === 1){
 						newType2.push(activity);
 					}
 				});
 
-				if(newType2.length * 2.0 >= arrayMedium.length){
+				if(newType2.length * 2.0 >= activities.medium.length){
 					student.identification.type = 'medium';
 				}
 			}
@@ -912,19 +924,22 @@ exports.adaptBeginner = function(student, course, arrayMedium, arrayEasy){
 	return student;
 }
 
-exports.adaptMedium = function(student, course, arrayMedium, arrayEasy){
+/**
+ *	Funcion para calcular el tipo de un estudiante medium despues de un bloque de actividades.
+ */
+exports.adaptMedium = function(student, course, activities){
 	var newType1 = true;
 	var newType2 = true;
-	if(arrayEasy.length > 0){
-		_.forEach(arrayEasy, function(activity){
+	if(activities.easy.length > 0){
+		_.forEach(activities.easy, function(activity){
 			if(activity.status === -1){
 				newType1 = false;
 			}
 		});
 
 		if(newType1){
-			if(arrayMedium.length > 0){
-				_.forEach(arrayMedium, function(activity){
+			if(activities.medium.length > 0){
+				_.forEach(activities.medium, function(activity){
 					if(activity.status === -1){
 						newType2 = false;
 					}
@@ -942,36 +957,38 @@ exports.adaptMedium = function(student, course, arrayMedium, arrayEasy){
 	return student;
 }
 
-exports.adaptAdvanced = function(student, course, arrayHard, arrayMedium, arrayEasy){
+/**
+ *	Funcion para calcular el tipo de un estudiante advanced despues de un bloque de actividades.
+ */
+exports.adaptAdvanced = function(student, course, activities){
 	var newType1 = true;
 	var newType2 = true;
 	var newType3 = [];
 
-	if(arrayEasy.length > 0){
-		_.forEach(arrayEasy, function(activity){
+	if(activities.easy.length > 0){
+		_.forEach(activities.easy, function(activity){
 			if(activity.status === -1){
 				newType1 = false;
 			}
 		});
 
 		if(newType1){
-
-			if(arrayMedium.length > 0){
-				_.forEach(arrayMedium, function(activity){
+			if(activities.medium.length > 0){
+				_.forEach(activities.medium, function(activity){
 					if(activity.status === -1){
 						newType2 = false;
 					}
 				});
 
 				if(newType2){
-					if(arrayHard.length > 0){
-						_.forEach(arrayHard, function(activity){
+					if(activities.hard.length > 0){
+						_.forEach(activities.hard, function(activity){
 							if(activity.status === 1){
 								newType3.push(activity);
 							}
 						});
 
-						if(newType3.length * 2.0 < arrayHard.length){
+						if(newType3.length * 2.0 < activities.hard.length){
 							student.identification.type = 'medium';
 						}
 					}
@@ -987,29 +1004,6 @@ exports.adaptAdvanced = function(student, course, arrayHard, arrayMedium, arrayE
 
 	return student;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
