@@ -628,7 +628,7 @@ var Course = function() {
 							summary: 'Algoritmos',
 							learning_path: [3, 14, 4],
 							type: 'Essential',
-							dificulty: 0,
+							dificulty: 1,
 							objectives: [{
 								code: 'ROBOT01',
 								description: 'Basic Concepts on Robotics',
@@ -698,7 +698,7 @@ var Course = function() {
 							summary: 'Bucles',
 							learning_path: [15, 23, 17],
 							type: 'Essential',
-							dificulty: 0,
+							dificulty: 2,
 							objectives: [{
 								code: 'ROBOT01',
 								description: 'Basic Concepts on Robotics',
@@ -712,7 +712,7 @@ var Course = function() {
 							summary: 'Miniservo (mapear)',
 							learning_path: [10, 5, 16, 12],
 							type: 'Reinforcement',
-							dificulty: 0,
+							dificulty: 1,
 							objectives: [{
 								code: 'ROBOT01',
 								description: 'Basic Concepts on Robotics',
@@ -726,7 +726,7 @@ var Course = function() {
 							summary: 'Servo rotacion continua',
 							learning_path: [3, 4],
 							type: 'Reinforcement',
-							dificulty: 2,
+							dificulty: 0,
 							objectives: [{
 								code: 'ROBOT01',
 								description: 'Basic Concepts on Robotics',
@@ -768,7 +768,7 @@ var Course = function() {
 							summary: 'Funciones sin retorno',
 							learning_path: [22, 18, 20, 21],
 							type: 'Essential',
-							dificulty: 0,
+							dificulty: 1,
 							objectives: [{
 								code: 'ROBOT01',
 								description: 'Basic Concepts on Robotics',
@@ -782,7 +782,7 @@ var Course = function() {
 							summary: 'Funciones con retorno',
 							learning_path: [22, 20, 21],
 							type: 'Extension',
-							dificulty: 0,
+							dificulty: 2,
 							objectives: [{
 								code: 'ROBOT01',
 								description: 'Basic Concepts on Robotics',
@@ -796,7 +796,7 @@ var Course = function() {
 							summary: 'Logica booleana',
 							learning_path: [6],
 							type: 'Extension',
-							dificulty: 0,
+							dificulty: 2,
 							objectives: [{
 								code: 'ROBOT01',
 								description: 'Basic Concepts on Robotics',
@@ -838,7 +838,7 @@ var Course = function() {
 							summary: 'Melodias',
 							learning_path: [18, 20, 21],
 							type: 'Essential',
-							dificulty: 0,
+							dificulty: 2,
 							objectives: [{
 								code: 'ROBOT01',
 								description: 'Basic Concepts on Robotics',
@@ -852,7 +852,7 @@ var Course = function() {
 							summary: 'Botonera',
 							learning_path: [15, 17],
 							type: 'Extension',
-							dificulty: 0,
+							dificulty: 2,
 							objectives: [{
 								code: 'ROBOT01',
 								description: 'Basic Concepts on Robotics',

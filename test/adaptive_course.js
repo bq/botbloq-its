@@ -269,30 +269,30 @@ describe('Chakram', function(){
 																				console.log('bien');
 																					lom = response.body._id;
 																					console.log('10. The system returns the lom: ' + response.body.general.title);
-																					return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/ok', 200)
+																					return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/nok', 200)
 																					.then(function (response2) {
-																						expect(response2.body).to.have.property('status', 1);
+																						expect(response2.body).to.have.property('status', -1);
 																						return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
 																						.then(function(response) {
 																							lom = response.body._id;
 																							console.log('11. The system returns the lom: ' + response.body.general.title);
-																							return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/ok', 200)
+																							return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/nok', 200)
 																							.then(function (response2) {
-																								expect(response2.body).to.have.property('status', 1);
+																								expect(response2.body).to.have.property('status', -1);
 																								return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
 																								.then(function(response) {
 																									lom = response.body._id;
 																									console.log('12. The system returns the lom: ' + response.body.general.title);
-																									return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/ok', 200)
+																									return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/nok', 200)
 																									.then(function (response2) {
-																										expect(response2.body).to.have.property('status', 1);
+																										expect(response2.body).to.have.property('status', -1);
 																										return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
 																										.then(function(response) {
 																											lom = response.body._id;
 																											console.log('13. The system returns the lom: ' + response.body.general.title);
-																											return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/ok', 200)
+																											return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/nok', 200)
 																											.then(function (response2) {
-																												expect(response2.body).to.have.property('status', 1);
+																												expect(response2.body).to.have.property('status', -1);
 																												return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
 																												.then(function(response) {
 																													lom = response.body._id;
@@ -311,46 +311,94 @@ describe('Chakram', function(){
 																																.then(function(response) {
 																																	lom = response.body._id;
 																																	console.log('16. The system returns the lom: ' + response.body.general.title);
-																																	return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/ok', 200)
+																																	return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/nok', 200)
 																																	.then(function (response2) {
-																																		expect(response2.body).to.have.property('status', 1);
+																																		expect(response2.body).to.have.property('status', -1);
 																																		return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
 																																		.then(function(response) {
 																																			lom = response.body._id;
 																																			console.log('17. The system returns the lom: ' + response.body.general.title);
-																																			return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/ok', 200)
+																																			return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/nok', 200)
 																																			.then(function (response2) {
-																																				expect(response2.body).to.have.property('status', 1);
+																																				expect(response2.body).to.have.property('status', -1);
 																																				return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
 																																				.then(function(response) {
 																																					lom = response.body._id;
 																																					console.log('18. The system returns the lom: ' + response.body.general.title);
-																																					return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/ok', 200)
+																																					return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/nok', 200)
 																																					.then(function (response2) {
-																																						expect(response2.body).to.have.property('status', 1);
+																																						expect(response2.body).to.have.property('status', -1);
 																																						return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
 																																						.then(function(response) {
 																																							lom = response.body._id;
 																																							console.log('19. The system returns the lom: ' + response.body.general.title);
-																																							return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/nok', 200)
+																																							return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/ok', 200)
 																																							.then(function (response2) {
-																																								expect(response2.body).to.have.property('status', -1);
+																																								expect(response2.body).to.have.property('status', 1);
 																																								return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
 																																								.then(function(response) {
 																																									lom = response.body._id;
 																																									console.log('20. The system returns the lom: ' + response.body.general.title);
-																																									return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/ok', 200)
+																																									return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/nok', 200)
 																																									.then(function (response2) {
-																																										expect(response2.body).to.have.property('status', 1);
+																																										expect(response2.body).to.have.property('status', -1);
 																																										return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
 																																										.then(function(response) {
 																																											lom = response.body._id;
 																																											console.log('21. The system returns the lom: ' + response.body.general.title);
-																																											return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
-																																											.then(function(response) {
-
-																																												console.log('22. The system returns: ' + JSON.stringify(response.body, null, 4));
-																																													
+																																											return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/nok', 200)
+																																											.then(function (response2) {
+																																												expect(response2.body).to.have.property('status', -1);
+																																												return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
+																																												.then(function(response) {
+																																													lom = response.body._id;
+																																													console.log('22. The system returns the lom: ' + response.body.general.title);
+																																													return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/ok', 200)
+																																													.then(function (response2) {
+																																														expect(response2.body).to.have.property('status', 1);
+																																														return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
+																																														.then(function(response) {
+																																															lom = response.body._id;
+																																															console.log('23. The system returns the lom: ' + response.body.general.title);
+																																															return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/ok', 200)
+																																															.then(function (response2) {
+																																																expect(response2.body).to.have.property('status', 1);
+																																																return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
+																																																.then(function(response) {
+																																																	lom = response.body._id;
+																																																	console.log('24. The system returns the lom: ' + response.body.general.title);
+																																																	return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/ok', 200)
+																																																	.then(function (response2) {
+																																																		expect(response2.body).to.have.property('status', 1);
+																																																		return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
+																																																		.then(function(response) {
+																																																			lom = response.body._id;
+																																																			console.log('25. The system returns the lom: ' + response.body.general.title);
+																																																			return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/nok', 200)
+																																																			.then(function (response2) {
+																																																				expect(response2.body).to.have.property('status', -1);
+																																																				return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
+																																																				.then(function(response) {
+																																																					lom = response.body._id;
+																																																					console.log('26. The system returns the lom: ' + response.body.general.title);
+																																																					return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/ok', 200)
+																																																					.then(function (response2) {
+																																																						expect(response2.body).to.have.property('status', 1);
+																																																						return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
+																																																						.then(function(response) {
+																																																							lom = response.body._id;
+																																																							console.log('27. The system returns the lom: ' + response.body.general.title);
+																																																						});
+																																																					});
+																																																				});
+																																																			});
+																																																		});
+																																																	});
+																																																});
+																																															});
+																																														});
+																																													});																
+																																												});
 																																											});
 																																										});
 																																									});

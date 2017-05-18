@@ -350,7 +350,6 @@ exports.selectActivityAdvanced = function(course, myLesson, status, student){
 				
 				} else {
 					if(posibilities.length > 1){
-						console.log(posibilities.shift());
 						ret = this.selectLessonNotCoursed(posibilities, student);
 				
 					} else {
@@ -885,17 +884,28 @@ exports.adaptativeMode = function(student, course){
 }
 
 exports.adaptBeginner = function(student, course, arrayMedium, arrayEasy){
-	var newType = true;
+	var newType1 = true;
+	var newType2 = [];
 
 	if(arrayEasy.length > 0){
 		_.forEach(arrayEasy, function(activity){
 			if(activity.status === -1){
-				newType = false;
+				newType1 = false;
 			}
 		});
 
-		if(newType){
-			student.identification.type = 'medium';
+		if(newType1){
+			if(arrayMedium.length > 0){
+				_.forEach(arrayMedium, function(activity){
+					if(activity.status === 1){
+						newType2.push(activity);
+					}
+				});
+
+				if(newType2.length * 2.0 >= arrayMedium.length){
+					student.identification.type = 'medium';
+				}
+			}
 		}
 	}
 
@@ -960,8 +970,6 @@ exports.adaptAdvanced = function(student, course, arrayHard, arrayMedium, arrayE
 								newType3.push(activity);
 							}
 						});
-
-						console.log('eeeeeee: ' + newType3.length + '  oooooo: ' + newType3.length * 2.0);
 
 						if(newType3.length * 2.0 < arrayHard.length){
 							student.identification.type = 'medium';

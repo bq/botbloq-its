@@ -600,6 +600,7 @@ exports.newActivity = function (req, res) {
 
 										if(lesson.type === 'Essential'){
 											student = functions.adaptativeMode(student, course);
+											console.log('-------------- Tipo: ' + student.identification.type);
 										}
 
 										/*
