@@ -11,6 +11,16 @@ var studentType = [[], ['beginner','beginner','medium'], ['beginner','medium','m
 					['advanced','advanced','advanced'], ['medium','medium','advanced'], 
 					['beginner','beginner','medium']];
 
+
+var beginnerTable = {bad: ['beginner', 'beginner', 'beginner'], 
+					normal: ['beginner', 'beginner', 'beginner'],
+					well: ['medium', 'medium', 'beginner']};
+
+var mediumTable = {bad: 'beginner', normal: 'medium', well: 'advanced'};
+
+var hardTable = {bad: 'beginner', normal: 'medium', well: 'advanced'};
+
+
 var rules = require('../../res/rules.json');
 var ruleEngineGR = new RuleEngine();
 ruleEngineGR.fromJSON(rules);
@@ -841,8 +851,14 @@ exports.assignTypeStudent = function(student, course){
  */
 exports.adaptativeMode = function(student, course){
 	var bool = false, 
-		activitiesCoursed = student.activity_log,
-		activityIndex = activitiesCoursed.length-1;
+		activitiesCoursed = student.activity_log;
+
+	_.remove(activitiesCoursed, function(n) { 
+		return !(course._id.equals(n.idCourse));
+	});
+
+	var activityIndex = activitiesCoursed.length-1,
+		fail, time;
 
 	var activities = {easy: [], medium: [], hard: []};
 
@@ -870,20 +886,50 @@ exports.adaptativeMode = function(student, course){
 			activityIndex -= 1;
 		}
 
+
+
+		var restActs = student.activity_log.slice();
+		restActs =  _.pullAllBy(restActs, activities.medium, '_id');
+		
+		var mean = _.meanBy(restActs, 'duration');
+		var deviation  = this.deviation(restActs, mean);
+
+		if(deviation >= mean){	
+			restActs.sort(function(a, b){
+				return (b.duration - a.duration);
+			});
+
+			var sesg = restActs.length / 10;
+			restActs = _.drop(restActs, sesg);
+			restActs = _.dropRight(restActs, sesg);
+
+
+			mean = _.meanBy(restActs, 'duration');
+			deviation = this.deviation(restActs, mean);
+		}
+
 		/**
 		 *	Segun el tipo actual del estudiante se llama a una u otra funcion.
+		 *	Se calcula el rendimiento y se analizan los tiempos.
 		 */
 		switch(student.identification.type){
 			case 'beginner':
-				student = this.adaptBeginner(student, course, activities);
+				fail = this.yieldBeginner(activities);
+				time = this.timeBeginner(activities, student, fail);
+
+				student.identification.type = beginnerTable[fail][time];
 				break;
 
 			case 'medium':
-				student = this.adaptMedium(student, course, activities);
+				fail = this.yieldMedium(activities);
+
+				student.identification.type = mediumTable[fail];
 				break;
 
 			case 'advanced':
-				student = this.adaptAdvanced(student, course, activities);
+				fail = this.yieldAdvanced(activities);
+
+				student.identification.type = hardTable[fail];
 				break; 
 		}
 	}
@@ -893,51 +939,64 @@ exports.adaptativeMode = function(student, course){
 }
 
 /**
+ *	Funcion para calcular la desviacion tipica.
+ */
+exports.deviation = function(restActs, mean){
+	var deviation = 0;
+
+	_.forEach(restActs, function(activity){
+		deviation += Math.pow(activity.duration - mean, 2);
+	});
+
+	return (Math.sqrt(deviation / restActs.length));
+}
+
+/**
  *	Funcion para calcular el tipo de un estudiante beginner despues de un bloque de actividades.
  */
-exports.adaptBeginner = function(student, course, activities){
-	var newType1 = true;
-	var newType2 = [];
+exports.yieldBeginner = function(activities){
+	var fail = 'normal';
+	var actsWell = [];
 
 	if(activities.easy.length > 0){
 		_.forEach(activities.easy, function(activity){
 			if(activity.status === -1){
-				newType1 = false;
+				fail = 'bad';
 			}
 		});
 
-		if(newType1){
+		if(fail === 'normal'){
 			if(activities.medium.length > 0){
 				_.forEach(activities.medium, function(activity){
 					if(activity.status === 1){
-						newType2.push(activity);
+						actsWell.push(activity);
 					}
 				});
 
-				if(newType2.length * 2.0 >= activities.medium.length){
-					student.identification.type = 'medium';
+				if(actsWell.length * 2.0 >= activities.medium.length){
+					fail = 'well';
 				}
 			}
 		}
 	}
 
-	return student;
+	return fail;
 }
 
 /**
  *	Funcion para calcular el tipo de un estudiante medium despues de un bloque de actividades.
  */
-exports.adaptMedium = function(student, course, activities){
-	var newType1 = true;
+exports.yieldMedium = function(activities){
+	var fail = 'normal';
 	var newType2 = true;
 	if(activities.easy.length > 0){
 		_.forEach(activities.easy, function(activity){
 			if(activity.status === -1){
-				newType1 = false;
+				fail = 'bad';
 			}
 		});
 
-		if(newType1){
+		if(fail === 'normal'){
 			if(activities.medium.length > 0){
 				_.forEach(activities.medium, function(activity){
 					if(activity.status === -1){
@@ -946,67 +1005,151 @@ exports.adaptMedium = function(student, course, activities){
 				});
 
 				if(newType2){
-					student.identification.type = 'advanced';
+					fail = 'well';
 				}
-			}
 
-		} else {
-			student.identification.type = 'beginner';
+			}
 		}
 	}
-	return student;
+	return fail;
 }
 
 /**
  *	Funcion para calcular el tipo de un estudiante advanced despues de un bloque de actividades.
  */
-exports.adaptAdvanced = function(student, course, activities){
-	var newType1 = true;
-	var newType2 = true;
-	var newType3 = [];
+exports.yieldAdvanced = function(activities){
+	var fail = 'normal';
+	var actsWell = [];
 
 	if(activities.easy.length > 0){
 		_.forEach(activities.easy, function(activity){
 			if(activity.status === -1){
-				newType1 = false;
+				fail = 'bad';
 			}
 		});
 
-		if(newType1){
+		if(fail === 'normal'){
 			if(activities.medium.length > 0){
 				_.forEach(activities.medium, function(activity){
 					if(activity.status === -1){
-						newType2 = false;
+						fail = 'bad';
 					}
 				});
 
-				if(newType2){
+				if(fail === 'normal'){
 					if(activities.hard.length > 0){
 						_.forEach(activities.hard, function(activity){
 							if(activity.status === 1){
-								newType3.push(activity);
+								actsWell.push(activity);
 							}
 						});
 
-						if(newType3.length * 2.0 < activities.hard.length){
-							student.identification.type = 'medium';
+						if(actsWell.length * 2.0 >= activities.hard.length){
+							fail = 'well';
 						}
 					}
-				} else {
-					student.identification.type = 'medium';
-				}
+				} 
 			}
 
-		} else {
-			student.identification.type = 'medium';
-		}
+		} 
 	}
-
-	return student;
+	return fail;
 }
 
+/**
+ *	Funcion para analizar los tiempos de un estudiante beginner
+ */
+exports.timeBeginner = function(activities, student, fail){
+	var time = 2;
 
+	switch(fail){
+		case 'bad':
+			// Si falla faciles: tiempo normal (de momento da igual ya que no hay beginner -)
+			time = 1;
+			break;
+		case 'normal':
+			// Si falla mas de 50% de medias: tiempo normal (de momento da igual ya que no hay beginner -)
+			time = 1;
+			break;
+		case 'well':
 
+			/**
+			 * Si no falla ni faciles ni mas del 50% de medias: se calcula la media y a desviacion tipica
+			 * para analizar los tiempos de las actividades del bloque. Se calcula si el estudiante he realizado
+			 * tres o mas operaciones antes del bloque.
+			 */
+			var restActs = student.activity_log.slice();
+			restActs =  _.pullAllBy(restActs, activities.medium, '_id');
+
+			if(restActs.length > 3){
+				var mean = _.meanBy(restActs, 'duration');
+				var deviation  = this.deviation(restActs, mean);
+
+				// Si la desviacion es mayor que la media, se realiza un sesgo (10%) y se recalculan.
+				if(deviation >= mean){	
+
+					// Se ordenan las actividades segun a duracion.
+					restActs.sort(function(a, b){
+						return (b.duration - a.duration);
+					});
+
+					// Sesgo
+					var sesg = restActs.length / 10;
+					restActs = _.drop(restActs, sesg);
+					restActs = _.dropRight(restActs, sesg);
+
+					// Recalcula media y desviacion
+					mean = _.meanBy(restActs, 'duration');
+					deviation = this.deviation(restActs, mean);
+				}
+
+				// Analiza tiempos de actividades faciles y medias.
+				var resEasy = this.analizeTime(activities.easy, mean, deviation);
+				var resMedium = this.analizeTime(activities.medium, mean, deviation);
+
+				// Si la duracion de las actividades fáciles y medias es media o corta: Tiempo corto.
+				if(resEasy < 2 && resMedium < 2){
+					time = 1;
+					if(resEasy < 1 || resMedium < 1){
+						time = 0;
+					} 
+
+				}
+
+			} 
+			break;
+	}
+	return time;
+}
+
+/**
+ * 	Funcion para analizar los tiempos del alumno con respecto a su media de duracion.
+ */
+exports.analizeTime = function(activities, mean, deviation){
+	var res = 0, time = 1;
+	_.forEach(activities, function(act){
+
+		/**
+		 * 	Si la actividad ha durado mas que la media y mas que la media+desviacion: tiempo largo.
+		 *	Si la actividad ha durado menos que la media y menos que la media-desviacion: tiempo corto.
+		 *	Otros casos: tiempo medio.
+		 */
+		
+		if(act.duration >= mean && act.duration > mean+deviation){
+			res += 1;
+		} else if(act.duration <= mean && act.duration < mean-deviation){
+			res -= 1;
+		}
+
+	});
+	if(res > 0 && res > activities.length/2){
+		time = 2;
+	} else if(res < 0 && (-res) > activities.length/2){
+		time = 0;
+	}
+
+	return time;
+}
 
 
 

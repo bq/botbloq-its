@@ -266,7 +266,6 @@ describe('Chakram', function(){
 
 																				return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
 																				.then(function(response) {
-																				console.log('bien');
 																					lom = response.body._id;
 																					console.log('10. The system returns the lom: ' + response.body.general.title);
 																					return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/nok', 200)
