@@ -1058,6 +1058,7 @@ exports.yieldAdvanced = function(activities){
 
 /**
  *	Funcion para analizar los tiempos de un estudiante beginner
+ * 	Tiempo: 0 = corto, 1 = medio, 2 = largo.
  */
 exports.timeBeginner = function(activities, student, fail){
 	var time = 2;
