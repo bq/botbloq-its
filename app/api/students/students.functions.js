@@ -14,11 +14,15 @@ var studentType = [[], ['beginner','beginner','medium'], ['beginner','medium','m
 
 var beginnerTable = {bad: ['beginner', 'beginner', 'beginner'], 
 					normal: ['beginner', 'beginner', 'beginner'],
-					well: ['medium', 'medium', 'beginner']};
+					good: ['medium', 'medium', 'beginner']};
 
-var mediumTable = {bad: 'beginner', normal: 'medium', well: 'advanced'};
+var mediumTable = {bad: ['beginner', 'beginner', 'beginner'], 
+					normal: ['medium', 'medium', 'medium'], 
+					good: ['advanced', 'advanced', 'medium']};
 
-var hardTable = {bad: 'beginner', normal: 'medium', well: 'advanced'};
+var advancedTable = {bad: ['medium', 'medium', 'medium'], 
+					normal: ['advanced', 'advanced', 'medium'], 
+					good: ['advanced', 'advanced', 'advanced']};
 
 
 var rules = require('../../res/rules.json');
@@ -922,14 +926,16 @@ exports.adaptativeMode = function(student, course){
 
 			case 'medium':
 				fail = this.yieldMedium(activities);
+				time = this.timeMedium(activities, student, fail);
 
-				student.identification.type = mediumTable[fail];
+				student.identification.type = mediumTable[fail][time];
 				break;
 
 			case 'advanced':
 				fail = this.yieldAdvanced(activities);
+				time = this.timeAdvanced(activities, student, fail);
 
-				student.identification.type = hardTable[fail];
+				student.identification.type = advancedTable[fail][time];
 				break; 
 		}
 	}
@@ -956,7 +962,7 @@ exports.deviation = function(restActs, mean){
  */
 exports.yieldBeginner = function(activities){
 	var fail = 'normal';
-	var actsWell = [];
+	var actsGood = [];
 
 	if(activities.easy.length > 0){
 		_.forEach(activities.easy, function(activity){
@@ -969,12 +975,12 @@ exports.yieldBeginner = function(activities){
 			if(activities.medium.length > 0){
 				_.forEach(activities.medium, function(activity){
 					if(activity.status === 1){
-						actsWell.push(activity);
+						actsGood.push(activity);
 					}
 				});
 
-				if(actsWell.length * 2.0 >= activities.medium.length){
-					fail = 'well';
+				if(actsGood.length * 2.0 >= activities.medium.length){
+					fail = 'good';
 				}
 			}
 		}
@@ -1005,7 +1011,7 @@ exports.yieldMedium = function(activities){
 				});
 
 				if(newType2){
-					fail = 'well';
+					fail = 'good';
 				}
 
 			}
@@ -1019,7 +1025,7 @@ exports.yieldMedium = function(activities){
  */
 exports.yieldAdvanced = function(activities){
 	var fail = 'normal';
-	var actsWell = [];
+	var actsGood = [];
 
 	if(activities.easy.length > 0){
 		_.forEach(activities.easy, function(activity){
@@ -1040,12 +1046,12 @@ exports.yieldAdvanced = function(activities){
 					if(activities.hard.length > 0){
 						_.forEach(activities.hard, function(activity){
 							if(activity.status === 1){
-								actsWell.push(activity);
+								actsGood.push(activity);
 							}
 						});
 
-						if(actsWell.length * 2.0 >= activities.hard.length){
-							fail = 'well';
+						if(actsGood.length * 2.0 >= activities.hard.length){
+							fail = 'good';
 						}
 					}
 				} 
@@ -1063,63 +1069,176 @@ exports.yieldAdvanced = function(activities){
 exports.timeBeginner = function(activities, student, fail){
 	var time = 2;
 
-	switch(fail){
-		case 'bad':
-			// Si falla faciles: tiempo normal (de momento da igual ya que no hay beginner -)
-			time = 1;
-			break;
-		case 'normal':
-			// Si falla mas de 50% de medias: tiempo normal (de momento da igual ya que no hay beginner -)
-			time = 1;
-			break;
-		case 'well':
+	if(fail === 'good'){
+		/**
+		 * Si no falla ni faciles ni mas del 50% de medias: se calcula la media y a desviacion tipica
+		 * para analizar los tiempos de las actividades del bloque. Se calcula si el estudiante he realizado
+		 * tres o mas operaciones antes del bloque.
+		 */
+		var restActs = student.activity_log.slice();
+		restActs =  _.pullAllBy(restActs, activities.hard, '_id');
+		restActs =  _.pullAllBy(restActs, activities.medium, '_id');
+		restActs =  _.pullAllBy(restActs, activities.easy, '_id');
 
-			/**
-			 * Si no falla ni faciles ni mas del 50% de medias: se calcula la media y a desviacion tipica
-			 * para analizar los tiempos de las actividades del bloque. Se calcula si el estudiante he realizado
-			 * tres o mas operaciones antes del bloque.
-			 */
-			var restActs = student.activity_log.slice();
-			restActs =  _.pullAllBy(restActs, activities.medium, '_id');
+		if(restActs.length > 3){
+			var mean = _.meanBy(restActs, 'duration');
+			var deviation  = this.deviation(restActs, mean);
 
-			if(restActs.length > 3){
-				var mean = _.meanBy(restActs, 'duration');
-				var deviation  = this.deviation(restActs, mean);
+			// Si la desviacion es mayor que la media, se realiza un sesgo (10%) y se recalculan.
+			if(deviation >= mean){	
 
-				// Si la desviacion es mayor que la media, se realiza un sesgo (10%) y se recalculan.
-				if(deviation >= mean){	
+				// Se ordenan las actividades segun a duracion.
+				restActs.sort(function(a, b){
+					return (b.duration - a.duration);
+				});
 
-					// Se ordenan las actividades segun a duracion.
-					restActs.sort(function(a, b){
-						return (b.duration - a.duration);
-					});
+				// Sesgo
+				var sesg = restActs.length / 10;
+				restActs = _.drop(restActs, sesg);
+				restActs = _.dropRight(restActs, sesg);
 
-					// Sesgo
-					var sesg = restActs.length / 10;
-					restActs = _.drop(restActs, sesg);
-					restActs = _.dropRight(restActs, sesg);
+				// Recalcula media y desviacion
+				mean = _.meanBy(restActs, 'duration');
+				deviation = this.deviation(restActs, mean);
+			}
 
-					// Recalcula media y desviacion
-					mean = _.meanBy(restActs, 'duration');
-					deviation = this.deviation(restActs, mean);
-				}
+			// Analiza tiempos de actividades faciles y medias.
+			var resEasy = this.analizeTime(activities.easy, mean, deviation);
+			var resMedium = this.analizeTime(activities.medium, mean, deviation);
 
-				// Analiza tiempos de actividades faciles y medias.
-				var resEasy = this.analizeTime(activities.easy, mean, deviation);
-				var resMedium = this.analizeTime(activities.medium, mean, deviation);
+			// Si la duracion de las actividades fáciles y medias es media o corta: Tiempo corto.
+			if(resEasy < 2 && resMedium < 2){
+				time = 1;
+				if(resEasy < 1 || resMedium < 1){
+					time = 0;
+				} 
 
-				// Si la duracion de las actividades fáciles y medias es media o corta: Tiempo corto.
-				if(resEasy < 2 && resMedium < 2){
-					time = 1;
-					if(resEasy < 1 || resMedium < 1){
-						time = 0;
-					} 
+			}
 
-				}
-
-			} 
-			break;
+		} 
+	} else {
+		time = 1;
 	}
+
+	return time;
+}
+
+/**
+ *	Funcion para analizar los tiempos de un estudiante medium
+ * 	Tiempo: 0 = corto, 1 = medio, 2 = largo.
+ */
+exports.timeMedium = function(activities, student, fail){
+	var time = 2;
+
+	if(fail === 'normal'){
+		time = 1;
+	} else {
+		
+		var restActs = student.activity_log.slice();
+		restActs =  _.pullAllBy(restActs, activities.easy, '_id');
+		restActs =  _.pullAllBy(restActs, activities.medium, '_id');
+		restActs =  _.pullAllBy(restActs, activities.hard, '_id');
+
+		if(restActs.length > 3){
+			var mean = _.meanBy(restActs, 'duration');
+			var deviation  = this.deviation(restActs, mean);
+
+			// Si la desviacion es mayor que la media, se realiza un sesgo (10%) y se recalculan.
+			if(deviation >= mean){	
+
+				// Se ordenan las actividades segun a duracion.
+				restActs.sort(function(a, b){
+					return (b.duration - a.duration);
+				});
+
+				// Sesgo
+				var sesg = restActs.length / 10;
+				restActs = _.drop(restActs, sesg);
+				restActs = _.dropRight(restActs, sesg);
+
+				// Recalcula media y desviacion
+				mean = _.meanBy(restActs, 'duration');
+				deviation = this.deviation(restActs, mean);
+			}
+
+			// Analiza tiempos de actividades faciles, medias y dificiles.
+			var resEasy = this.analizeTime(activities.easy, mean, deviation);
+			var resMedium = this.analizeTime(activities.medium, mean, deviation);
+			var resHard = this.analizeTime(activities.hard, mean, deviation);
+
+			if(resHard === 0 && resMedium < 2 || resHard === 1 && resMedium === 0){
+				time = 0;
+			} else if( resHard === 2 && resMedium === 2 || 
+			  resHard === 2 && resEasy === 2 || resMedium === 2 && resEasy === 2){
+				time = 2;
+			} else if( resHard === 2 && resMedium === 1 || resHard === 1 && resMedium === 2){
+				time = 2;
+			} else {
+				time = 1;
+			}
+
+		} 
+	} 
+
+	return time;
+}
+
+/**
+ *	Funcion para analizar los tiempos de un estudiante advanced
+ * 	Tiempo: 0 = corto, 1 = medio, 2 = largo.
+ */
+exports.timeAdvanced = function(activities, student, fail){
+	var time = 2;
+
+	if(fail === 'good'){
+		time = 1;
+	} else {
+		
+		var restActs = student.activity_log.slice();
+		restActs =  _.pullAllBy(restActs, activities.easy, '_id');
+		restActs =  _.pullAllBy(restActs, activities.medium, '_id');
+		restActs =  _.pullAllBy(restActs, activities.hard, '_id');
+
+		if(restActs.length > 3){
+			var mean = _.meanBy(restActs, 'duration');
+			var deviation  = this.deviation(restActs, mean);
+
+			// Si la desviacion es mayor que la media, se realiza un sesgo (10%) y se recalculan.
+			if(deviation >= mean){	
+
+				// Se ordenan las actividades segun a duracion.
+				restActs.sort(function(a, b){
+					return (b.duration - a.duration);
+				});
+
+				// Sesgo
+				var sesg = restActs.length / 10;
+				restActs = _.drop(restActs, sesg);
+				restActs = _.dropRight(restActs, sesg);
+
+				// Recalcula media y desviacion
+				mean = _.meanBy(restActs, 'duration');
+				deviation = this.deviation(restActs, mean);
+			}
+
+			// Analiza tiempos de actividades faciles, medias y dificiles.
+			var resEasy = this.analizeTime(activities.easy, mean, deviation);
+			var resMedium = this.analizeTime(activities.medium, mean, deviation);
+			var resHard = this.analizeTime(activities.hard, mean, deviation);
+
+			if(resHard === 2 || resHard === 1 && (resMedium === 2 || resEasy === 2) || 
+			  resMedium === 2 && resEasy === 2){
+				time = 2;
+			} else if (resHard === 1 && (resMedium < 2 && resEasy < 2) || 
+			  resHard === 0 && resMedium === 2 || resHard === 0 && resEasy === 2){
+				time = 1;
+			} else {
+				time = 0;
+			}
+
+		} 
+	} 
+
 	return time;
 }
 
@@ -1127,26 +1246,39 @@ exports.timeBeginner = function(activities, student, fail){
  * 	Funcion para analizar los tiempos del alumno con respecto a su media de duracion.
  */
 exports.analizeTime = function(activities, mean, deviation){
-	var res = 0, time = 1;
+	var res = 0, time, shortTime = false, longTime = false;
 	_.forEach(activities, function(act){
 
 		/**
-		 * 	Si la actividad ha durado mas que la media y mas que la media+desviacion: tiempo largo.
-		 *	Si la actividad ha durado menos que la media y menos que la media-desviacion: tiempo corto.
+		 * 	Si 1 actividad ha durado mas que la media y mas que la media+desviacion: tiempo largo.
+		 *	Si 1 actividad ha durado menos que la media y menos que la media-desviacion: tiempo corto.
+		 *	Si hay mas actividades por encima de la media que por debajo: tiempo largo.
+		 *	Si hay mas actividades por debajo de la media que por encima: tiempo corto.
 		 *	Otros casos: tiempo medio.
 		 */
 		
-		if(act.duration >= mean && act.duration > mean+deviation){
-			res += 1;
-		} else if(act.duration <= mean && act.duration < mean-deviation){
-			res -= 1;
-		}
+		if(act.duration >= mean){
+			if(act.duration > mean+deviation){
+				longTime = true;
+			} else {
+				res += 1;
+			}
+		} else if(act.duration <= mean){
+			if( act.duration < mean-deviation){
+				shortTime = true;
+			} else {
+				res -= 1;
+			}
+		} 
 
 	});
-	if(res > 0 && res > activities.length/2){
+
+	if(longTime || res > 0 && res > activities.length/2){
 		time = 2;
-	} else if(res < 0 && (-res) > activities.length/2){
+	} else if(shortTime || res < 0 && (-res) > activities.length/2){
 		time = 0;
+	} else {
+		time = 1;
 	}
 
 	return time;
