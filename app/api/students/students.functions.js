@@ -1075,46 +1075,16 @@ exports.timeBeginner = function(activities, student, fail){
 		 * para analizar los tiempos de las actividades del bloque. Se calcula si el estudiante he realizado
 		 * tres o mas operaciones antes del bloque.
 		 */
-		var restActs = student.activity_log.slice();
-		restActs =  _.pullAllBy(restActs, activities.hard, '_id');
-		restActs =  _.pullAllBy(restActs, activities.medium, '_id');
-		restActs =  _.pullAllBy(restActs, activities.easy, '_id');
-
-		if(restActs.length > 3){
-			var mean = _.meanBy(restActs, 'duration');
-			var deviation  = this.deviation(restActs, mean);
-
-			// Si la desviacion es mayor que la media, se realiza un sesgo (10%) y se recalculan.
-			if(deviation >= mean){	
-
-				// Se ordenan las actividades segun a duracion.
-				restActs.sort(function(a, b){
-					return (b.duration - a.duration);
-				});
-
-				// Sesgo
-				var sesg = restActs.length / 10;
-				restActs = _.drop(restActs, sesg);
-				restActs = _.dropRight(restActs, sesg);
-
-				// Recalcula media y desviacion
-				mean = _.meanBy(restActs, 'duration');
-				deviation = this.deviation(restActs, mean);
-			}
-
-			// Analiza tiempos de actividades faciles y medias.
-			var resEasy = this.analizeTime(activities.easy, mean, deviation);
-			var resMedium = this.analizeTime(activities.medium, mean, deviation);
+		var res = this.calculateTime(student, activities);
+		if(res.easy !== -1){
 
 			// Si la duracion de las actividades fáciles y medias es media o corta: Tiempo corto.
-			if(resEasy < 2 && resMedium < 2){
+			if(res.easy < 2 && res.medium < 2){
 				time = 1;
-				if(resEasy < 1 || resMedium < 1){
+				if(res.easy < 1 || res.medium < 1){
 					time = 0;
 				} 
-
 			}
-
 		} 
 	} else {
 		time = 1;
@@ -1134,44 +1104,15 @@ exports.timeMedium = function(activities, student, fail){
 		time = 1;
 	} else {
 		
-		var restActs = student.activity_log.slice();
-		restActs =  _.pullAllBy(restActs, activities.easy, '_id');
-		restActs =  _.pullAllBy(restActs, activities.medium, '_id');
-		restActs =  _.pullAllBy(restActs, activities.hard, '_id');
+		var res = this.calculateTime(student, activities);
+		if(res.easy !== -1){
 
-		if(restActs.length > 3){
-			var mean = _.meanBy(restActs, 'duration');
-			var deviation  = this.deviation(restActs, mean);
-
-			// Si la desviacion es mayor que la media, se realiza un sesgo (10%) y se recalculan.
-			if(deviation >= mean){	
-
-				// Se ordenan las actividades segun a duracion.
-				restActs.sort(function(a, b){
-					return (b.duration - a.duration);
-				});
-
-				// Sesgo
-				var sesg = restActs.length / 10;
-				restActs = _.drop(restActs, sesg);
-				restActs = _.dropRight(restActs, sesg);
-
-				// Recalcula media y desviacion
-				mean = _.meanBy(restActs, 'duration');
-				deviation = this.deviation(restActs, mean);
-			}
-
-			// Analiza tiempos de actividades faciles, medias y dificiles.
-			var resEasy = this.analizeTime(activities.easy, mean, deviation);
-			var resMedium = this.analizeTime(activities.medium, mean, deviation);
-			var resHard = this.analizeTime(activities.hard, mean, deviation);
-
-			if(resHard === 0 && resMedium < 2 || resHard === 1 && resMedium === 0){
+			if(res.hard === 0 && res.medium < 2 || res.hard === 1 && res.medium === 0){
 				time = 0;
-			} else if( resHard === 2 && resMedium === 2 || 
-			  resHard === 2 && resEasy === 2 || resMedium === 2 && resEasy === 2){
+			} else if( res.hard === 2 && res.medium === 2 || 
+			  res.hard === 2 && res.easy === 2 || res.medium === 2 && res.easy === 2){
 				time = 2;
-			} else if( resHard === 2 && resMedium === 1 || resHard === 1 && resMedium === 2){
+			} else if( res.hard === 2 && res.medium === 1 || res.hard === 1 && res.medium === 2){
 				time = 2;
 			} else {
 				time = 1;
@@ -1194,43 +1135,14 @@ exports.timeAdvanced = function(activities, student, fail){
 		time = 1;
 	} else {
 		
-		var restActs = student.activity_log.slice();
-		restActs =  _.pullAllBy(restActs, activities.easy, '_id');
-		restActs =  _.pullAllBy(restActs, activities.medium, '_id');
-		restActs =  _.pullAllBy(restActs, activities.hard, '_id');
+		var res = this.calculateTime(student, activities);
+		if(res.easy !== -1){
 
-		if(restActs.length > 3){
-			var mean = _.meanBy(restActs, 'duration');
-			var deviation  = this.deviation(restActs, mean);
-
-			// Si la desviacion es mayor que la media, se realiza un sesgo (10%) y se recalculan.
-			if(deviation >= mean){	
-
-				// Se ordenan las actividades segun a duracion.
-				restActs.sort(function(a, b){
-					return (b.duration - a.duration);
-				});
-
-				// Sesgo
-				var sesg = restActs.length / 10;
-				restActs = _.drop(restActs, sesg);
-				restActs = _.dropRight(restActs, sesg);
-
-				// Recalcula media y desviacion
-				mean = _.meanBy(restActs, 'duration');
-				deviation = this.deviation(restActs, mean);
-			}
-
-			// Analiza tiempos de actividades faciles, medias y dificiles.
-			var resEasy = this.analizeTime(activities.easy, mean, deviation);
-			var resMedium = this.analizeTime(activities.medium, mean, deviation);
-			var resHard = this.analizeTime(activities.hard, mean, deviation);
-
-			if(resHard === 2 || resHard === 1 && (resMedium === 2 || resEasy === 2) || 
-			  resMedium === 2 && resEasy === 2){
+			if(res.hard === 2 || res.hard === 1 && (res.medium === 2 || res.easy === 2) || 
+			  res.medium === 2 && res.easy === 2){
 				time = 2;
-			} else if (resHard === 1 && (resMedium < 2 && resEasy < 2) || 
-			  resHard === 0 && resMedium === 2 || resHard === 0 && resEasy === 2){
+			} else if (res.hard === 1 && (res.medium < 2 && res.easy < 2) || 
+			  res.hard === 0 && res.medium === 2 || res.hard === 0 && res.easy === 2){
 				time = 1;
 			} else {
 				time = 0;
@@ -1240,6 +1152,49 @@ exports.timeAdvanced = function(activities, student, fail){
 	} 
 
 	return time;
+}
+
+/**
+ *	Funcion que calcula la desviacion y la media de la duracion de las actividades 
+ *	y analiza los resultados.
+ */
+exports.calculateTime = function(student, activities){
+	var res = {easy: -1, medium: -1, hard: -1};
+	var restActs = student.activity_log.slice();
+	restActs =  _.pullAllBy(restActs, activities.easy, '_id');
+	restActs =  _.pullAllBy(restActs, activities.medium, '_id');
+	restActs =  _.pullAllBy(restActs, activities.hard, '_id');
+
+	if(restActs.length > 3){
+		var mean = _.meanBy(restActs, 'duration');
+		var deviation  = this.deviation(restActs, mean);
+
+		// Si la desviacion es mayor que la media, se realiza un sesgo (10%) y se recalculan.
+		if(deviation >= mean){	
+
+			// Se ordenan las actividades segun a duracion.
+			restActs.sort(function(a, b){
+				return (b.duration - a.duration);
+			});
+
+			// Sesgo
+			var sesg = restActs.length / 10;
+			restActs = _.drop(restActs, sesg);
+			restActs = _.dropRight(restActs, sesg);
+
+			// Recalcula media y desviacion
+			mean = _.meanBy(restActs, 'duration');
+			deviation = this.deviation(restActs, mean);
+		}
+
+		// Analiza tiempos de actividades faciles, medias y dificiles.
+		
+		res.easy = this.analizeTime(activities.easy, mean, deviation);
+		res.medium = this.analizeTime(activities.medium, mean, deviation);
+		res.hard = this.analizeTime(activities.hard, mean, deviation);
+	}
+
+	return res;
 }
 
 /**

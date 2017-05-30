@@ -66,6 +66,8 @@ student according to the variable data inserted in the request
 	- courses-done : retrieve a list with finished courses
 	- courses-not-done : retrieve a list with unfinished courses
 	- active-courses : retrieve a list with active courses
+	- last-included : retrieve a list with last included courses
+	- related-courses : retrieve a list with related courses
 	- all : retrieve all lists
 
 **Query Parameters**:
