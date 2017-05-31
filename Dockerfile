@@ -1,6 +1,7 @@
 # Mongodb 
 # docker run -d --name my-mongodb mongo
 # Nodeapp (backend)
+# !!!!! database host name: mongo -> config.json
 # build:
 # docker build -t botbloq/botbloq-its .
 # run:
