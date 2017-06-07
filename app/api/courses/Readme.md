@@ -153,6 +153,36 @@ If this action is not successful, it returns the error code.
 If successful, this action deletes the LOM contained into the lesson.
 If this action is not successful, it returns the error code. 
 
+---------------------------------------
+**DELETE /botbloq/v1/its/courses/:idc/section/:ids/lesson/:idle/delete_loms**
+---------------------------------------
+
+- delete the array LOM of the input from the lesson.
+
+**Parameters**: 
+
+- idc: id of the course to be deleted the LOMs.
+- ids: name of the section to be deleted the LOMs.
+- idle: name of the lesson to be deleted the LOMs.
+
+**Query Parameters**:
+
+**Permissions**:
+
+**Status Codes**:
+
+200 OK - Action successfully attempted.
+404 Not Found - course, section, lesson or LOM not found.
+400 Bad Request - The request contains bad syntax.
+
+**Input**:
+
+An array with the LOMs id.
+
+**Return**:  
+If successful, this action deletes the array LOM from the lesson.
+If this action is not successful, it returns the error code. 
+
 
 ---------------------------------------------------------------------------------------------------------------------
 >>>>>>>>>>>>						LESSONS
