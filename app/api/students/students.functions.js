@@ -890,28 +890,6 @@ exports.adaptativeMode = function(student, course){
 			activityIndex -= 1;
 		}
 
-
-
-		var restActs = student.activity_log.slice();
-		restActs =  _.pullAllBy(restActs, activities.medium, '_id');
-		
-		var mean = _.meanBy(restActs, 'duration');
-		var deviation  = this.deviation(restActs, mean);
-
-		if(deviation >= mean){	
-			restActs.sort(function(a, b){
-				return (b.duration - a.duration);
-			});
-
-			var sesg = restActs.length / 10;
-			restActs = _.drop(restActs, sesg);
-			restActs = _.dropRight(restActs, sesg);
-
-
-			mean = _.meanBy(restActs, 'duration');
-			deviation = this.deviation(restActs, mean);
-		}
-
 		/**
 		 *	Segun el tipo actual del estudiante se llama a una u otra funcion.
 		 *	Se calcula el rendimiento y se analizan los tiempos.
