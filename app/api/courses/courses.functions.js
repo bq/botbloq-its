@@ -29,7 +29,7 @@ exports.find_lom = function(lomId,loms){
 	var ret = -1;
 	
 	_.forEach(loms, function(value){
-		if(value.lom_id === lomId) {
+		if(value.lom_id.toString() === lomId.toString()) {
 			ret = _.indexOf(loms,value);
 		}
 	});
