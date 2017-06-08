@@ -92,6 +92,10 @@ router.put('/:idc/section/:ids', section_ctrl.update_section); // update a parti
 */
 
 // GETs
+router.get('/:idc/:findBy/:idFind', controller.getActivity); //get an activity by student of lom to correct.
+
+router.get('/:idc/:findBy', controller.getActivity); //get an activity to correct.
+
 router.get('/:id/objectives', controller.getObjectives); // list the objectives of the indicated course 
 
 router.get('/:id', controller.get); // list the indicated course 
@@ -105,6 +109,8 @@ router.post('/:id/includePhoto',upload.single('file'), controller.includePhoto);
 router.post('/', controller.create); // create a Course by the object
 
 // PUTs
+router.put('/:idc/student/:idstd/lom/:idl/:score', controller.correctActivity);
+
 router.put('/:id', controller.update); // update the whole course 
 
 // DELETEs

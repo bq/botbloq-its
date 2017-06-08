@@ -16,23 +16,24 @@ var Objective = new Schema({
 		type: String,
 		enum: ['knowledge', 'comprehension', 'application', 
 		'analysis', 'sintehsis', 'evaluation']
-	}
+	},
+	_id: false
 });
 
 var Lesson = new Schema({ 
-		name: { type: String, required: true}, 
-		summary: {type: String, default: 'no summary'},  
-		objectives: [Objective],
-		learning_path: [Number],
-		photo: String,
-		dificulty : { type: Number, default: 0},
-		type: {
-			type: String,
-			enum: ['Reinforcement', 'Essential', 'Extension'],
-			default: 'Essential' 
-		},
-		loms : [LOM],
-		_id: false
+	name: { type: String, required: true}, 
+	summary: {type: String, default: 'no summary'},  
+	objectives: [Objective],
+	learning_path: [Number],
+	photo: String,
+	dificulty : { type: Number, default: 0},
+	type: {
+		type: String,
+		enum: ['Reinforcement', 'Essential', 'Extension'],
+		default: 'Essential' 
+	},
+	loms : [LOM],
+	_id: false
 });
 
 var Section = new Schema({ 
@@ -55,6 +56,17 @@ var History = new Schema({
 	lesson: Number,
 	_id: false
 });
+
+var Solution = new Schema({
+	idStudent: String,
+	idCourse: String,
+	idSection: String,
+	idLesson: String,
+	idLom: String,
+	solution: String,
+	_id: false
+});
+
 	
 var CoursesSchema = new mongoose.Schema({
 	name: { type: String, trim: true, required: true, unique: true },
@@ -64,7 +76,8 @@ var CoursesSchema = new mongoose.Schema({
 	sections  : [Section],
 	photo: String,
 	statistics: {type: Statistics, required: true, default: ''},
-	history: [History]
+	history: [History],
+	solutions: [Solution]
 	}, 
 	{ timestamps: true }
 	);

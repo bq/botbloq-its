@@ -153,7 +153,16 @@ var activitySchema = new Schema({
 	created_at: {
 		type: Date,
 		default: Date.now
-	}
+	},
+	solution: {
+		type: String,
+		required: false
+	},
+	score: {
+		type: Number,
+		required: false
+	},
+	_id: false
 });
 
 var Objective = new Schema({
@@ -164,7 +173,8 @@ var Objective = new Schema({
 		type: String,
 		enum: ['knowledge', 'comprehension', 'application', 
 		'analysis', 'sintehsis', 'evaluation']
-	}
+	},
+	_id: false
 });
 
 
