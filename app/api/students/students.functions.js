@@ -153,6 +153,58 @@ exports.getRelatedCourses = function(student, courses){
 }
 
 /**
+ *	Function to calc all student features for node-rules.
+ */
+exports.calcFeatures = function(student){
+	var courses = [], lessons = [], loms = [], 
+	status = [], durations = [], correct_loms = 0, averageDuration = 500;
+
+	var activities = student.activity_log;
+
+	/*
+		Si el estudiante ya ha realizado algún curso y tiene resultados académicos, 
+		se calculan los indicadores para obtener su grupo a traves de las reglas de decisión.
+
+		Si el estudiante no ha realizado ningún curso previo y no tiene resultados académicos, 
+		se le asigna el grupo inicial o principiante.
+	*/
+	if(activities.length > 0){
+		_.forEach(activities, function(activity){
+			if(courses.indexOf(activity.idCourse) === -1){
+				courses.push(activity.idCourse);
+			}
+			if(lessons.indexOf(activity.idLesson) === -1){
+				lessons.push(activity.idLesson);
+			}
+			if(loms.indexOf(activity.idLom) === -1){
+				loms.push(activity.idLom);
+			}
+			status.push(activity.status);
+			durations.push(activity.duration);
+		});
+		correct_loms = _.countBy(status, Math.floor);
+		correct_loms = (correct_loms['1'] * 100) / loms.length;
+
+		averageDuration = _.meanBy(durations);
+	}
+
+	var features = {
+						units: 			courses.length, 
+						problems: 		lessons.length, 
+						steps: 			loms.length, 
+						corrects_steps: correct_loms, 
+						duration: 		averageDuration, 
+						hints: 			5, 
+						skills: 		student.knowledgeLevel.length
+					};
+
+	return features;
+}
+
+
+
+
+/**
  *	Función para realizar la actualización de un estudiante sin eliminar datos.
  */
 exports.doUpdate = function(object, newObject){

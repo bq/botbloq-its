@@ -8,7 +8,13 @@ var Student = function() {
 			identification: {
 				name:  nameStudent,
 				email: emailStudent
-			}
+			},
+			learningStyle : {
+				comprehension: 'global',
+    			input: 'visual',
+    			perception: 'sensing',
+    			processing: 'active'
+			} 
         };
         return student;
     };
