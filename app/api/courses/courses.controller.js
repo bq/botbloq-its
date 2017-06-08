@@ -16,6 +16,7 @@ format in the body of the request.
 */
 
 var Courses = require('./courses.model.js'),
+	Students = require('../students/students.model.js'),
     config = require('../../res/config.js'),
     CoursesFunctions = require('./courses.functions.js'),
     async = require('async'),
@@ -220,11 +221,132 @@ exports.includePhoto =  function (req, res) {
 	});
 };
 
+/**
+ *	Function to obtain one or more activities to correct them.
+ */
+exports.getActivity = function (req, res) {
+	var ret = [];
+	async.waterfall([
+	    Courses.findById.bind(Courses, req.params.idc),
+	    function(course, next) {
+			if(!course){
+				res.status(404).send('The course with id: ' + req.params.idc + ' is not registrated');
+			} else{
 
 
+				if(course.solutions.length > 0){
+					switch(req.params.findBy){
+						case 'student':
+							var student = req.params.idFind;
 
+							course.solutions.find(function(element, index, array){
+								if(element.idStudent.toString() === student.toString()){
+									ret.push(element);
+								}
+							});
+							res.status(200);
+							break;
+						
+						case 'lom':
+							var lom = req.params.idFind;
 
+							course.solutions.find(function(element, index, array){
+								if(element.idLom.toString() === lom.toString()){
+									ret.push(element);
+								}
+							});
+							res.status(200);
+							break;
 
+						case 'first':
+							ret.push(course.solutions[0]);
+							res.status(200);
+							break;
+							
+						default:
+							ret = 'the findBy value:' + req.params.findBy + ' is not correct';
+							res.status(400);
+							break;
+					}
+				} else {
+					res.status(404);
+					ret = 'The course has no activities to correct';
+				}
+			}
+			course.save(next);
+		}
+	], function(err, course) {
+		CoursesFunctions.controlErrors(err, res, ret);
+	});
+};
 
+exports.correctActivity = function(req, res){
+	var ret, bool = false,
+		idLom = req.params.idl,
+		idCourse = req.params.idc,
+		idStudent = req.params.idstd,
+		score = req.params.score;
 
+	async.waterfall([
+	    Courses.findById.bind(Courses, idCourse),
+	    function(course, next) {
+			if(!course){
+				res.status(404).send('The course with id: ' + idCourse + ' is not registrated');
+			} else{
+				Students.findOne({_id: idStudent}, function(err, student){
+					if(err){
+						console.log(err);
+			        	res.status(err.code).send(err);
+					} else if(!student){
+						res.status(404).send('The student with id: ' + idStudent + ' is not registrated');
+					}else {
+						student.activity_log.find(function(element, index, array){
+							if(element.idLom === idLom && element.idCourse === idCourse){
+								element.score = score;
+								
+								if(score >= 5){
+									element.status = 1;
+
+									var lesson = CoursesFunctions.exist_section_lesson(element.idLesson, course.sections[0].lessons);
+									lesson = course.sections[0].lessons[lesson];
+									student.knowledgeLevel.find(function(element1, index1, array1){
+										if(element1.code === lesson.objectives[0].code && element1.level === lesson.objectives[0].level){
+											bool = true;
+										}
+									});
+							 		
+									if(bool === false && lesson.objectives.length !== 0){
+										student.knowledgeLevel.push(lesson.objectives[0]);
+									} 
+
+								} else {
+									element.status = -1;
+								}
+								ret = element;
+
+								student.course.find(function(element1, index1, array1){
+									if(element1.idLom === idLom && element1.idCourse === idCourse){
+										element1.status = element.status;
+									}
+								});
+
+								course.solutions.find(function(element1, index1, array1){
+									if(element1.idLom === idLom && element1.idStudent === idStudent){
+										course.solutions.splice(index1, 1);
+									}
+								});
+
+								course.save(next);
+							}
+						});
+					}
+					student.save();
+				});
+
+			}
+		}
+	], function(err, course) {
+		CoursesFunctions.controlErrors(err, res, ret);
+	});
+};
 
