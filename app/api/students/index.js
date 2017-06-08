@@ -54,7 +54,7 @@ router.unlock('/:id', controller.activate);
 /////////////////////////// PUTs
 
 // Updates the status of the lom for a student and a course
-router.put('/:idstd/course/:idc/lom/:idl/:status', controller.updateActivity);
+router.put('/:idstd/course/:idc/lom/:idl/:status', controller.finalizeActivity);
 
 // enrollments a student in a course
 router.put('/:idstd/course/:idc', controller.enrollment); 

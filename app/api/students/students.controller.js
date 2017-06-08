@@ -51,10 +51,25 @@ exports.create = function(req, res) {
 				        	console.log(err);
 				        	res.status(err.code).send(err);
 				        } else {
-					        console.log('Student created!');
-							var json_survey = require('../../res/learningstyle.json'); 
-							json_survey.id_student = student._id;
-							res.json(json_survey);
+				        	console.log('Student created!');
+				        	var features = functions.calcFeatures(student);
+
+							ruleEngineGR.execute(features, function(result){
+								student.learningStyle.group = result.group;
+								if(req.body.learningStyle){
+					        		ruleEngineLS.execute(student, function(result1){
+										student.learningStyle.type = result1.type;
+
+										student.save();
+										res.json(student);
+									});
+					        	} else {
+									var json_survey = require('../../res/learningstyle.json'); 
+									json_survey.id_student = student._id;
+									student.save();
+									res.json(json_survey);
+								}
+							});
 				        }
 				    });
 				} else {
@@ -227,6 +242,37 @@ exports.init = function (req, res) {
 	    }
 	], function(err, student) {
 		functions.controlErrors(err, res, student);
+	});
+};
+
+/* 
+	Función para agrupar a un estudiante según sus resultados académicos
+*/
+exports.group = function(req,res) {
+	async.waterfall([Students.findById.bind(Students, req.params.id),
+		function(student, next) {
+			if(!student){
+				res.status(404).send('The student with id: ' + req.params.id + ' is not registrated');
+			} else if(student.active !== 1){
+				res.status(403).send('The student with id: ' + student._id + ' is not activated');
+			} else {
+				
+				var features = functions.calcFeatures(student);
+
+				ruleEngineGR.execute(features, function(result){
+					student.learningStyle.group = result.group;
+					student.save(next);
+				});
+				
+			}
+		}
+	], function(err, student) {
+		if(err){
+			console.log(err);
+			res.status(err.code).send(err);
+		} else {
+		 	res.status(200).send(student.learningStyle);
+		}
 	});
 };
 
@@ -411,110 +457,6 @@ exports.dataCourses = function (req, res) {
     });
 }
 
-/**
- *  According receives an 'ok' or 'nok' activity will be
- *  correct or incorrectly completed, respectively.
- */
-exports.updateActivity = function (req, res) {
-	var ret, bool = false;
-	async.waterfall([
-	    Students.findById.bind(Students,  req.params.idstd),
-	    function(student, next) { 
-			//find a student by id
-			Courses.findOne({_id: req.params.idc}, function(err, course){
-			    if (err) {
-			        console.log(err);
-			        res.status(err.code).send(err);
-			    } else {
-					if(student.active === 1){
-						var coursed = false;
-						student.course.find(function(element ,index , array){
-							if(element.idCourse === req.params.idc){
-								if(element.active === 1){
-									coursed = true;
-									if (element.idLom === req.params.idl){
-										switch(req.params.status){
-											case 'ok':
-												element.status = 1;
-												ret = element;
-												res.status(200);
-												break;
-											case 'nok':
-												element.status = -1;
-												ret = element;
-												res.status(200);
-												break;
-											case 'idle':
-												element.status = 2;
-												ret = 'The activity has been paused correctly';
-												res.status(200);
-												break;
-											default:
-												res.status(400);
-												ret = 'the status: ' + req.params.status + ' is not correct'; 
-												break;
-										}
-										 
-										 /**
-										  *  Include the objetive of the finished lesson in student knowledgeLevel  
-										  */
-										if(res.statusCode === 200){
-											if(element.status !== 2){
-												var lesson = functions2.exist_section_lesson(element.idLesson, course.sections[0].lessons);
-												lesson = course.sections[0].lessons[lesson];
-												student.knowledgeLevel.find(function(element1, index1, array1){
-													if(element1.code === lesson.objectives[0].code && element1.level === lesson.objectives[0].level){
-														bool = true;
-													}
-												});
-										 		
-												if(bool === false && lesson.objectives.length !== 0){
-													student.knowledgeLevel.push(lesson.objectives[0]);
-												} 
-											}
-											 
-									 
-											 /**
-											  *  To calculate the duration of the activity, the created_at is subtracted from the current 
-											  *  date and added to the previous duration (in case the activity has been paused previously).
-											  */
-											student.activity_log.find(function(element1, index1, array1){
-												if (element1.idCourse === element.idCourse && element1.idSection === element.idSection && 
-												  element1.idLesson === element.idLesson && element1.IdLom === element.IdLom){
-													
-													element1.duration = element1.duration + (Date.now() - element1.created_at);
-													element1.status = element.status;
-												}
-											});
-										}
-										
-										student.save(next);
-									} else{
-										res.status(404);
-										ret = 'The student: ' + student._id + ' does not have the lom: ' + req.params.idl;
-									} 
-								} else{
-									res.status(403);
-									ret = 'The student: ' + student._id + ' is not activated in the course with id: ' + req.params.idc;
-								} 								
-							}
-						});
-						
-						if(!coursed){
-							res.status(400);
-							ret = 'The student: ' + student._id + ' is not enrolled in the course with id: ' + req.params.idc;
-						} 
-					} else {
-						res.status(403); 
-						ret = 'The student with id: ' + student._id + ' is not activated';
-					}
-			    }
-			});	
-	    }
-	], function(err, student) {
-		functions.controlErrors(err, res, ret);
-	});
-};
 
 /**
  *  This function returns the next activity of the course in which
@@ -523,7 +465,7 @@ exports.updateActivity = function (req, res) {
  */
 exports.newActivity = function (req, res) {
 	
-	var activity, ret = 0,
+	var activity, ret = 0, dat,
 	coursed = false;
 	
 	async.waterfall([
@@ -554,7 +496,11 @@ exports.newActivity = function (req, res) {
 									 *  this function is explained in 'students.functions.js'.
 									 */
 
-									if(element.status !== 2){
+									if(element.status === 3){
+										ret = -4;
+
+									} else if(element.status !== 2){
+
 										ret = functions.nextActivity(element, course, student);	
 									} else {
 										ret = element;
@@ -587,6 +533,12 @@ exports.newActivity = function (req, res) {
 										activity = 'There is a course without sections';
 										student.save(next);
 										break;
+									case -3:
+										res.status(400);
+										activity = 'The student is waiting for a correction';
+										student.save(next);
+										break;
+
 									default:	
 										
 										element = ret;
@@ -614,6 +566,7 @@ exports.newActivity = function (req, res) {
 
 
 											if(element.status !== 2){
+
 												student.activity_log.push(
 													{
 														idCourse: element.idCourse,
@@ -625,6 +578,16 @@ exports.newActivity = function (req, res) {
 														created_at: Date.now()
 													}
 												);
+											} else {
+
+
+												student.activity_log.find(function(element1, index1, array1){
+													if(element1.idCourse === element.idCourse && element1.idLom === element.idLom){
+														
+														element1.created_at = Date.now();
+
+													}
+												});
 											}
 											
 											/**
@@ -677,75 +640,97 @@ exports.newActivity = function (req, res) {
 	});
 };
 
-/* 
-	Función para agrupar a un estudiante según sus resultados académicos
-*/
-exports.group = function(req,res) {
-	async.waterfall([Students.findById.bind(Students, req.params.id),
-		function(student, next) {
-			if(!student){
-				res.status(404).send('The student with id: ' + req.params.id + ' is not registrated');
-			} else if(student.active !== 1){
-				res.status(403).send('The student with id: ' + student._id + ' is not activated');
-			} else {
-				var courses = [], lessons = [], loms = [], 
-				status = [], durations = [], correct_loms = 0, averageDuration = 500;
+/**
+ *	This function sends the activity solution to the teacher to correct it
+ *	or pause an activity.
+ */
+exports.finalizeActivity = function(req, res){
+	var ret;
+	var solution = req.body;
+	async.waterfall([
+	    Students.findById.bind(Students,  req.params.idstd),
+	    function(student, next) { 
+			//find a student by id
+			Courses.findOne({_id: req.params.idc}, function(err, course){
+			    if (err) {
+			        console.log(err);
+			        res.status(err.code).send(err);
+			    } else {
+					if(student.active === 1){
+						var coursed = false;
+						student.course.find(function(element ,index , array){
+							if(element.idCourse === req.params.idc){
+								if(element.active === 1){
+									coursed = true;
+									if (element.idLom === req.params.idl){
+										switch(req.params.status){
+											case 'idle':
+												element.status = 2;
+												ret = 'Activity paused correctly';
+												res.status(200);
+												break;
+											case 'finalize':
+												element.status = 3;
+												res.status(200);
+												ret = 'The solution was successfully sent';
+												course.solutions.push({
 
-				var activities = student.activity_log;
+													idStudent: student._id,
+													idSection: element.idSection,
+													idLesson: element.idLesson,
+													idLom: element.idLom,
+													solution: JSON.stringify(solution)
 
-				/*
-					Si el estudiante ya ha realizado algún curso y tiene resultados académicos, 
-					se calculan los indicadores para obtener su grupo a traves de las reglas de decisión.
+												});
+												course.save();
+												break;
+											default:
+												res.status(400);
+												ret = 'the status: ' + req.params.status + ' is not correct'; 
+												break;
+										}
 
-					Si el estudiante no ha realizado ningún curso previo y no tiene resultados académicos, 
-					se le asigna el grupo inicial o principiante.
-				*/
-				if(activities.length > 0){
-					_.forEach(activities, function(activity){
-						if(courses.indexOf(activity.idCourse) === -1){
-							courses.push(activity.idCourse);
+										if(res.statusCode === 200){
+											student.activity_log.find(function(element1, index1, array1){
+												if (element1.idCourse === element.idCourse && element1.idSection === element.idSection && 
+												  element1.idLesson === element.idLesson && element1.IdLom === element.IdLom){
+
+
+													element1.duration = element1.duration + (Date.now() - element1.created_at);
+													element1.status = element.status;
+													element1.solution = JSON.stringify(solution);
+												}
+											});
+										}
+
+										student.save(next);
+									} else {
+										res.status(404);
+										ret = 'The student: ' + student._id + ' does not have the lom: ' + req.params.idl;
+									}
+
+								} else {
+									res.status(403);
+									ret = 'The student: ' + student._id + ' is not activated in the course with id: ' + req.params.idc;
+								}
+							}
+						});
+
+						if(!coursed){
+							res.status(400);
+							ret = 'The student: ' + student._id + ' is not enrolled in the course with id: ' + req.params.idc;
 						}
-						if(lessons.indexOf(activity.idLesson) === -1){
-							lessons.push(activity.idLesson);
-						}
-						if(loms.indexOf(activity.idLom) === -1){
-							loms.push(activity.idLom);
-						}
-						status.push(activity.status);
-						durations.push(activity.duration);
-					});
-					correct_loms = _.countBy(status, Math.floor);
-					correct_loms = (correct_loms['1'] * 100) / loms.length;
-
-					averageDuration = _.meanBy(durations);
+					} else {
+						res.status(403); 
+						ret = 'The student with id: ' + student._id + ' is not activated';
+					}
 				}
-
-				var features = {
-									units: 			courses.length, 
-									problems: 		lessons.length, 
-									steps: 			loms.length, 
-									corrects_steps: correct_loms, 
-									duration: 		averageDuration, 
-									hints: 			5, 
-									skills: 		student.knowledgeLevel.length
-								};
-
-				ruleEngineGR.execute(features, function(result){
-					student.learningStyle.group = result.group;
-					student.save(next);
-				});
-				
-			}
+			});
 		}
 	], function(err, student) {
-		if(err){
-			console.log(err);
-			res.status(err.code).send(err);
-		} else {
-		 	res.status(200).send(student.learningStyle);
-		}
+		functions.controlErrors(err, res, ret);
 	});
-};
+}
 
 /**
  * Removes a element by id
