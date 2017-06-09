@@ -6,35 +6,18 @@ Student Model (basic management)
 
 ----------
 
-**GET /botbloq/v1/its/students**
+
+**GET /botbloq/v1/its/students/:idstd/course/:idc/section/:ids/lesson/:idl**
 -------------
 
-Retrieve of all the students registered in the system. 
+Returns the lesson assigned to id selected.
 
-**Parameters**: None
+**Parameters**: 
 
-**Query Parameters**:
-
-**Permissions**:
-
-**Status Codes**:
-200 OK - Action successfully attempted.
-
-**Input**:
-
-**Return**:  
-This action returns a JSON data block containing the information for each student.
-
-
-
-**GET /botbloq/v1/its/students/:id**
-------------
-
-Retrieve the basic information of a student
-
-**Parameters**
-
-- id: Student ID
+- idstd: student ID
+- idc: course ID
+- ids: section ID
+- idl: lesson ID
 
 **Query Parameters**:
 
@@ -43,11 +26,41 @@ Retrieve the basic information of a student
 **Status Codes**:
 200 OK - Action successfully attempted.
 400 Bad Request - The request contains bad syntax.
+403 Forbidden - The student is not activated.
 404 Not Found - Resource not found.
-**Input**: 
 
-**Return**: 
-If successful, this action returns the corresponding JSON object student with id introduced.
+**Input**:
+
+**Return**:  
+If successful, this action returns a JSON data block containing the information for the lesson selected.
+If this action is not successful, it returns the error code. 
+
+
+
+**GET /botbloq/v1/its/students/:idstd/course/:idc**
+-------------
+
+Returns a new activity for the enrolled course.
+
+**Parameters**: 
+
+- idstd: student ID
+- idc: course ID
+
+**Query Parameters**:
+
+**Permissions**:
+
+**Status Codes**:
+200 OK - Action successfully attempted.
+400 Bad Request - The request contains bad syntax.
+403 Forbidden - The student is not activated.
+404 Not Found - Resource not found.
+
+**Input**:
+
+**Return**:  
+If successful, this action returns a JSON data block containing the information for the new activity.
 If this action is not successful, it returns the error code. 
 
 
@@ -55,8 +68,8 @@ If this action is not successful, it returns the error code.
 **GET /botbloq/v1/its/students/:id/:data**
 ------------
 
-Returns a list with finished courses, unfinished courses or active courses of a 
-student according to the variable data inserted in the request
+Returns a list with finished courses, unfinished courses, active courses, last included courses
+or related courses of a student according to the variable data inserted in the request.
 
 **Parameters**
 
@@ -87,15 +100,14 @@ If this action is not successful, it returns the error code.
 
 
 
-**GET /botbloq/v1/its/students/:idstd/course/:idc**
--------------
+**GET /botbloq/v1/its/students/:id/knowledge**
+------------
 
-Returns a new activity for the enrolled course.
+Retrieve the knowledge level of a student
 
-**Parameters**: 
+**Parameters**
 
-- idstd: student ID
-- idc: course ID
+- id: Student ID
 
 **Query Parameters**:
 
@@ -104,14 +116,58 @@ Returns a new activity for the enrolled course.
 **Status Codes**:
 200 OK - Action successfully attempted.
 400 Bad Request - The request contains bad syntax.
-403 Forbidden - The student is not activated.
 404 Not Found - Resource not found.
+**Input**: 
+
+**Return**: 
+If successful, this action returns the corresponding knowledge level of a student with id introduced.
+If this action is not successful, it returns the error code. 
+
+
+
+**GET /botbloq/v1/its/students/:id**
+------------
+
+Retrieve the basic information of a student
+
+**Parameters**
+
+- id: Student ID
+
+**Query Parameters**:
+
+**Permissions**:
+
+**Status Codes**:
+200 OK - Action successfully attempted.
+400 Bad Request - The request contains bad syntax.
+404 Not Found - Resource not found.
+**Input**: 
+
+**Return**: 
+If successful, this action returns the corresponding JSON object student with id introduced.
+If this action is not successful, it returns the error code. 
+
+
+
+**GET /botbloq/v1/its/students**
+-------------
+
+Retrieve of all the students registered in the system. 
+
+**Parameters**: None
+
+**Query Parameters**:
+
+**Permissions**:
+
+**Status Codes**:
+200 OK - Action successfully attempted.
 
 **Input**:
 
 **Return**:  
-If successful, this action returns a JSON data block containing the information for the new activity.
-If this action is not successful, it returns the error code. 
+This action returns a JSON data block containing the information for each student.
 
 
 
@@ -255,14 +311,14 @@ If this action is not successful, it returns the error code.
 **PUT /botbloq/v1/its/students/:idstd/course/:idc/lom/:idl/:status **
 -------------
 
-Update the status of a student's activity. 
+Finalize an activity and send the solution to correct it. Also pauses activity.
 
 **Parameters**
 
 - idstd: Student ID
 - idc: Course ID
 - idl: Lom ID
-- status: ok or nok
+- status: finalize or idle
 
 **Query Parameters**:
 
@@ -277,7 +333,7 @@ Update the status of a student's activity.
 **Input**: 
 
 **Return**:  
-If successful, returns updated student information.
+If successful, returns a message to verify he action.
 If this action is not successful, it returns the error code. 
 
 
@@ -392,7 +448,6 @@ Number of removed students (N) and the success of the operation (.ok)
 ” ok ” : 1 ,
 ”n ” : 1
 }
-
 
 
 

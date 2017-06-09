@@ -31,6 +31,9 @@ router.post('/:idc/section/:ids/lesson/:idle/lom/:idlo', loms_ctrl.assign_lom);
 // create a particular lom of a lesson
 router.post('/:idc/section/:ids/lesson/:idle/assign_loms', loms_ctrl.assign_loms);
 
+
+// DELETEs
+
 // DELETEs a list of loms of a lesson
 router.delete('/:idc/section/:ids/lesson/:idle/delete_loms', loms_ctrl.delete_loms);
 // DELETEs a particular lom of a lesson

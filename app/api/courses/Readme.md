@@ -37,6 +37,8 @@ If successful, this action returns the information of lom
 	contained into the lesson.
 If this action is not successful, it returns the error code. 
 
+
+
 ---------------------------------------
 **GET /botbloq/v1/its/courses/course/:course_id/section/:section_id/lesson/:lesson_id/loms**
 ---------------------------------------
@@ -63,6 +65,7 @@ If this action is not successful, it returns the error code.
 If successful, this action returns a list with the information for each one of the loms 
 	contained into the lesson.
 If this action is not successful, it returns the error code. 
+
 
 
 ---------------------------------------
@@ -94,6 +97,8 @@ If this action is not successful, it returns the error code.
 If successful, this action assign the indicated LOM into the lesson.
 If this action is not successful, it returns the error code. 
 
+
+
 ---------------------------------------
 **POST /botbloq/v1/its/courses/:idc/section/:ids/lesson/:idle/assign_loms**
 ---------------------------------------
@@ -124,34 +129,7 @@ An array with the LOMs id.
 If successful, this action assign the array LOM into the lesson.
 If this action is not successful, it returns the error code. 
 
----------------------------------------
-**DELETE /botbloq/v1/its/courses/:idc/section/:ids/lesson/:idle/lom/:idlo**
----------------------------------------
 
-- delete the indicated LOM from the lesson.
-
-**Parameters**: 
-
-- idc: id of the course to be deleted the LOM.
-- ids: name of the section to be deleted the LOM.
-- idle: name of the lesson to be deleted the LOM.
-- idlo: id of the LOM to be deleted.
-
-**Query Parameters**:
-
-**Permissions**:
-
-**Status Codes**:
-
-200 OK - Action successfully attempted.
-404 Not Found - course, section, lesson or LOM not found.
-400 Bad Request - The request contains bad syntax.
-
-**Input**:
-
-**Return**:  
-If successful, this action deletes the LOM contained into the lesson.
-If this action is not successful, it returns the error code. 
 
 ---------------------------------------
 **DELETE /botbloq/v1/its/courses/:idc/section/:ids/lesson/:idle/delete_loms**
@@ -184,9 +162,70 @@ If successful, this action deletes the array LOM from the lesson.
 If this action is not successful, it returns the error code. 
 
 
+
+---------------------------------------
+**DELETE /botbloq/v1/its/courses/:idc/section/:ids/lesson/:idle/lom/:idlo**
+---------------------------------------
+
+- delete the indicated LOM from the lesson.
+
+**Parameters**: 
+
+- idc: id of the course to be deleted the LOM.
+- ids: name of the section to be deleted the LOM.
+- idle: name of the lesson to be deleted the LOM.
+- idlo: id of the LOM to be deleted.
+
+**Query Parameters**:
+
+**Permissions**:
+
+**Status Codes**:
+
+200 OK - Action successfully attempted.
+404 Not Found - course, section, lesson or LOM not found.
+400 Bad Request - The request contains bad syntax.
+
+**Input**:
+
+**Return**:  
+If successful, this action deletes the LOM contained into the lesson.
+If this action is not successful, it returns the error code. 
+
+
+
 ---------------------------------------------------------------------------------------------------------------------
 >>>>>>>>>>>>						LESSONS
 ---------------------------------------------------------------------------------------------------------------------
+
+---------------------------------------
+**GET /botbloq/v1/its/courses/course/:course_id/section/:section_id/lesson/:lesson_id/objectives**
+---------------------------------------
+
+- lists the objectives of indicated lesson. 
+
+**Parameters**: 
+- course_id: name of the course to be listed the objectives
+- section_id: name of the section of the course to be listed the objectives
+- lesson_id: name of the lesson of the course section to be listed the objectives
+
+**Query Parameters**:
+
+**Permissions**:
+
+**Status Codes**:
+
+200 OK - Action successfully attempted.
+404 Not Found - course, section or lesson not found.
+
+**Input**:
+
+**Return**:  
+If successful, this action returns a list with the objectives of the lesson
+	contained into the course section.
+If this action is not successful, it returns the error code. 
+
+
 
 ---------------------------------------
 **GET /botbloq/v1/its/courses/course/:course_id/section/section_id/lesson/lesson_id**
@@ -241,6 +280,39 @@ If this action is not successful, it returns the error code.
 If successful, this action returns a list with the information for each one of the lessons 
 	contained into the course section.
 If this action is not successful, it returns the error code. 
+
+
+
+---------------------------------------
+**POST /botbloq/v1/its/courses/:idc/section/:ids/lesson/:idl/includePhoto**
+---------------------------------------
+
+- includes a photo in the indicated lesson.
+
+**Parameters**: 
+
+- idc: id of the course.
+- ids: name of the section.
+- idl: name of the lesson.
+
+**Query Parameters**:
+
+**Permissions**:
+
+**Status Codes**:
+
+200 OK - Action successfully attempted.
+404 Not Found - course, section or lesson not found.
+400 Bad Request - The request contains bad syntax.
+
+**Input**: 
+
+A photo to be included in the lesson.
+
+**Return**:  
+- the photo is included into the lesson of the course. 
+	A message to verify the action.
+
 
 
 ---------------------------------------
@@ -351,6 +423,33 @@ If this action is not successful, it returns the error code.
 >>>>>>>>>>>>						SECTIONS
 ---------------------------------------------------------------------------------------------------------------------
 
+---------------------------------------
+**GET /botbloq/v1/its/courses/course/:course_id/section/:section_id/objectives**
+---------------------------------------
+
+- lists the objectives of indicated section. 
+
+**Parameters**: 
+- course_id: name of the course to be listed the objectives
+- section_id: name of the section of the course to be listed the objectives
+
+**Query Parameters**:
+
+**Permissions**:
+
+**Status Codes**:
+
+200 OK - Action successfully attempted.
+404 Not Found - course or section not found.
+
+**Input**:
+
+**Return**:  
+If successful, this action returns a list with the objectives of the section
+	contained into the course.
+If this action is not successful, it returns the error code. 
+
+
 
 ---------------------------------------
 **GET /botbloq/v1/its/courses/course/:course_id/section/:section_id**
@@ -403,6 +502,7 @@ If this action is not successful, it returns the error code.
 **Return**:  
 If successful, this action returns a list with the information for each one of the course sections.
 If this action is not successful, it returns the error code. 
+
 
 
 ---------------------------------------
@@ -504,6 +604,87 @@ The old value of the section is substituted by new value received.
 ---------------------------------------------------------------------------------------------------------------------
 
 ---------------------------------------
+**GET /botbloq/v1/its/courses/course/:idc/:findBy/:idFind**
+---------------------------------------
+
+- Lists pending activities to be corrected.
+
+**Parameters**: 
+- idc: name of the course to be listed the activities.
+- findBy: student or lom, depending on how you want to filter
+- idFind: idStudent or idLom
+
+**Query Parameters**:
+
+**Permissions**:
+
+**Status Codes**:
+
+200 OK - Action successfully attempted.
+404 Not Found - course, student or lom not found.
+
+**Input**:
+
+**Return**:  
+If successful, this action returns a list with the activities of the course to be corrected.
+If this action is not successful, it returns the error code. 
+
+
+
+---------------------------------------
+**GET /botbloq/v1/its/courses/course/:idc/:findBy**
+---------------------------------------
+
+- Lists the first activity to be corrected.
+
+**Parameters**: 
+- idc: name of the course to be listed the activity.
+- findBy: first
+
+**Query Parameters**:
+
+**Permissions**:
+
+**Status Codes**:
+
+200 OK - Action successfully attempted.
+404 Not Found - course not found.
+
+**Input**:
+
+**Return**:  
+If successful, this action returns the activity of the course to be corrected.
+If this action is not successful, it returns the error code. 
+
+
+
+---------------------------------------
+**GET /botbloq/v1/its/courses/course/:course_id/objectives**
+---------------------------------------
+
+- lists the objectives of indicated course. 
+
+**Parameters**: 
+- course_id: name of the course to be listed the objectives
+
+**Query Parameters**:
+
+**Permissions**:
+
+**Status Codes**:
+
+200 OK - Action successfully attempted.
+404 Not Found - course not found.
+
+**Input**:
+
+**Return**:  
+If successful, this action returns a list with the objectives of the course.
+If this action is not successful, it returns the error code. 
+
+
+
+---------------------------------------
 **GET /botbloq/v1/its/courses/:id**
 ---------------------------------------
 
@@ -529,6 +710,8 @@ Retrieve the basic information of a course.
 If successful, this action returns a JSON data block containing the course information.
 If this action is not successful, it returns the error code. 
 
+
+
 ---------------------------------------
 **GET /botbloq/v1/its/courses/**
 ---------------------------------------
@@ -552,6 +735,37 @@ Retrieve of all the courses registered in the system.
 **Return**:  
 If successful, this action returns a JSON data block containing the information for each course.
 If this action is not successful, it returns the error code. 
+
+
+
+---------------------------------------
+**POST /botbloq/v1/its/courses/:id/includePhoto**
+---------------------------------------
+
+- includes a photo in the indicated course.
+
+**Parameters**: 
+
+- id: id of the course.
+
+**Query Parameters**:
+
+**Permissions**:
+
+**Status Codes**:
+
+200 OK - Action successfully attempted.
+404 Not Found - course not found.
+400 Bad Request - The request contains bad syntax.
+
+**Input**: 
+
+A photo to be included in the course.
+
+**Return**:  
+- the photo is included into the course. 
+	A message to verify the action.
+
 
 
 ---------------------------------------
@@ -589,6 +803,38 @@ The service creates a new course with  the provided values.
 
 **Return**:  
 - the new course is included into the courses collection
+
+
+
+---------------------------------------
+**PUT /botbloq/v1/its/courses/:idc/student/:idstd/lom/:idl/:score**
+---------------------------------------
+
+Correct an activity and qualify it. 
+
+**Parameters**
+
+- idc: course id of the activity.
+- idstd: student id who sent the activity solution.
+- idl: lom id of the activity.
+
+**Query Parameters**:
+
+**Permissions**:
+
+**Status Codes**:
+
+200 OK - Action successfully attempted.
+404 Not Found - course, student or LOM not found.
+400 Bad Request - The request contains bad syntax.
+
+**Input**: 
+
+**Return**:  
+If successful, this action returns a JSON data block containing the information for the finished activity.
+If this action is not successful, it returns the error code. 
+
+
 
 ---------------------------------------
 **PUT /botbloq/v1/its/courses/:id**
@@ -684,9 +930,3 @@ Number of removed courses (N) and the success of the operation (.ok)
 ” ok ” : 1 ,
 ”n ” : 3
 }
-
-
-
-
-
-
