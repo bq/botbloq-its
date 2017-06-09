@@ -54,9 +54,12 @@ exports.create = function(req, res) {
 				        	console.log('Student created!');
 				        	var features = functions.calcFeatures(student);
 
+				        	// Calculate the student's group
 							ruleEngineGR.execute(features, function(result){
 								student.learningStyle.group = result.group;
 								if(req.body.learningStyle){
+									// If the learning style is included, the student's 
+									// ideal format type is calculated
 					        		ruleEngineLS.execute(student, function(result1){
 										student.learningStyle.type = result1.type;
 
@@ -64,6 +67,7 @@ exports.create = function(req, res) {
 										res.json(student);
 									});
 					        	} else {
+					        		// If learning style is not included, a survey is returned.
 									var json_survey = require('../../res/learningstyle.json'); 
 									json_survey.id_student = student._id;
 									student.save();
@@ -664,15 +668,16 @@ exports.finalizeActivity = function(req, res){
 									coursed = true;
 									if (element.idLom === req.params.idl){
 										switch(req.params.status){
-											case 'idle':
+											case 'idle': // pause the activity.
 												element.status = 2;
 												ret = 'Activity paused correctly';
 												res.status(200);
 												break;
-											case 'finalize':
+											case 'finalize': // finalize the activity.
 												element.status = 3;
 												res.status(200);
 												ret = 'The solution was successfully sent';
+												// the activity soluction is sent to correct it.
 												course.solutions.push({
 
 													idStudent: student._id,
@@ -694,7 +699,6 @@ exports.finalizeActivity = function(req, res){
 											student.activity_log.find(function(element1, index1, array1){
 												if (element1.idCourse === element.idCourse && element1.idSection === element.idSection && 
 												  element1.idLesson === element.idLesson && element1.IdLom === element.IdLom){
-
 
 													element1.duration = element1.duration + (Date.now() - element1.created_at);
 													element1.status = element.status;
