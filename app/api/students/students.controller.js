@@ -30,6 +30,44 @@ exports.all = function (req, res) {
 };
 
 /**
+ * Returns an student by id
+ */
+exports.get = function (req, res) {
+	var finder;
+	if(mongoose.Types.ObjectId.isValid(req.params.id)){
+		finder = {_id: req.params.id};
+	} else {
+		finder = {'identification.email': req.params.id};
+	}
+
+	Students.findOne(finder, function(err, student) {
+		if(err){
+			console.log(err);
+			res.status(err.code).send(err);
+		}else if(!student){
+			res.status(404).send('The student with id o email: ' + req.params.id + ' is not registrated');
+		} else {
+			if(student.active === 1){
+				var arrayCourses = [];
+				student.course.find(function(element, index, array){
+					if(element.active === 1){ 
+						arrayCourses.push(element); 
+					} 
+				});
+				student.course = arrayCourses;
+				if(res.statusCode === 200){
+					res.json(student);
+				} else {
+					res.sendStatus(res.statusCode);
+				}
+			} else {
+				res.status(403).send('The student with id: ' + req.params.id + ' is not activated');
+			}
+		}
+	});
+};
+
+/**
  * Creates a new element
  */
 exports.create = function(req, res) {
@@ -86,83 +124,8 @@ exports.create = function(req, res) {
 	}
 };
 
-/**
- * Destroys all elements
- */
-exports.destroy  = function(req, res){
-	Students.remove({}, function (err, resp) {
-		functions.controlErrors(err, res, resp);
-	});
-};
 
 //BY ID	
-/**
- * Activates an student by id
- */
-exports.activate = function (req, res) {
-	async.waterfall([
-	    Students.findById.bind(Students, req.params.id),
-	    function(student, next) {
-	        student = _.extend(student, {active: 1});
-	       	student.save(next);
-	    }
-	], function(err, student){
-		functions.controlErrors(err, res, student);
-	});
-};
-
-/**
- * Deactivates an student by id
- */
-exports.deactivate = function (req, res) {
-	async.waterfall([
-	    Students.findById.bind(Students, req.params.id),
-	    function(student, next) {
-	        student = _.extend(student, {active: 0});
-	       	student.save(next);
-	    }
-	], function(err, student) {
-		functions.controlErrors(err, res, student);
-	});
-};
-
-/**
- * Returns an student by id
- */
-exports.get = function (req, res) {
-	var finder;
-	if(mongoose.Types.ObjectId.isValid(req.params.id)){
-		finder = {_id: req.params.id};
-	} else {
-		finder = {'identification.email': req.params.id};
-	}
-
-	Students.findOne(finder, function(err, student) {
-		if(err){
-			console.log(err);
-			res.status(err.code).send(err);
-		}else if(!student){
-			res.status(404).send('The student with id o email: ' + req.params.id + ' is not registrated');
-		} else {
-			if(student.active === 1){
-				var arrayCourses = [];
-				student.course.find(function(element, index, array){
-					if(element.active === 1){ 
-						arrayCourses.push(element); 
-					} 
-				});
-				student.course = arrayCourses;
-				if(res.statusCode === 200){
-					res.json(student);
-				} else {
-					res.sendStatus(res.statusCode);
-				}
-			} else {
-				res.status(403).send('The student with id: ' + req.params.id + ' is not activated');
-			}
-		}
-	});
-};
 
 /**
  *  Updates a student by id
@@ -207,6 +170,122 @@ exports.update = function(req, res) {
 };
 
 /**
+ * Returns an student knowledge Level by id
+ */
+exports.getKnowledge = function (req, res) {
+	var finder;
+	if(mongoose.Types.ObjectId.isValid(req.params.id)){
+		finder = {_id: req.params.id};
+	} else {
+		finder = {'identification.email': req.params.id};
+	}
+
+	Students.findOne(finder, function(err, student) {
+		if(err){
+			console.log(err);
+			res.status(err.code).send(err);
+		}else if(!student){
+			res.status(404).send('The student with id o email: ' + req.params.id + ' is not registrated');
+		} else {
+			if(student.active === 1){
+				if(res.statusCode === 200){
+					res.json(student.knowledgeLevel);
+				} else {
+					res.sendStatus(res.statusCode);
+				}
+			} else {
+				res.status(403).send('The student with id: ' + req.params.id + ' is not activated');
+			}
+		}
+	});
+};
+
+
+/**
+ * Returns a specific lesson by id
+ */
+exports.getLesson = function (req, res) {
+	var finder, courseId = req.params.idc, sectionId = req.params.ids, lessonId = req.params.idl;
+	if(mongoose.Types.ObjectId.isValid(req.params.idstd)){
+		finder = {_id: req.params.idstd};
+	} else {
+		finder = {'identification.email': req.params.idstd};
+	}
+
+	Students.findOne(finder, function(err, student) {
+		if(err){
+			console.log(err);
+			res.status(err.code).send(err);
+		}else if(!student){
+			res.status(404).send('The student with id o email: ' + req.params.idstd + ' is not registrated');
+		} else {
+			if(student.active === 1){
+
+				if(mongoose.Types.ObjectId.isValid(courseId)){
+					Courses.findOne({_id: courseId}, function(err, course) {
+				        if (err) {
+				        	console.log(err);
+							res.status(err.code).send(err);				
+						} else if(!course){
+							res.status(404).send('The course with id: ' + courseId + ' is not registrated');
+						} else {
+							var inds = functions2.exist_section_lesson(sectionId,course.sections);
+							if (inds < 0){
+								res.status(404).send('The section with id : ' + sectionId +
+								' has not been found in the course with id: ' + courseId);
+							} else {	// section exists
+								var indl = functions2.exist_section_lesson(lessonId,course.sections[inds].lessons);
+								if (indl < 0) {
+									res.status(404).send('The lesson with id : ' + lessonId +
+									' has not been found in the section with id: ' + sectionId);
+								} else {
+									res.status(200).send(course.sections[inds].lessons[indl]);	
+								}	
+							}   
+						} 			 
+					});
+				} else {
+					res.status(404).send('The course with id: ' + courseId + ' is not registrated');
+				}
+			} else {
+				res.status(403).send('The student with id: ' + req.params.idstd + ' is not activated');
+			}
+		}
+	});
+};
+
+/**
+ * Activates an student by id
+ */
+exports.activate = function (req, res) {
+	async.waterfall([
+	    Students.findById.bind(Students, req.params.id),
+	    function(student, next) {
+	        student = _.extend(student, {active: 1});
+	       	student.save(next);
+	    }
+	], function(err, student){
+		functions.controlErrors(err, res, student);
+	});
+};
+
+/**
+ * Deactivates an student by id
+ */
+exports.deactivate = function (req, res) {
+	async.waterfall([
+	    Students.findById.bind(Students, req.params.id),
+	    function(student, next) {
+	        student = _.extend(student, {active: 0});
+	       	student.save(next);
+	    }
+	], function(err, student) {
+		functions.controlErrors(err, res, student);
+	});
+};
+
+
+/**
  *  Includes a learning style in a student
  */
 exports.init = function (req, res) {
@@ -232,6 +311,7 @@ exports.init = function (req, res) {
 		   			default:
 		   			 	res.status(400).send('The id_question: ' +
 		   			 	  answers[i].id_question + ' is not correct');
+		   			 	break;
 					}
 				}
 
@@ -302,8 +382,8 @@ exports.enrollment = function (req, res) {
 					if(student.active === 1){
 						var coursed = false;
 						/* 
-							Se busca el nuevo curso en los cursos en los que esta matriculado el estudiante 
-							para comprobar que no está matriculado en el previamente.
+							The course is searched in the courses in which the student is enrolled to verify 
+							that he is not enrolled in the course.
 						*/
 						student.course.find(function(element ,index , array){
 							if(element.idCourse === req.params.idc){
@@ -320,8 +400,8 @@ exports.enrollment = function (req, res) {
 						// if student is activated and is not enrolled in the same course
 						if(!coursed){ 
 							/*
-								Si no está matriculado en el curso con anterioridad, se le asigna el tipo
-								de estudiante para ese curso y se matricula 
+								If you are not enrolled in the course previously, 
+								the type is assigned fot the student for that course and enrolled in it
 							*/
 							type = functions.assignTypeStudent(student, course);
 
@@ -409,7 +489,6 @@ exports.unenrollment = function (req, res) {
 	Función para obtener los cursos finalizados, cursos no finalizados 
 	y los cursos activos de un estudiante.
 */
-
 exports.dataCourses = function (req, res) {
 	var data = [];
     Students.findOne({_id: req.params.id}, function(err, student) { 
@@ -468,7 +547,6 @@ exports.dataCourses = function (req, res) {
  *  and the result of the same.
  */
 exports.newActivity = function (req, res) {
-	
 	var activity, ret = 0, dat,
 	coursed = false;
 	
@@ -513,8 +591,7 @@ exports.newActivity = function (req, res) {
 									switch (ret){
 									case -1:
 										/*
-											Se incluye el curso finalizado en las estadísticas 
-											del estudiante.
+											The completed course is included in the student's statistics.
 										*/
 										course.statistics.std_finished.push(student._id);
 										course.statistics.std_enrolled.find(function(element, index, array){
@@ -537,7 +614,7 @@ exports.newActivity = function (req, res) {
 										activity = 'There is a course without sections';
 										student.save(next);
 										break;
-									case -3:
+									case -4:
 										res.status(400);
 										activity = 'The student is waiting for a correction';
 										student.save(next);
@@ -547,8 +624,7 @@ exports.newActivity = function (req, res) {
 										
 										element = ret;
 										/*
-											Si la actividad devuelta es Básica, se recalcula el tipo del
-											estudiante.
+											If the activity returned is basic, the student's type is calculated.
 										*/
 
 										var lesson = functions2.exist_section_lesson(element.idLesson, course.sections[0].lessons);
@@ -560,8 +636,8 @@ exports.newActivity = function (req, res) {
 										}
 
 										/*
-											Si se devuelve la siguiente actividad de curso, se selecciona
-											el tipo de LOM más acorde con el tipo de estudiante.
+											If the next activity is returned, the best 
+											LOM format is selected for the student.
 										*/
 										var lomRet = functions.selectLOM(student, element, course);
 
@@ -677,7 +753,7 @@ exports.finalizeActivity = function(req, res){
 												element.status = 3;
 												res.status(200);
 												ret = 'The solution was successfully sent';
-												// the activity soluction is sent to correct it.
+												// the activity solution is sent to correct it.
 												course.solutions.push({
 
 													idStudent: student._id,
@@ -762,89 +838,11 @@ exports.remove = function (req, res) {
 	});
 };
 
-
-
 /**
- * Returns an student knowledge Level by id
+ * Destroys all elements
  */
-exports.getKnowledge = function (req, res) {
-	var finder;
-	if(mongoose.Types.ObjectId.isValid(req.params.id)){
-		finder = {_id: req.params.id};
-	} else {
-		finder = {'identification.email': req.params.id};
-	}
-
-	Students.findOne(finder, function(err, student) {
-		if(err){
-			console.log(err);
-			res.status(err.code).send(err);
-		}else if(!student){
-			res.status(404).send('The student with id o email: ' + req.params.id + ' is not registrated');
-		} else {
-			if(student.active === 1){
-				if(res.statusCode === 200){
-					res.json(student.knowledgeLevel);
-				} else {
-					res.sendStatus(res.statusCode);
-				}
-			} else {
-				res.status(403).send('The student with id: ' + req.params.id + ' is not activated');
-			}
-		}
-	});
-};
-
-
-/**
- * Returns a specific lesson by id
- */
-exports.getLesson = function (req, res) {
-	var finder, courseId = req.params.idc, sectionId = req.params.ids, lessonId = req.params.idl;
-	if(mongoose.Types.ObjectId.isValid(req.params.idstd)){
-		finder = {_id: req.params.idstd};
-	} else {
-		finder = {'identification.email': req.params.idstd};
-	}
-
-	Students.findOne(finder, function(err, student) {
-		if(err){
-			console.log(err);
-			res.status(err.code).send(err);
-		}else if(!student){
-			res.status(404).send('The student with id o email: ' + req.params.idstd + ' is not registrated');
-		} else {
-			if(student.active === 1){
-
-				if(mongoose.Types.ObjectId.isValid(courseId)){
-					Courses.findOne({_id: courseId}, function(err, course) {
-				        if (err) {
-				        	console.log(err);
-							res.status(err.code).send(err);				
-						} else if(!course){
-							res.status(404).send('The course with id: ' + courseId + ' is not registrated');
-						} else {
-							var inds = functions2.exist_section_lesson(sectionId,course.sections);
-							if (inds < 0){
-								res.status(404).send('The section with id : ' + sectionId +
-								' has not been found in the course with id: ' + courseId);
-							} else {	// section exists
-								var indl = functions2.exist_section_lesson(lessonId,course.sections[inds].lessons);
-								if (indl < 0) {
-									res.status(404).send('The lesson with id : ' + lessonId +
-									' has not been found in the section with id: ' + sectionId);
-								} else {
-									res.status(200).send(course.sections[inds].lessons[indl]);	
-								}	
-							}   
-						} 			 
-					});
-				} else {
-					res.status(404).send('The course with id: ' + courseId + ' is not registrated');
-				}
-			} else {
-				res.status(403).send('The student with id: ' + req.params.idstd + ' is not activated');
-			}
-		}
+exports.destroy  = function(req, res){
+	Students.remove({}, function (err, resp) {
+		functions.controlErrors(err, res, resp);
 	});
 };
