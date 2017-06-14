@@ -18,6 +18,9 @@ exports.controlErrors = function (err, res, ret){
 	}
 }
 
+/**
+ *	Function to update a LOM without deleting data.
+ */
 exports.doUpdate = function(object, newObject){
 	var result, result2;
 	result = _.keysIn(newObject);

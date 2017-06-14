@@ -161,13 +161,13 @@ exports.calcFeatures = function(student){
 
 	var activities = student.activity_log;
 
-	/*
-		Si el estudiante ya ha realizado algún curso y tiene resultados académicos, 
-		se calculan los indicadores para obtener su grupo a traves de las reglas de decisión.
-
-		Si el estudiante no ha realizado ningún curso previo y no tiene resultados académicos, 
-		se le asigna el grupo inicial o principiante.
-	*/
+	/**
+	 *	If the student has already taken a course and has academic results, 
+	 *	the indicators are calculated to obtain his / her group through the decision rules.
+	 *
+	 *	If the student has not taken any previous course and does not have academic results,
+	 *	he is assigned the initial group or beginner.
+	 */
 	if(activities.length > 0){
 		_.forEach(activities, function(activity){
 			if(courses.indexOf(activity.idCourse) === -1){
@@ -205,7 +205,7 @@ exports.calcFeatures = function(student){
 
 
 /**
- *	Función para realizar la actualización de un estudiante sin eliminar datos.
+ *	Function to update a student without deleting data.
  */
 exports.doUpdate = function(object, newObject){
 	var result, result2;
@@ -229,14 +229,14 @@ exports.doUpdate = function(object, newObject){
 	return object;
 }
 /**
- * 	Función para seleccionar el tipo de LOM disponible más acorde con 
- * 	el tipo de estudiante que lo solicita.
+ * 	Function to select the type of LOM available more in agreement 
+ *	with the type of student that requests it.
  *
- *  Orden de preferencias de los tipos de LOM:
- *	Video -> Audio -> Ejercicio -> PDF -> otro
- *	Audio -> Video -> Ejercicio -> PDF -> otro
- *	PDF -> Ejercicio -> Video -> Audio -> otro
- *	Ejercicio -> PDF -> Video -> Audio -> otro
+ *  LOM types preferences :
+ *	Video -> Audio -> Exercise -> PDF -> other
+ *	Audio -> Video -> Exercise -> PDF -> other
+ *	PDF -> Exercise -> Video -> Audio -> other
+ *	Exercise -> PDF -> Video -> Audio -> other
  */
 exports.selectType = function(loms, type){
 	var ret = '', cont = 0, fail = [];
@@ -300,7 +300,7 @@ exports.selectType = function(loms, type){
 }
 
 /**
- *	Función para asignar al estudiante el LOM más adecuado con respecto a su tipo. 
+ *	Function to assign the student the most appropriate LOM with respect to its type.
  */
 exports.selectLOM = function(student, element, course){
 	var section, lesson, loms,  LOM = -1;
@@ -338,7 +338,7 @@ exports.findTypeLesson = function(lessons, type, course){
 }
 
 /** 
- *	Función que analiza si un estudiante ya ha cursado correctamente una lección con anterioridad.
+ *	Function which analyzes if a student has already successfully completed a lesson before.
  */
 exports.isCursed = function(lesson, student){
 	var ret = false, bool = false;
@@ -362,8 +362,8 @@ exports.isCursed = function(lesson, student){
 	return ret;
 }
 /**
- *	Función que selecciona de un grupo de lecciones la primera lección que no ha sido
- *	cursada correctamente por el estudiante.
+ *	Function that selects from a group of lessons the first lesson 
+ *	that has not been correctly completed by the student.
  */
 exports.selectLessonNotCoursed = function(lessons, student){
 	var ret, indexLessons = 0;
@@ -387,7 +387,7 @@ exports.selectLessonNotCoursed = function(lessons, student){
 }
 
 /**
- *	Función que devuelve la siguiente actividad de un curso a un estudiante 'Advanced'.
+ *	Function that returns the next activity of a course to an 'Advanced' student.
  */
 exports.selectActivityAdvanced = function(course, myLesson, status, student){
 	var ret = -1, posibilities;
@@ -395,12 +395,12 @@ exports.selectActivityAdvanced = function(course, myLesson, status, student){
 	switch(myLesson.type){
 
 		/**
-		 *	Básica:
-		 *	Si ok: Devolver la siguiente actividad por refuerzo más dificil, si no hay, devolver
-		 *	la siguiente ampliación sin cursar, y si no hay, devolver la siguiente básica.
+		 *	Essential:
+		 *	If ok: Return the following activity 'Reinforcement' more difficult, if there is not, 
+		 *	return the next 'Extension' without completing, and if there is, return the following 'Essential'.
 		 *
-		 *	Si nok: Devolver la siguiente actividad por refuerzo menos difícil, si no hay, devolver
-		 *	la siguiente ampliación sin cursar, y si no hay, devolver la siguiente básica.
+		 *	If nok: Return the following activity 'Reinforcement' less difficult, if there is, return the next 
+		 *	'Extension' without completing, and if there is, return the following 'Essential'.
 		 */
 		case 'Essential':
 			posibilities = this.findTypeLesson(myLesson.learning_path, 'Reinforcement', course);
@@ -449,11 +449,11 @@ exports.selectActivityAdvanced = function(course, myLesson, status, student){
 			}
 			break;
 		/**
-		 *	Refuerzo:
-		 *	Si ok: Devolver la siguiente extensión, si no hay, devolver la siguiente Básica.
+		 *	Reinforcement:
+		 *	If ok: Return the next 'Extension', if there is, return the following 'Essential'.
 		 * 
-		 *	Si nok: Devolver la siguiente por refuerzo más difícil no cursada, si no hay, 
-		 *	devolver la siguiente básica. 
+		 *	If nok: Return the next most difficult 'Reinforcement' not completed, if there is, 
+		 *	return the following 'Essential'. 
 		 */
 		case 'Reinforcement':
 			if(status === 1){
@@ -497,10 +497,10 @@ exports.selectActivityAdvanced = function(course, myLesson, status, student){
 			}
 			break;
 		/**
-		 *	Ampliación:
-		 *	Si ok: Devolver la siguiente ampliación no cursada, si no hay, devolver la siguiente básica
+		 *	Extension:
+		 *	If ok: Return the next 'Extension' not completed, if there is none, return the following 'Essential'.
 		 *
-		 *	Si nok: Repetir la misma ampliación.
+		 *	If nok: Repeat same 'Extension'.
 		 */
 		case 'Extension': 
 			if(status === 1){
@@ -538,18 +538,18 @@ exports.selectActivityAdvanced = function(course, myLesson, status, student){
 }
 
 /**
- *	Función que devuelve la siguiente actividad de un curso a un estudiante 'Medium'.
+ *	Function that returns the next activity of a course to a student 'Medium'.
  */
 exports.selectActivityMedium = function(course, myLesson, status, student){
 	var ret = -1, posibilities;
 
 	switch(myLesson.type){
 		/**
-		 *	Básica:
-		 *	Si ok: Devuelve la siguiente por refuerzo de dificultad aleatoria, si no hay, 
-		 *	devuelve la siguiente Básica.
+		 *	Essential:
+		 *	If ok: Returns the following 'Reinforcement' by random difficulty , if there is not, 
+		 *	return the following 'Essential'.
 		 *
-		 *	Si nok: Repite la misma básica.
+		 *	If nok: Repeat same 'Essential'.
 		 */
 		case 'Essential':
 
@@ -570,11 +570,11 @@ exports.selectActivityMedium = function(course, myLesson, status, student){
 			}
 			break;
 		/**
-		 *	Refuerzo:
-		 *	Si ok: Devuelve la siguiente refuerzo (si no lleva 2 por refuerzo seguidas), si no hay, 
-		 *	devuelve la siguiente básica
+		 *	Reinforcement:
+		 *	If ok: It returns the following 'Reinforcement' (if it is not the third followed), if there is not, 
+		 *	it returns the following 'Essential'.
 		 *
-		 *	Si nok: Repite la misma refuerzo.
+		 *	If nok: Repeat same 'Reinforcement'.
 		 */
 		case 'Reinforcement':
 
@@ -625,18 +625,18 @@ exports.selectActivityMedium = function(course, myLesson, status, student){
 }
 
 /**
- *	Función que devuelve la siguiente actividad de un curso a un estudiante 'Beginner'.
+ *	Function that returns the next activity of a course to a student 'Beginner'.
  */
 exports.selectActivityBeginner = function(course, myLesson, status, student){
 	var ret = -1, posibilities;
 
 	switch(myLesson.type){
 		/**
-		 *	Básica:
-		 *	Si ok: devuelve la siguiente refuerzo no cursada más fácil, si no hay, 
-		 *	devuelve la siguiente básica.
+		 *	Essential:
+		 *	If ok: Returns the next uncompleted 'Reinforcement' easier, if there is not, 
+		 *	returns the following 'Essential'.
 		 *
-		 *	Si nok: Repite la misma básica.
+		 *	If nok: Repeat same 'Essential'.
 		 */
 		case 'Essential':
 
@@ -665,11 +665,11 @@ exports.selectActivityBeginner = function(course, myLesson, status, student){
 			}
 			break;
 		/**
-		 *	Refuerzo:
-		 *	Si ok: devuelve la siguiente refuerzo no cursada más fácil, si no hay, devuelve la siguiente
-		 *	básica.
+		 *	Reinforcement:
+		 *	If ok: Returns the next uncompleted reinforcement easier, if there is not, 
+		 *	returns the following 'Essential'.
 		 *
-		 *	Si nok: devuelve la última actividad básica realizada por el estudiante.
+		 *	If nok: Returns the last 'Essential' activity completed by the student.
 		 */
 		case 'Reinforcement':
 
@@ -723,7 +723,7 @@ exports.selectActivityBeginner = function(course, myLesson, status, student){
 }
 
 /**
- *	Función para seleccionar la siguiente actividad del estudiante.
+ *	Function to select the next student activity.
  */
 exports.selectActivity = function(myLesson, course, status, student){
 	var ret;
@@ -848,8 +848,8 @@ exports.nextActivity = function (element, course, student){
 }
 
 /**
- *	Función que asigna al estudiante un tipo en el nuevo curso matriculado, según sus
- *	resultados académicos (capacidad) y sus conocimientos previos (salto).
+ *	Function that assigns the student a type in the new course enrolled, according 
+ *	to their academic results (yield) and their previous knowledge (jump).
  */
 exports.assignTypeStudent = function(student, course){
 	var group;
@@ -862,8 +862,8 @@ exports.assignTypeStudent = function(student, course){
 
 		if(student.learningStyle.group){
 			/**
-			 *	Si el estudiante tiene un grupo asignado, se calculan los conocimientos 
-			 *	previos (salto) y se le asigna un tipo de estudiante para el nuevo curso.
+			 *	If the student has an assigned group, the previous knowledge (jump) 
+			 *	is calculated and assigned a student type for the new course.
 			 */
 			group = student.learningStyle.group;
 
@@ -891,7 +891,7 @@ exports.assignTypeStudent = function(student, course){
 
 		} else {
 			/**
-			 *	Si el estudiante no tiene un grupo asignado, se solicitará asignarlo.
+			 *	If the student does not have an assigned group, they will be asked to assign it.
 			 */
 			ret = -1;
 		}
@@ -903,7 +903,7 @@ exports.assignTypeStudent = function(student, course){
 }
 
 /**
- *	Funcion para recalcular el tipo del estudiante despues de cada bloque de actividades realizado.
+ *	Function to recalculate the type of student after each completed block of activities.
  */
 exports.adaptativeMode = function(student, course){
 	var bool = false, 
@@ -919,7 +919,7 @@ exports.adaptativeMode = function(student, course){
 	var activities = {easy: [], medium: [], hard: []};
 
 	/**
-	 *	Se dividen las actividades cursadas según su dificultad
+	 *	The activities are divided according to their difficulty
 	 */
 	if(activitiesCoursed.length > 0){
 		while(bool !== true){
@@ -943,8 +943,8 @@ exports.adaptativeMode = function(student, course){
 		}
 
 		/**
-		 *	Segun el tipo actual del estudiante se llama a una u otra funcion.
-		 *	Se calcula el rendimiento y se analizan los tiempos.
+		 *	According to the current type of student is called to one or another function. 
+		 *	The performance is calculated and the times are analyzed.
 		 */
 		switch(student.identification.type){
 			case 'beginner':
@@ -975,7 +975,7 @@ exports.adaptativeMode = function(student, course){
 }
 
 /**
- *	Funcion para calcular la desviacion tipica.
+ *	Function to calculate the standard deviation.
  */
 exports.deviation = function(restActs, mean){
 	var deviation = 0;
@@ -988,7 +988,7 @@ exports.deviation = function(restActs, mean){
 }
 
 /**
- *	Funcion para calcular el tipo de un estudiante beginner despues de un bloque de actividades.
+ *	Function to calculate the type of a student beginner after a block of activities.
  */
 exports.yieldBeginner = function(activities){
 	var fail = 'normal';
@@ -1020,7 +1020,7 @@ exports.yieldBeginner = function(activities){
 }
 
 /**
- *	Funcion para calcular el tipo de un estudiante medium despues de un bloque de actividades.
+ *	Function to calculate the type of a student medium after a block of activities.
  */
 exports.yieldMedium = function(activities){
 	var fail = 'normal';
@@ -1051,7 +1051,7 @@ exports.yieldMedium = function(activities){
 }
 
 /**
- *	Funcion para calcular el tipo de un estudiante advanced despues de un bloque de actividades.
+ *	Function to calculate the type of a student advanced after a block of activities.
  */
 exports.yieldAdvanced = function(activities){
 	var fail = 'normal';
@@ -1093,22 +1093,22 @@ exports.yieldAdvanced = function(activities){
 }
 
 /**
- *	Funcion para analizar los tiempos de un estudiante beginner
- * 	Tiempo: 0 = corto, 1 = medio, 2 = largo.
+ *	Function to analyze the times of a student beginner
+ *  - Time: 0 = short, 1 = medium, 2 = long.
  */
 exports.timeBeginner = function(activities, student, fail){
 	var time = 2;
 
 	if(fail === 'good'){
 		/**
-		 * Si no falla ni faciles ni mas del 50% de medias: se calcula la media y a desviacion tipica
-		 * para analizar los tiempos de las actividades del bloque. Se calcula si el estudiante he realizado
-		 * tres o mas operaciones antes del bloque.
+		 * 	If it does not fail 'easy' nor more than 50% of 'medium': the average and standard 
+		 *	deviation is calculated to analyze the times of the activities of the block. It is calculated 
+		 *	if the student has performed three or more operations before the block.
 		 */
 		var res = this.calculateTime(student, activities);
 		if(res.easy !== -1){
 
-			// Si la duracion de las actividades fáciles y medias es media o corta: Tiempo corto.
+			// If the duration of the easy and medium activities is medium or short: Short time.
 			if(res.easy < 2 && res.medium < 2){
 				time = 1;
 				if(res.easy < 1 || res.medium < 1){
@@ -1124,8 +1124,8 @@ exports.timeBeginner = function(activities, student, fail){
 }
 
 /**
- *	Funcion para analizar los tiempos de un estudiante medium
- * 	Tiempo: 0 = corto, 1 = medio, 2 = largo.
+ *	Function to analyze the times of a student medium
+ *  - Time: 0 = short, 1 = medium, 2 = long.
  */
 exports.timeMedium = function(activities, student, fail){
 	var time = 2;
@@ -1155,8 +1155,8 @@ exports.timeMedium = function(activities, student, fail){
 }
 
 /**
- *	Funcion para analizar los tiempos de un estudiante advanced
- * 	Tiempo: 0 = corto, 1 = medio, 2 = largo.
+ *	Function to analyze the times of a student advanced
+ *  - Time: 0 = short, 1 = medium, 2 = long.
  */
 exports.timeAdvanced = function(activities, student, fail){
 	var time = 2;
@@ -1185,8 +1185,8 @@ exports.timeAdvanced = function(activities, student, fail){
 }
 
 /**
- *	Funcion que calcula la desviacion y la media de la duracion de las actividades 
- *	y analiza los resultados.
+ *	Function that calculates the deviation and the average of the duration of 
+ *	the activities and analyzes the results.
  */
 exports.calculateTime = function(student, activities){
 	var res = {easy: -1, medium: -1, hard: -1};
@@ -1199,26 +1199,25 @@ exports.calculateTime = function(student, activities){
 		var mean = _.meanBy(restActs, 'duration');
 		var deviation  = this.deviation(restActs, mean);
 
-		// Si la desviacion es mayor que la media, se realiza un sesgo (10%) y se recalculan.
+		// If the deviation is greater than average, a bias (10%) is performed and recalculated.
 		if(deviation >= mean){	
 
-			// Se ordenan las actividades segun a duracion.
+			// Activities are sorted according to duration.
 			restActs.sort(function(a, b){
 				return (b.duration - a.duration);
 			});
 
-			// Sesgo
+			// Bias
 			var sesg = restActs.length / 10;
 			restActs = _.drop(restActs, sesg);
 			restActs = _.dropRight(restActs, sesg);
 
-			// Recalcula media y desviacion
+			// Recalculates mean and deviation
 			mean = _.meanBy(restActs, 'duration');
 			deviation = this.deviation(restActs, mean);
 		}
 
-		// Analiza tiempos de actividades faciles, medias y dificiles.
-		
+		// It analyzes easy, medium and difficult times of activities.
 		res.easy = this.analizeTime(activities.easy, mean, deviation);
 		res.medium = this.analizeTime(activities.medium, mean, deviation);
 		res.hard = this.analizeTime(activities.hard, mean, deviation);
@@ -1228,18 +1227,18 @@ exports.calculateTime = function(student, activities){
 }
 
 /**
- * 	Funcion para analizar los tiempos del alumno con respecto a su media de duracion.
+ * 	Function to analyze the times of the student with respect to their average of duration.
  */
 exports.analizeTime = function(activities, mean, deviation){
 	var res = 0, time, shortTime = false, longTime = false;
 	_.forEach(activities, function(act){
 
 		/**
-		 * 	Si 1 actividad ha durado mas que la media y mas que la media+desviacion: tiempo largo.
-		 *	Si 1 actividad ha durado menos que la media y menos que la media-desviacion: tiempo corto.
-		 *	Si hay mas actividades por encima de la media que por debajo: tiempo largo.
-		 *	Si hay mas actividades por debajo de la media que por encima: tiempo corto.
-		 *	Otros casos: tiempo medio.
+		 * 	If 1 activity has lasted more than the average and more than the average + deviation: long time.
+		 *	If 1 activity has lasted less than the average and less than the mean-deviation: short time.
+		 *	If there are more activities above the average than below: long time.
+		 *	If there are more activities below the average than above: short time.
+		 *	Other cases: average time.
 		 */
 		
 		if(act.duration >= mean){

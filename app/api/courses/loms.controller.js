@@ -1,12 +1,6 @@
  'use strict';
 
-/*
-Learning Objects (LO) controller
 
-This version works with the following exported functions.
-
-	
-*/
 var Courses = require('./courses.model.js'),
     config = require('../../res/config.js'),
     async = require('async'),
@@ -16,12 +10,29 @@ var Courses = require('./courses.model.js'),
 var CoursesFunctions = require('./courses.functions.js'),
 	controller = require('./courses.controller.js'),
 	LOMS = require('../loms/loms.model.js');
-	
-	
-// Exporting function all_loms
-// lists all loms from a lesson. 
-// If the lesson, section or course doesn't exist, it sends an error message
 
+/**
+ *	List of requests:
+ *
+ *	- all_loms: 				Lists all LOMs from a lesson, section and a course.
+ *
+ * 	- get_lom: 					Lists the indicated LOM from a lesson, section and a course.
+ *
+ * 	- assign_lom: 				Assigns a LOM in a lesson from a section and a course.
+ *
+ *	- assign_loms: 				Assigns a LOM list in a lesson from a section and a course.
+ *
+ * 	- delete_lom: 				Deletes a LOM from a lesson, section and a course.
+ *
+ * 	- delete_loms: 				Deletes a LOM list from a lesson, section and a course.
+ */
+
+
+	
+	
+/**
+ *	Lists all LOMs from a lesson, section and a course
+ */
 exports.all_loms = function (req, res) {	
 	var courseId = req.params.course_id;
 	var sectionId = req.params.section_id;
@@ -57,10 +68,9 @@ exports.all_loms = function (req, res) {
 	}
 };
 
-// Exporting function get_lom
-// lists the indicated lom from a lesson. 
-// If some of them i.e. course, section or lesson doesn't exist, it sends an error message
-
+/**
+ *	Lists the indicated LOM from a lesson, section and a course
+ */
 exports.get_lom = function (req, res) {	
 	var courseId = req.params.course_id;
 	var sectionId = req.params.section_id;
@@ -104,12 +114,9 @@ exports.get_lom = function (req, res) {
 };
 
 
-// Exporting assign_lom function
-// It verifies if the course, section, and lesson exist. 
-// If lom already exist, it sets an error
-// If lom doesn't exist previously, it creates the new lom
-
-
+/**
+ *	Assigns a LOM in a lesson from a section and a course.
+ */
 exports.assign_lom = function(req, res) {	
 	var courseId = req.params.idc,
 		sectionId = req.params.ids,
@@ -175,12 +182,9 @@ exports.assign_lom = function(req, res) {
 	}
 };
 
-// Exporting assign_loms function
-// It verifies if the course, section, and lesson exist. 
-// If loms already exist, it sets an error
-// If loms doesn't exist previously, it assign the news loms
-
-
+/**
+ *	Assigns a LOM list in a lesson from a section and a course.
+ */
 exports.assign_loms = function(req, res) {	
 	var courseId = req.params.idc,
 		sectionId = req.params.ids,
@@ -241,12 +245,9 @@ exports.assign_loms = function(req, res) {
 	}
 };
 
-// Exporting delete_lom function 
-// It verifies if the course, section, lesson, and lom exist.
-// If the course, section, or lesson does not exist, it sends an error message
-// If lom does not exist, it considers the lom deleted (i.e. not an error) 
-
-
+/**
+ *	Deletes a LOM from a lesson, section and a course.
+ */
 exports.delete_lom = function(req, res) {	
 	var courseId = req.params.idc,
 		sectionId = req.params.ids,
@@ -295,11 +296,9 @@ exports.delete_lom = function(req, res) {
 	}
 };
 
-// Exporting delete_loms function
-// It verifies if the course, section, and lesson exist. 
-// If the course, section, or lesson does not exist, it sends an error message
-// If lom does not exist, it considers the lom deleted (i.e. not an error) 
-
+/**
+ *	Deletes a LOM list from a lesson, section and a course.
+ */
 exports.delete_loms = function(req, res) {	
 	var courseId = req.params.idc,
 		sectionId = req.params.ids,

@@ -8,10 +8,31 @@ var LOMS = require('./loms.model.js'),
 	functions = require('./loms.functions.js'),
 	mongoose = require('mongoose');
 	
-//ALL LOMS
-	
 /**
- * Returns all elements
+ *	List of requests:
+ *
+ *	- all:    			Returns all LOMs.
+ *
+ *	- create: 			Creates a new LOM.
+ *
+ *	- get: 				Returns a LOM by id.
+ *	
+ *	- update: 			Updates a LOM by id.
+ *
+ *	- remove:			Removes a LOM by id.
+ *
+ *	- destroy: 			Destroys all LOMs.
+ *
+ *	- uploadFile: 		Uploads a file in a LOM.
+ *
+ *	- downloadFile: 	Downloads a file of a LOM.
+ *
+ *	- includePhoto: 	Include photo in a LOM.
+ */
+
+
+/**
+ * Returns all LOMs
  */
 exports.all = function (req, res) {
     LOMS.find({}, function (err, lom) {
@@ -20,7 +41,7 @@ exports.all = function (req, res) {
 };
 
 /**
- * Creates a new lom
+ * Creates a new LOM
  */
 exports.create = function(req, res) {
     LOMS.create(req.body, function (err, lom) {
@@ -39,19 +60,10 @@ exports.create = function(req, res) {
     });
 };
 
-/**
- * Destroys all loms
- */
-exports.destroy  = function(req, res){
-    LOMS.remove({}, function (err, resp) {
-        functions.controlErrors(err, res, resp)
-    });
-};
-
 //BY ID	
 
 /**
- * Returns a lom by id
+ * Returns a LOM by id
  */
 exports.get = function (req, res) {
 	if(mongoose.Types.ObjectId.isValid(req.params.id)){
@@ -72,7 +84,7 @@ exports.get = function (req, res) {
 };
 
 /**
- * Updates a lom by id
+ * Updates a LOM by id
  */	
 exports.update = function (req, res) {
 	if(mongoose.Types.ObjectId.isValid(req.params.id)){
@@ -96,7 +108,7 @@ exports.update = function (req, res) {
 };
 
 /**
- * Removes a lom by id
+ * Removes a LOM by id
  */
 exports.remove = function (req, res) {
 	if(mongoose.Types.ObjectId.isValid(req.params.id)){
@@ -124,10 +136,17 @@ exports.remove = function (req, res) {
 	}
 };
 
-
+/**
+ * Destroys all LOMs
+ */
+exports.destroy  = function(req, res){
+    LOMS.remove({}, function (err, resp) {
+        functions.controlErrors(err, res, resp)
+    });
+};
 
 /**
- * Uploads a file in a lom
+ * Uploads a file in a LOM
  */
 exports.uploadFile =  function (req, res) {
 	LOMS.findById(req.params.id, function(err, lom){
@@ -162,7 +181,7 @@ exports.uploadFile =  function (req, res) {
 };
 
 /**
- * Downloads a file of a lom
+ * Downloads a file of a LOM
  */
 exports.downloadFile = function(req, res, next){
 	var file = req.params.file;
@@ -181,7 +200,7 @@ exports.downloadFile = function(req, res, next){
 
 
 /**
- * Include photo in a lom
+ * Include photo in a LOM
  */
 exports.includePhoto =  function (req, res) {
 	LOMS.findById(req.params.id, function(err, lom){
@@ -194,11 +213,12 @@ exports.includePhoto =  function (req, res) {
 			var file = __dirname + '/../../res/files/photos/' + req.params.id + '/' + req.file.originalname;
 			lom.photo = file;
 			fs.readFile( req.file.path, function (err, data) {
-				if(!data) {res.status(400).send('No data to upload');
+				if(!data){ 
+					res.status(400).send('No data to upload');
 				} else {
 					fs.writeFile(file, data, function (err) {
-						if( err ){
-							console.error( err );
+						if(err){
+							console.error(err);
 					        res.status(404).send(err);
 						    res.end('Sorry, the photo: '+  req.file.originalname + 
 							' couldn\'t be uploaded in the lom with id: ' + req.params.id);

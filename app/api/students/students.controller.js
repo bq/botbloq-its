@@ -18,10 +18,50 @@ var learning_rules = require('../../res/learning_rules.json');
 var ruleEngineLS = new RuleEngine();
 ruleEngineLS.fromJSON(learning_rules);
 
-
-//ALL STUDENTS
 /**
- * Returns all elements
+ *	List of requests:
+ *
+ *	- all: 				Returns all students.
+ *
+ *	- get: 				Returns a student by id.
+ *
+ *	- create: 			Creates a new student.
+ *
+ *	- update: 			Updates a student by id.
+ *
+ *	- remove: 			Removes a student by id.
+ *
+ *	- destroy: 			Destroys all students.
+ *
+ * 	- getKnowledge: 	Returns an student knowledge Level by id.
+ *
+ *	- getLesson: 		Returns a specific lesson by id.
+ *
+ *	- activate: 		Activates an student by id.
+ *
+ *	- deactivate: 		Deactivates an student by id.
+ *
+ *	- init: 			Includes a learning style in a student.
+ *
+ *	- group: 			Group a student according to their academic results.
+ *
+ *	- enrollment: 		Enrollments a student by id in a course.
+ *
+ *	- unenrollment: 	Unenrollments a student by id of a course.
+ *
+ *	- dataCourses: 		Returns the finished courses, courses not completed, 
+ *						the active courses, last included and related courses of a student.
+ *
+ *	- newActivity: 		Returns the next activity of the course in which the student is enrolled,
+ *  					depending on their previous activity and the result of the same.
+ *
+ *	- finalizeActivity: Sends the activity solution to the teacher to correct it or pause an activity.
+ *						
+ */
+
+
+/**
+ * Returns all students
  */
 exports.all = function (req, res) {
 	Students.find({active: 1}, function (err, student) {
@@ -30,7 +70,7 @@ exports.all = function (req, res) {
 };
 
 /**
- * Returns an student by id
+ * Returns a student by id
  */
 exports.get = function (req, res) {
 	var finder;
@@ -49,6 +89,9 @@ exports.get = function (req, res) {
 		} else {
 			if(student.active === 1){
 				var arrayCourses = [];
+				/**
+				 * 	Only active courses are shown.
+				 */
 				student.course.find(function(element, index, array){
 					if(element.active === 1){ 
 						arrayCourses.push(element); 
@@ -68,7 +111,7 @@ exports.get = function (req, res) {
 };
 
 /**
- * Creates a new element
+ * Creates a new student
  */
 exports.create = function(req, res) {
 	var bool = false;
@@ -83,6 +126,7 @@ exports.create = function(req, res) {
 						bool = true;
 					}
 				}
+				// The email is unique
 				if(bool === false){
 				    Students.create(req.body, function (err, student) {
 				        if (err){
@@ -125,8 +169,6 @@ exports.create = function(req, res) {
 };
 
 
-//BY ID	
-
 /**
  *  Updates a student by id
  */
@@ -135,6 +177,7 @@ exports.update = function(req, res) {
 	    Students.findById.bind(Students, req.params.id),
 	    function(student, next) {
 	    	if(student.active === 1) {
+	    		// Email is unique.
 				if(req.body.identification.email){
 					Students.findOne({'identification.email': req.body.identification.email}, function(err, student2) {
 						if(err){
@@ -296,7 +339,7 @@ exports.init = function (req, res) {
 				var answers = req.body.answers;
 				for (var i = 0; i < answers.length; i++) { 
 					switch(answers[i].id_question) {
-					case 'ls_comp':
+					case 'ls_comp': 
 		    			student.learningStyle.comprehension = answers[i].value;
 		        		break;
 		    		case 'ls_input':
@@ -314,7 +357,7 @@ exports.init = function (req, res) {
 		   			 	break;
 					}
 				}
-
+				// Calculate the learningStyle type for LOMs format.
 				ruleEngineLS.execute(student, function(result){
 					student.learningStyle.type = result.type;
 					student.save(next);
@@ -329,9 +372,9 @@ exports.init = function (req, res) {
 	});
 };
 
-/* 
-	Función para agrupar a un estudiante según sus resultados académicos
-*/
+/** 
+ *	Function to group a student according to their academic results
+ */
 exports.group = function(req,res) {
 	async.waterfall([Students.findById.bind(Students, req.params.id),
 		function(student, next) {
@@ -381,10 +424,10 @@ exports.enrollment = function (req, res) {
 				} else {
 					if(student.active === 1){
 						var coursed = false;
-						/* 
-							The course is searched in the courses in which the student is enrolled to verify 
-							that he is not enrolled in the course.
-						*/
+						/** 
+						 *	The course is searched in the courses in which the student is enrolled to verify 
+						 *	that he is not enrolled in the course.
+						 */
 						student.course.find(function(element ,index , array){
 							if(element.idCourse === req.params.idc){
 								if (element.active === 1){ 
@@ -399,10 +442,10 @@ exports.enrollment = function (req, res) {
 						});
 						// if student is activated and is not enrolled in the same course
 						if(!coursed){ 
-							/*
-								If you are not enrolled in the course previously, 
-								the type is assigned fot the student for that course and enrolled in it
-							*/
+							/**
+							 *	If you are not enrolled in the course previously, 
+							 *	the type is assigned fot the student for that course and enrolled in it
+							 */
 							type = functions.assignTypeStudent(student, course);
 
 							if(type === -1 ){
@@ -416,13 +459,12 @@ exports.enrollment = function (req, res) {
 							} else {
 								student.identification.type = type;
 
-								console.log('tipo: ' + type);
-
 								newCourse = {idCourse: course._id, idSection: '', 
 								idLesson: '', idLom: '', status: 0, active: -1};
 
 								student.course.push(newCourse);
 								activity = newCourse;
+								// The student changes in the course statistics
 								course.statistics.std_enrolled.push(student._id);
 							}
 
@@ -441,7 +483,7 @@ exports.enrollment = function (req, res) {
 };
 
 /**
- * Enrollments a student by id in a course
+ * Unenrollments a student by id of a course
  */
 exports.unenrollment = function (req, res) {
 	var activity;
@@ -462,6 +504,7 @@ exports.unenrollment = function (req, res) {
 								coursed = true;
 								element.active = 0;
 								activity = element;
+								// The student changes in the course statistics
 								course.statistics.std_unenrolled.push(student._id);
 								course.statistics.std_enrolled.find(function(element1, index1, array1){
 									if(element1 === student._id){
@@ -485,10 +528,10 @@ exports.unenrollment = function (req, res) {
 	});
 }
 
-/*
-	Función para obtener los cursos finalizados, cursos no finalizados 
-	y los cursos activos de un estudiante.
-*/
+/**
+ *	Function to obtain the finished courses, courses not completed, 
+ *	the active courses, last included and related courses of a student.
+ */
 exports.dataCourses = function (req, res) {
 	var data = [];
     Students.findOne({_id: req.params.id}, function(err, student) { 
@@ -590,9 +633,9 @@ exports.newActivity = function (req, res) {
 
 									switch (ret){
 									case -1:
-										/*
-											The completed course is included in the student's statistics.
-										*/
+										/**
+										 *	The completed course is included in the student's statistics.
+										 */
 										course.statistics.std_finished.push(student._id);
 										course.statistics.std_enrolled.find(function(element, index, array){
 											if(student._id.equals(element)){
@@ -623,10 +666,9 @@ exports.newActivity = function (req, res) {
 									default:	
 										
 										element = ret;
-										/*
-											If the activity returned is basic, the student's type is calculated.
-										*/
-
+										/**
+										 *	If the activity returned is basic, the student's type is calculated.
+										 */
 										var lesson = functions2.exist_section_lesson(element.idLesson, course.sections[0].lessons);
 										lesson = course.sections[0].lessons[lesson];
 
@@ -635,10 +677,10 @@ exports.newActivity = function (req, res) {
 											console.log('-------------- Tipo: ' + student.identification.type);
 										}
 
-										/*
-											If the next activity is returned, the best 
-											LOM format is selected for the student.
-										*/
+										/**
+										 *	If the next activity is returned, the best 
+										 *	LOM format is selected for the student.
+										 */
 										var lomRet = functions.selectLOM(student, element, course);
 
 										if (lomRet !== -1){
@@ -753,7 +795,7 @@ exports.finalizeActivity = function(req, res){
 												element.status = 3;
 												res.status(200);
 												ret = 'The solution was successfully sent';
-												// the activity solution is sent to correct it.
+												// The activity solution is sent to correct it.
 												course.solutions.push({
 
 													idStudent: student._id,
@@ -772,6 +814,7 @@ exports.finalizeActivity = function(req, res){
 										}
 
 										if(res.statusCode === 200){
+											// The activity duration is updated 
 											student.activity_log.find(function(element1, index1, array1){
 												if (element1.idCourse === element.idCourse && element1.idSection === element.idSection && 
 												  element1.idLesson === element.idLesson && element1.IdLom === element.IdLom){
@@ -813,7 +856,7 @@ exports.finalizeActivity = function(req, res){
 }
 
 /**
- * Removes a element by id
+ * Removes a student by id
  */
 exports.remove = function (req, res) {
 	async.waterfall([
@@ -839,7 +882,7 @@ exports.remove = function (req, res) {
 };
 
 /**
- * Destroys all elements
+ * Destroys all students
  */
 exports.destroy  = function(req, res){
 	Students.remove({}, function (err, resp) {

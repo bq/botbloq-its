@@ -4,11 +4,10 @@ var Courses = require('./courses.model.js'),
     config = require('../../res/config.js'),
     _ = require('lodash');
 
-/*
-returns the index position of the section or lesson identified by id
-in the list of sections or lessons. If it doesn't exists in the list returns -1
-*/
-
+/**
+ *	Returns the index position of the section or lesson identified by id
+ *	in the list of sections or lessons. If it doesn't exists in the list returns -1
+ */
 exports.exist_section_lesson = function (id,array){	
 	var ret = -1;
 	
@@ -20,11 +19,10 @@ exports.exist_section_lesson = function (id,array){
 	return ret;
 }
 
-/*
-returns the index position of the lom identified by lomId
-in the list of loms. If it doesn't exists in the list returns -1
-*/
-
+/**
+ *	Returns the index position of the lom identified by lomId
+ *	in the list of loms. If it doesn't exists in the list returns -1
+ */
 exports.find_lom = function(lomId,loms){
 	var ret = -1;
 	
@@ -36,10 +34,10 @@ exports.find_lom = function(lomId,loms){
 	return ret;
 }
 
-/*
-Find the first course with the name indicated. Then
-update the indicated field with the value 
-*/
+/**
+ *	Find the first course with the name indicated. Then
+ *	update the indicated field with the value 
+ */
 exports.update_field = function(courseId,field,value){
 	Courses.findOne({_id: courseId}, function (err, course) {
 		course[field] = value;
@@ -48,7 +46,9 @@ exports.update_field = function(courseId,field,value){
 	);
 }
 
-
+/**
+ *  Controls callback errors and shows the solution
+ */
 exports.controlErrors = function (err, res, ret){
     if (err) {
         console.log(err);
@@ -63,6 +63,9 @@ exports.controlErrors = function (err, res, ret){
 	}
 }
 
+/**
+ *	Function to update a course without deleting data.
+ */
 exports.doUpdate = function(object, newObject){
 	var result, result2;
 	result = _.keysIn(newObject);
@@ -85,6 +88,9 @@ exports.doUpdate = function(object, newObject){
 	return object;
 }
 
+/**
+ *	Function to translate the LOM format to a type.
+ */
 exports.translateFormat = function(format){
 	var type = 'other';
 	

@@ -1,23 +1,5 @@
 'use strict';
 
-/*
-This version works with the following exported functions.
-function all_sections: list all sections from a course
-function get_section: list the indicated section from a course
-function create_section: creates a new section for the indicated
-	course. If the there exists a section with the same name, gives
-	an error message
-function delete_section: delete the section indicated for the course received as parameter
-	If either the course or the section does not exist, it considers it removed anyway
-function update_section: update the section indicated for the course received as parameter
-	If the section already exist, it updates the section
-	If section doesn't exist previously, it sets an error
-function update_section_field: updates just a field of a section
-// It receives as the body of the request in JSON format
-// the names of the course, the section and the field and 
-// the new value of the field 
-*/
-
 var Courses = require('./courses.model.js'),
 	Sections = require('./courses.model.js'),
     config = require('../../res/config.js'),
@@ -26,9 +8,28 @@ var Courses = require('./courses.model.js'),
     mongoose = require('mongoose'),
     _ = require('lodash');
 var controller = require('./courses.controller.js');
+
+/**
+ *	List of requests:
+ *
+ *	- all_sections: 				List all sections from a course.
+ *
+ * 	- get_section: 					Lists the indicated section from a course.
+ *
+ * 	- create_section: 				Creates a new section in a course.
+ *
+ * 	- update_section: 				Updates a section from a course.
+ *
+ * 	- delete_section: 				Deletes a section from a course.
+ *
+ * 	- get_sectionObjectives: 		Lists the indicated section objectives from a course.
+ */
+
+
 	
-// Exporting function all_sections
-// list all sections from a course
+/**
+ *	List all sections from a course
+ */
 exports.all_sections = function (req, res) {	
 	var courseId = req.params.course_id;
 	if(mongoose.Types.ObjectId.isValid(req.params.course_id)){
@@ -46,9 +47,9 @@ exports.all_sections = function (req, res) {
 	}
 };
 
-// Exporting function get_section
-// list the indicated section from a course
-// If the section does not exists, prints a message
+/**
+ *	Lists the indicated section from a course
+ */
 exports.get_section = function (req, res) {		
 	var courseId = req.params.course_id;
 	var sectionId = req.params.section_id;
@@ -80,13 +81,9 @@ exports.get_section = function (req, res) {
 	}
 };
 
-// Exporting create_section function
-// It receives as the body of the request in JSON format
-// the information about the section 
-// It verifies if the section already exist, in which case, it sets an error
-// If section doesn't exist previously, it creates the new section
-
-
+/**
+ *	Creates a new section in a course.
+ */
 exports.create_section = function(req, res) {	
 	var courseId = req.params.id,
 		new_sec = req.body,
@@ -117,13 +114,9 @@ exports.create_section = function(req, res) {
 	}
 }
 
-// Exporting update_section function
-// It receives as the body of the request in JSON format
-// the new information about the section to update
-// If the section already exist, it updates the section
-// If section doesn't exist previously, it sets an error
-
-
+/**
+ *	Updates a section from a course.
+ */
 exports.update_section = function(req, res) {	
 	var courseId = req.params.idc,
 		new_sec = req.body,
@@ -157,10 +150,9 @@ exports.update_section = function(req, res) {
 };
 
 		
-// Exporting delete_section function
-// delete the section indicated for the course received as parameter
-// If either the course or the section does not exist,
-// it considers it removed anyway
+/**
+ *	Deletes a section from a course.
+ */
 exports.delete_section = function(req,res) {		
 	var courseId = req.params.course_id;
 	var sectionId = req.params.section_id;
@@ -195,9 +187,9 @@ exports.delete_section = function(req,res) {
 
 
 
-// Exporting function get_section
-// list the objectives of the indicated section from a course
-// If the section does not exists, prints a message
+/**
+ *	Lists the indicated section objectives from a course.
+ */
 exports.get_sectionObjectives = function (req, res) {		
 	var courseId = req.params.course_id;
 	var sectionId = req.params.section_id;

@@ -1,19 +1,5 @@
 'use strict';
 
-/*
-This version works with the following exported functions.
-all: list all courses
-get: list the course specified by course_name. 
-	If there are several courses with the same name,
-	then all of them will be showed
-create: insert the course received as parameter
-remove: delete the course received as parameter
-update: update the course received as parameter
-the new course is received via the request body in JSON format
-update1: update the course received as parameter, but 
-just the field with the value indicated via JSON 
-format in the body of the request. 
-*/
 
 var Courses = require('./courses.model.js'),
 	Students = require('../students/students.model.js'),
@@ -23,21 +9,45 @@ var Courses = require('./courses.model.js'),
     fs = require('fs'), 
     mongoose = require('mongoose'),
     _ = require('lodash');
+
+
+/**
+ *	List of requests:
+ *
+ *	- all: 					Returns all courses
+ *
+ *	- get: 					Returns a course by id.
+ *
+ *	- remove: 				Removes a course by id.
+ *
+ *	- reset: 				Destroys all courses.
+ *
+ *	- create: 				Creates a new course.
+ *
+ *	- update: 				Updates a course by id.
+ *
+ *	- getObjectives: 		Returns course objectives list.
+ *
+ *	- includePhoto: 		Include photo in a course.
+ *
+ *	- getActivity: 			Function to obtain one or more activities to correct them.
+ *
+ *	- correctActivity: 		Function to corrects an activity.
+ */
 	
 
-// Exporting all function
-// list all courses
-exports.all = function (req, res) 
-	{
-	// console.log(config)
+/**
+ * 	Returns all courses
+ */
+exports.all = function (req, res) {
     Courses.find({}, function (err, course) {
 		CoursesFunctions.controlErrors(err, res, course);
 	});
 };
 
-// Exporting get function
-// list the course specified by its id
-// If there are none with this id, then it returns an empty list []
+/**
+ * 	Returns a course by id
+ */
 exports.get = function (req, res){
 	var courseId = req.params.id;
 	if(mongoose.Types.ObjectId.isValid(courseId)){
@@ -56,10 +66,9 @@ exports.get = function (req, res){
 	}
 };
 
-// Exporting remove function
-// delete the course received as parameter
-// If the course does not exist in the database, 
-// it considers the course removed anyway
+/**
+ * 	Removes a course by id
+ */
 exports.remove = function(req,res) {
 	async.waterfall([
 	    Courses.findById.bind(Courses, req.params.id),
@@ -83,7 +92,7 @@ exports.remove = function(req,res) {
 };
 
 /**
- * Destroys all elements
+ * 	Destroys all courses
  */
 exports.reset  = function(req, res){
     Courses.remove({}, function (err, resp) {
@@ -91,8 +100,9 @@ exports.reset  = function(req, res){
     });
 };
 
-// Exporting create function
-// insert the course received as parameter
+/**
+ * 	Creates a new course
+ */
 exports.create = function(req, res) {
 	var bool = false;
 	if (req.body.name){
@@ -122,9 +132,9 @@ exports.create = function(req, res) {
 	}
 };
 
-// Exporting update function
-// update the course received as parameter
-// the new course is received via the request body in JSON format
+/**
+ *  Updates a course by id
+ */
 exports.update = function(req, res) {
 	async.waterfall([
 	    Courses.findById.bind(Courses, req.params.id),
@@ -163,9 +173,9 @@ exports.update = function(req, res) {
 };
 
 
-// Exporting get function
-// list the objectives of the course specified by its id
-// If there are none with this id, then it returns an empty list []
+/**
+ *	Returns course objectives list
+ */
 exports.getObjectives = function (req, res){
 	var courseId = req.params.id;
 	if(mongoose.Types.ObjectId.isValid(courseId)){
@@ -280,6 +290,9 @@ exports.getActivity = function (req, res) {
 	});
 };
 
+/**
+ *	Function to corrects an activity.
+ */
 exports.correctActivity = function(req, res){
 	var ret, bool = false,
 		idLom = req.params.idl,
@@ -303,12 +316,13 @@ exports.correctActivity = function(req, res){
 						student.activity_log.find(function(element, index, array){
 							if(element.idLom === idLom && element.idCourse === idCourse){
 								element.score = score;
-								
+								// If the student passes activity
 								if(score >= 5){
 									element.status = 1;
 
 									var lesson = CoursesFunctions.exist_section_lesson(element.idLesson, course.sections[0].lessons);
 									lesson = course.sections[0].lessons[lesson];
+									// The knowledge level is updated
 									student.knowledgeLevel.find(function(element1, index1, array1){
 										if(element1.code === lesson.objectives[0].code && element1.level === lesson.objectives[0].level){
 											bool = true;
@@ -330,6 +344,7 @@ exports.correctActivity = function(req, res){
 									}
 								});
 
+								// The activity is removed from the list of pending activities to be corrected.
 								course.solutions.find(function(element1, index1, array1){
 									if(element1.idLom === idLom && element1.idStudent === idStudent){
 										course.solutions.splice(index1, 1);

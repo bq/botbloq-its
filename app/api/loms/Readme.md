@@ -87,6 +87,36 @@ If this action is not successful, it returns the error code.
 
 
 
+**POST /botbloq/v1/its/loms/:id/includePhoto**
+-------------
+
+The service uploads the selected photo and links it to the lom of the indicated id.
+
+**Parameters**: 
+
+id: LOM ID.
+
+**Query Parameters**:
+
+**Permissions**:
+
+**Status Codes**:
+
+200 OK - Action successfully attempted.
+400 Bad Request - The request contains bad syntax.
+404 Not Found - Resource not found.
+
+**Input**: 
+
+A photo specidied.
+
+**Return**:  
+
+If successful, this action returns: Photo: <filename.ext> uploaded successfully in the lom with id: <LOM ID>.
+If this action is not successful, it returns the error code.
+
+
+
 **POST /botbloq/v1/its/loms/:id/upload**
 -------------
 
