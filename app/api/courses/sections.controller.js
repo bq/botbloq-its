@@ -185,8 +185,6 @@ exports.delete_section = function(req,res) {
 	}
 };
 
-
-
 /**
  *	Lists the indicated section objectives from a course.
  */
@@ -200,19 +198,13 @@ exports.get_sectionObjectives = function (req, res) {
 			} else if (!course) {
 					res.status(404).send('The course with id: ' + courseId + ' is not registrated');   
 			} else {
-				var sections = course.sections;
-				var len = sections.length;
-				var bool = false;
-				for (var i = 0; i < len; i++) {
-					var elem = sections[i];
-					if (elem.name === sectionId){
-						res.status(200).send(elem.objectives);
-						bool = true;
-					}
-				}			
-				if (!bool){
+				var ind = CoursesFunctions.exist_section_lesson(sectionId,course.sections);
+							
+				if (ind < 0){
 					res.status(404).send('The section with id : ' + sectionId 
 					+ ' has not been found in the course with id: ' + courseId);	
+				} else {
+					res.status(200).send(course.sections[ind].objectives);
 				}
 			} 
 		});	
@@ -221,3 +213,93 @@ exports.get_sectionObjectives = function (req, res) {
 	}
 };
 	
+/**
+ *	Includes objectives in a section of a course.
+ */
+exports.includeObjectives = function(req, res) {	
+	var courseId = req.params.idc,
+		sectionId = req.params.ids,
+		ind = 0,
+		new_obj = req.body,
+		bool = true;
+	async.waterfall([
+   	 	Courses.findById.bind(Courses, courseId),
+    	function(course, next) {
+			if (!course){
+				res.status(404).send('The course with id: ' + courseId + ' is not registrated');
+			} else {
+				ind = CoursesFunctions.exist_section_lesson(sectionId,course.sections);
+
+				if (ind < 0){
+					res.status(404).send('The section with id : ' + sectionId +
+					' has not been found in the course with id: ' + courseId);
+				} else {
+					var objectives = course.sections[ind].objectives;
+					_.forEach(new_obj, function(key){
+						objectives.find(function(element, index, array){
+							if(element.code === key.code && element.description === key.description &&
+							  element.bloom === key.bloom && element.level === key.level){
+								bool = false;
+							} 
+						});
+
+						if(bool === true){
+							course.sections[ind].objectives.push(key);
+						} else {
+							bool = true;
+						}
+					});
+					course.save(next);
+				}
+			}
+		}], function(err, course) {
+			CoursesFunctions.controlErrors(err, res, course.sections[ind].objectives);
+	});
+	
+}
+
+	
+/**
+ *	Deletes objectives from a section of a course.
+ */
+exports.deleteObjectives = function(req, res) {	
+	var courseId = req.params.idc,
+		sectionId = req.params.ids,
+		ind = 0,
+		new_obj = req.body,
+		obj = -1;
+	async.waterfall([
+   	 	Courses.findById.bind(Courses, courseId),
+    	function(course, next) {
+			if (!course){
+				res.status(404).send('The course with id: ' + courseId + ' is not registrated');
+			} else {
+				ind = CoursesFunctions.exist_section_lesson(sectionId,course.sections);
+
+				if (ind < 0){
+					res.status(404).send('The section with id : ' + sectionId +
+					' has not been found in the course with id: ' + courseId);
+				} else {
+					var objectives = course.sections[ind].objectives;
+					_.forEach(new_obj, function(key){
+						objectives.find(function(element, index, array){
+							if(element.code === key.code && element.description === key.description &&
+							  element.bloom === key.bloom && element.level === key.level){
+								obj = index;
+							} 
+						});
+
+						if(obj > -1){
+							course.sections[ind].objectives.splice(obj, 1);
+							obj = -1;
+						}
+					});
+					course.save(next);
+				}
+			}
+		}], function(err, course) {
+			CoursesFunctions.controlErrors(err, res, course.sections[ind].objectives);
+	});
+	
+}
+

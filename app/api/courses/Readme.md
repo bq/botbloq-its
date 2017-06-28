@@ -354,6 +354,36 @@ A photo to be included in the lesson.
 
 
 ---------------------------------------
+**DELETE /botbloq/v1/its/courses/:idc/section/:ids/lesson/:idl/deleteObjectives**
+---------------------------------------
+
+Delete objectives from a lesson of a section and a course by the id.
+
+**Parameters**: 
+- idc: id of the course to be deleted the lesson objectives
+- ids: id of the section to be deleted the lesson objectives
+- idl: id of the lesson to be deleted the objectives
+
+**Query Parameters**:
+
+**Permissions**:
+
+**Status Codes**:
+
+200 OK - Action successfully attempted.
+404 Not Found - course not found.
+400 Bad Request - The request contains bad syntax.
+
+**Input**: 
+
+A list with lesson objectives to be deleted
+
+**Return**:  
+
+A list with lesson objectives 
+
+
+---------------------------------------
 **DELETE /botbloq/v1/its/courses/course/:course_id/section/:section_id/lesson/lesson_id**
 ---------------------------------------
 
@@ -382,6 +412,37 @@ A photo to be included in the lesson.
 -the indicated lesson is removed from the database 
 	If lesson does not exist, it considers the section deleted (i.e. not an error)
 	If the course or the section doesn't exist, it sends an error message
+
+
+---------------------------------------
+**PUT /botbloq/v1/its/courses/:idc/section/:ids/lesson/:idl/includeObjectives**
+---------------------------------------
+
+Include objectives in a lesson of a section and a course by the id.
+
+**Parameters**: 
+- idc: id of the course to be included the lesson objectives
+- ids: id of the section to be included the lesson objectives
+- idl: id of the lesson to be included the objectives
+
+**Query Parameters**:
+
+**Permissions**:
+
+**Status Codes**:
+
+200 OK - Action successfully attempted.
+404 Not Found - course not found.
+400 Bad Request - The request contains bad syntax.
+
+**Input**: 
+
+A list with lesson objectives to be included
+
+**Return**:  
+
+A list with the lesson objectives 
+
 
 
 ---------------------------------------
@@ -538,6 +599,34 @@ If this action is not successful, it returns the error code.
 **Return**:  
 - the new section is included into the sections field of the course.
 
+---------------------------------------
+**DELETE /botbloq/v1/its/courses/:idc/section/:ids/deleteObjectives**
+---------------------------------------
+
+Delete objectives from a section of a course by the id.
+
+**Parameters**: 
+- idc: id of the course to be deleted the section objectives
+- ids: id of the section to be deleted the objectives
+
+**Query Parameters**:
+
+**Permissions**:
+
+**Status Codes**:
+
+200 OK - Action successfully attempted.
+404 Not Found - course not found.
+400 Bad Request - The request contains bad syntax.
+
+**Input**: 
+
+A list with section objectives to be deleted
+
+**Return**:  
+
+A list with section objectives 
+
 
 ---------------------------------------
 **DELETE /botbloq/v1/its/courses/course/:course_id/section/:section_id**
@@ -564,6 +653,35 @@ If this action is not successful, it returns the error code.
 
 **Return**:  
 -the indicated section is removed from the course.
+
+---------------------------------------
+**PUT /botbloq/v1/its/courses/:idc/section/:ids/includeObjectives**
+---------------------------------------
+
+Include objectives in a section of a course by the id.
+
+**Parameters**: 
+- idc: id of the course to be included the section objectives
+- ids: id of the section to be included the objectives
+
+**Query Parameters**:
+
+**Permissions**:
+
+**Status Codes**:
+
+200 OK - Action successfully attempted.
+404 Not Found - course not found.
+400 Bad Request - The request contains bad syntax.
+
+**Input**: 
+
+A list with section objectives to be included
+
+**Return**:  
+
+A list with the section objectives 
+
 
 
 ---------------------------------------
@@ -835,6 +953,34 @@ If successful, this action returns a JSON data block containing the information 
 If this action is not successful, it returns the error code. 
 
 
+---------------------------------------
+**PUT /botbloq/v1/its/courses/:id/includeObjectives**
+---------------------------------------
+
+Include objectives in a course by the id.
+
+**Parameters**: 
+- id: id of the course to be included the objectives
+
+**Query Parameters**:
+
+**Permissions**:
+
+**Status Codes**:
+
+200 OK - Action successfully attempted.
+404 Not Found - course not found.
+400 Bad Request - The request contains bad syntax.
+
+**Input**: 
+
+A list with course objectives to be included
+
+**Return**:  
+
+A list with the course objectives 
+
+
 
 ---------------------------------------
 **PUT /botbloq/v1/its/courses/:id**
@@ -872,6 +1018,33 @@ Update the whole information of a course in  the database.
 
 **Return**:  
 The whole description of the course is substituted by the new one
+
+---------------------------------------
+**DELETE /botbloq/v1/its/courses/:id/deleteObjectives**
+---------------------------------------
+
+Delete objectives from a course by the id.
+
+**Parameters**: 
+- id: id of the course to be deleted the objectives
+
+**Query Parameters**:
+
+**Permissions**:
+
+**Status Codes**:
+
+200 OK - Action successfully attempted.
+404 Not Found - course not found.
+400 Bad Request - The request contains bad syntax.
+
+**Input**: 
+
+A list with course objectives to be deleted
+
+**Return**:  
+
+A list with the course objectives 
 
 
 ---------------------------------------

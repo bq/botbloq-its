@@ -61,10 +61,16 @@ router.post('/:idc/section/:ids/lesson/:idl/includePhoto',upload.single('file'),
 // create a particular lesson of a course section
 router.post('/:idc/section/:ids', lesson_ctrl.create_lesson); 
 
+// delete objectives from a course
+router.delete('/:idc/section/:ids/lesson/:idl/deleteObjectives', lesson_ctrl.deleteObjectives);
+
 // DELETEs a particular lesson of a section
 router.delete('/:course_id/section/:section_id/lesson/:lesson_id', lesson_ctrl.delete_lesson);
 
 // PUTs
+
+router.put('/:idc/section/:ids/lesson/:idl/includeObjectives', lesson_ctrl.includeObjectives); // include objectives in a lesson
+
 // update a particular lesson of a course section
 router.put('/:idc/section/:ids/lesson/:idl', lesson_ctrl.update_lesson); 
 
@@ -84,10 +90,14 @@ router.get('/:course_id/sections', section_ctrl.all_sections); // list all secti
 router.post('/:id', section_ctrl.create_section);
 
 // DELETEs
+// delete objectives from a course
+router.delete('/:idc/section/:ids/deleteObjectives', section_ctrl.deleteObjectives);
 
 router.delete('/:course_id/section/:section_id', section_ctrl.delete_section);
 
 // PUTs
+router.put('/:idc/section/:ids/includeObjectives', section_ctrl.includeObjectives); // include objectives in a section
+
 // of a section of a course
 router.put('/:idc/section/:ids', section_ctrl.update_section); // update a particular section of a course
 
@@ -116,9 +126,14 @@ router.post('/', controller.create); // create a Course by the object
 // PUTs
 router.put('/:idc/student/:idstd/lom/:idl/:score', controller.correctActivity);
 
+router.put('/:id/includeObjectives', controller.includeObjectives); // include objectives in a course
+
 router.put('/:id', controller.update); // update the whole course 
 
 // DELETEs
+
+// delete objectives from a course
+router.delete('/:id/deleteObjectives', controller.deleteObjectives);
 //deletes a course by id
 router.delete('/:id', controller.remove);
 //deletes all courses
