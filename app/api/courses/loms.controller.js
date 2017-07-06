@@ -1,14 +1,13 @@
  'use strict';
+ /* jshint node: true */
 
 
 var Courses = require('./courses.model.js'),
-    config = require('../../res/config.js'),
     async = require('async'),
     _ = require('lodash'),
 	mongoose = require('mongoose');
 	
 var CoursesFunctions = require('./courses.functions.js'),
-	controller = require('./courses.controller.js'),
 	LOMS = require('../loms/loms.model.js');
 
 /**
@@ -359,3 +358,4 @@ exports.delete_loms = function(req, res) {
 		res.status(404).send('The course with id: ' + courseId + ' is not registrated');
 	}
 };
+

@@ -1,9 +1,8 @@
 'use strict';
+/* jshint node: true */
+
 var functions2 = require('../courses/courses.functions.js');
-var Courses = require('../courses/courses.model.js');
 var _ = require('lodash');
-var LOMS = require('../loms/loms.model.js');
-var mongoose = require('mongoose');
 var RuleEngine = require('node-rules');
 
 var studentType = [[], ['beginner','beginner','medium'], ['beginner','medium','medium'], 
@@ -42,7 +41,7 @@ exports.controlErrors = function (err, res, ret){
 			res.json(ret); 			
 		}
 	}
-}
+};
 
 /**
  *	This function returns all courses completed by the student
@@ -59,7 +58,7 @@ exports.getCoursesDone = function(student, courses){
 	}
 	return coursesDone;
 
-}
+};
 
 /**
  *	This function returns all courses completed by the student
@@ -79,7 +78,7 @@ exports.getCoursesNotDone = function(student, courses){
 	}
 	return coursesNotDone;
 
-}
+};
 
 /**
  *	Returns all active student courses
@@ -92,7 +91,7 @@ exports.getActiveCourses = function(student){
 		}
 	} 
 	return activeCourses;
-}
+};
 
 /**
  *	Returns lasts courses included
@@ -113,7 +112,7 @@ exports.getLastCourses = function(student, courses){
 	} else {
 		return lastCourses;
 	}
-}
+};
 
 /**
  *	Returns related courses to the student
@@ -150,7 +149,7 @@ exports.getRelatedCourses = function(student, courses){
 	});
 
 	return relatedCourses;
-}
+};
 
 /**
  *	Function to calc all student features for node-rules.
@@ -199,7 +198,7 @@ exports.calcFeatures = function(student){
 					};
 
 	return features;
-}
+};
 
 
 
@@ -227,7 +226,7 @@ exports.doUpdate = function(object, newObject){
 		});
 	} 
 	return object;
-}
+};
 /**
  * 	Function to select the type of LOM available more in agreement 
  *	with the type of student that requests it.
@@ -297,7 +296,7 @@ exports.selectType = function(loms, type){
 		}
 	}
 	return ret;
-}
+};
 
 /**
  *	Function to assign the student the most appropriate LOM with respect to its type.
@@ -316,7 +315,7 @@ exports.selectLOM = function(student, element, course){
 	}
 
 	return LOM;
-}
+};
 
 /**
  *  This function receives by parameter an array of lessons, a lesson type 
@@ -335,7 +334,7 @@ exports.findTypeLesson = function(lessons, type, course){
 		}
 	}
 	return ret;
-}
+};
 
 /** 
  *	Function which analyzes if a student has already successfully completed a lesson before.
@@ -360,7 +359,7 @@ exports.isCursed = function(lesson, student){
 	} 
 
 	return ret;
-}
+};
 /**
  *	Function that selects from a group of lessons the first lesson 
  *	that has not been correctly completed by the student.
@@ -384,7 +383,7 @@ exports.selectLessonNotCoursed = function(lessons, student){
 	}
 
 	return ret;
-}
+};
 
 /**
  *	Function that returns the next activity of a course to an 'Advanced' student.
@@ -535,7 +534,7 @@ exports.selectActivityAdvanced = function(course, myLesson, status, student){
 	return ret;
 
 
-}
+};
 
 /**
  *	Function that returns the next activity of a course to a student 'Medium'.
@@ -622,7 +621,7 @@ exports.selectActivityMedium = function(course, myLesson, status, student){
 
 	return ret;
 
-}
+};
 
 /**
  *	Function that returns the next activity of a course to a student 'Beginner'.
@@ -720,7 +719,7 @@ exports.selectActivityBeginner = function(course, myLesson, status, student){
 	}
 	return ret;
 
-}
+};
 
 /**
  *	Function to select the next student activity.
@@ -742,7 +741,7 @@ exports.selectActivity = function(myLesson, course, status, student){
 	}
 	if (ret !== -1) { ret = functions2.exist_section_lesson(ret.name, course.sections[0].lessons); }
 	return ret;
-}
+};
 
 /**
  *  In this function the previous checks are carried out to look for the following activity:
@@ -845,7 +844,7 @@ exports.nextActivity = function (element, course, student){
 	} else { ret = -3; }
 
 	return ret;
-}
+};
 
 /**
  *	Function that assigns the student a type in the new course enrolled, according 
@@ -900,7 +899,7 @@ exports.assignTypeStudent = function(student, course){
 		ret = -2;
 	}
 	return ret;
-}
+};
 
 /**
  *	Function to recalculate the type of student after each completed block of activities.
@@ -972,7 +971,7 @@ exports.adaptativeMode = function(student, course){
 
 
 	return student;
-}
+};
 
 /**
  *	Function to calculate the standard deviation.
@@ -985,7 +984,7 @@ exports.deviation = function(restActs, mean){
 	});
 
 	return (Math.sqrt(deviation / restActs.length));
-}
+};
 
 /**
  *	Function to calculate the type of a student beginner after a block of activities.
@@ -1017,7 +1016,7 @@ exports.yieldBeginner = function(activities){
 	}
 
 	return fail;
-}
+};
 
 /**
  *	Function to calculate the type of a student medium after a block of activities.
@@ -1048,7 +1047,7 @@ exports.yieldMedium = function(activities){
 		}
 	}
 	return fail;
-}
+};
 
 /**
  *	Function to calculate the type of a student advanced after a block of activities.
@@ -1090,7 +1089,7 @@ exports.yieldAdvanced = function(activities){
 		} 
 	}
 	return fail;
-}
+};
 
 /**
  *	Function to analyze the times of a student beginner
@@ -1121,7 +1120,7 @@ exports.timeBeginner = function(activities, student, fail){
 	}
 
 	return time;
-}
+};
 
 /**
  *	Function to analyze the times of a student medium
@@ -1152,7 +1151,7 @@ exports.timeMedium = function(activities, student, fail){
 	} 
 
 	return time;
-}
+};
 
 /**
  *	Function to analyze the times of a student advanced
@@ -1182,7 +1181,7 @@ exports.timeAdvanced = function(activities, student, fail){
 	} 
 
 	return time;
-}
+};
 
 /**
  *	Function that calculates the deviation and the average of the duration of 
@@ -1224,7 +1223,7 @@ exports.calculateTime = function(student, activities){
 	}
 
 	return res;
-}
+};
 
 /**
  * 	Function to analyze the times of the student with respect to their average of duration.
@@ -1266,7 +1265,7 @@ exports.analizeTime = function(activities, mean, deviation){
 	}
 
 	return time;
-}
+};
 
 
 

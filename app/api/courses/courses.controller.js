@@ -1,9 +1,8 @@
 'use strict';
-
+/* jshint node: true */
 
 var Courses = require('./courses.model.js'),
 	Students = require('../students/students.model.js'),
-    config = require('../../res/config.js'),
     CoursesFunctions = require('./courses.functions.js'),
     async = require('async'),
     fs = require('fs'), 
@@ -104,7 +103,6 @@ exports.reset  = function(req, res){
  * 	Creates a new course
  */
 exports.create = function(req, res) {
-	var bool = false;
 	if (req.body.name){
 		Courses.findOne({name: req.body.name}, function(err, course) {
 			if(err){
@@ -399,7 +397,7 @@ exports.includeObjectives = function(req, res) {
 			CoursesFunctions.controlErrors(err, res, course.objectives);
 	});
 	
-}
+};
 
 /**
  *	Deletes objectives from a course.
@@ -434,7 +432,8 @@ exports.deleteObjectives = function(req, res) {
 			CoursesFunctions.controlErrors(err, res, course.objectives);
 	});
 	
-}
+};
+
 
 
 

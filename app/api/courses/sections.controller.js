@@ -1,13 +1,11 @@
 'use strict';
+/* jshint node: true */
 
 var Courses = require('./courses.model.js'),
-	Sections = require('./courses.model.js'),
-    config = require('../../res/config.js'),
     CoursesFunctions = require('./courses.functions.js'),
     async = require('async'),
     mongoose = require('mongoose'),
     _ = require('lodash');
-var controller = require('./courses.controller.js');
 
 /**
  *	List of requests:
@@ -71,8 +69,8 @@ exports.get_section = function (req, res) {
 					}
 				}			
 				if (!bool){
-					res.status(404).send('The section with id : ' + sectionId 
-					+ ' has not been found in the course with id: ' + courseId);	
+					res.status(404).send('The section with id : ' + sectionId + 
+            ' has not been found in the course with id: ' + courseId);	
 				}
 			} 
 		});	
@@ -112,7 +110,7 @@ exports.create_section = function(req, res) {
 	} else {
 		res.status(404).send('The course with id: ' + courseId + ' is not registrated');
 	}
-}
+};
 
 /**
  *	Updates a section from a course.
@@ -172,7 +170,7 @@ exports.delete_section = function(req,res) {
 					course.sections.splice(ind,1);
 
 					if (res.statusCode !== 200) {
-						res.status(400).send('error while updating '+err)
+						res.status(400).send('error while updating '+err);
 					} else { 
 						res.status(200).send({ok:1, n: 1});
 					}
@@ -201,8 +199,8 @@ exports.get_sectionObjectives = function (req, res) {
 				var ind = CoursesFunctions.exist_section_lesson(sectionId,course.sections);
 							
 				if (ind < 0){
-					res.status(404).send('The section with id : ' + sectionId 
-					+ ' has not been found in the course with id: ' + courseId);	
+					res.status(404).send('The section with id : ' + sectionId + 
+              ' has not been found in the course with id: ' + courseId);	
 				} else {
 					res.status(200).send(course.sections[ind].objectives);
 				}
@@ -255,8 +253,7 @@ exports.includeObjectives = function(req, res) {
 		}], function(err, course) {
 			CoursesFunctions.controlErrors(err, res, course.sections[ind].objectives);
 	});
-	
-}
+};
 
 	
 /**
@@ -300,6 +297,5 @@ exports.deleteObjectives = function(req, res) {
 		}], function(err, course) {
 			CoursesFunctions.controlErrors(err, res, course.sections[ind].objectives);
 	});
-	
-}
+};
 

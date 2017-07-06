@@ -1,7 +1,7 @@
 'use strict';
+/* jshint node: true */
 
 var LOMS = require('./loms.model.js'),
-    config = require('../../res/config.js'),
     async = require('async'),
     _ = require('lodash'),
 	fs = require('fs'), 
@@ -141,7 +141,7 @@ exports.remove = function (req, res) {
  */
 exports.destroy  = function(req, res){
     LOMS.remove({}, function (err, resp) {
-        functions.controlErrors(err, res, resp)
+        functions.controlErrors(err, res, resp);
     });
 };
 
@@ -235,4 +235,3 @@ exports.includePhoto =  function (req, res) {
 			 
 	});
 };
-

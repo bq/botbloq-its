@@ -1,4 +1,5 @@
 'use strict';
+/* jshint node: true */
 
 var _ = require('lodash');
 /**
@@ -16,7 +17,7 @@ exports.controlErrors = function (err, res, ret){
 			res.sendStatus(res.statusCode);
 		}
 	}
-}
+};
 
 /**
  *	Function to update a LOM without deleting data.
@@ -41,4 +42,4 @@ exports.doUpdate = function(object, newObject){
 		});
 	} 
 	return object;
-}
+};

@@ -1,7 +1,7 @@
 'use strict';
+/* jshint node: true */
 
 var Students = require('./students.model.js'),
-	config = require('../../res/config.js'), 
 	async = require('async'),
 	_ = require('lodash'),
 	functions = require('./students.functions.js'), 
@@ -195,12 +195,14 @@ exports.update = function(req, res) {
 		
 						if(res.statusCode === 200) {
 							var newStudent = functions.doUpdate(student,req.body);
+              student = _.extend(student, newStudent);
 							student.save(next);						
 						}
 					});
 				} else {
 					res.status(200);
 					var newStudent = functions.doUpdate(student,req.body);
+          student = _.extend(student, newStudent);
 					student.save(next);	
 				}
 			} else {
@@ -526,7 +528,7 @@ exports.unenrollment = function (req, res) {
 	], function(err, student) {
 		functions.controlErrors(err, res, activity);
 	});
-}
+};
 
 /**
  *	Function to obtain the finished courses, courses not completed, 
@@ -564,7 +566,7 @@ exports.dataCourses = function (req, res) {
 							data = {coursesDone: [], coursesNotDone: [], activeCourses: [], lastIncluded: [],
 								relatedCourses: []};
 							data.coursesDone = functions.getCoursesDone(student, courses);
-							data.activeCourses = functions.getActiveCourses(student)
+							data.activeCourses = functions.getActiveCourses(student);
 							data.coursesNotDone = functions.getCoursesNotDone(student, courses);
 							data.lastIncluded = functions.getLastCourses(student, courses);
 							data.relatedCourses = functions.getRelatedCourses(student, courses);
@@ -581,7 +583,7 @@ exports.dataCourses = function (req, res) {
 			}
 		}
     });
-}
+};
 
 
 /**
@@ -590,7 +592,7 @@ exports.dataCourses = function (req, res) {
  *  and the result of the same.
  */
 exports.newActivity = function (req, res) {
-	var activity, ret = 0, dat,
+	var activity, ret = 0,
 	coursed = false;
 	
 	async.waterfall([
@@ -853,7 +855,7 @@ exports.finalizeActivity = function(req, res){
 	], function(err, student) {
 		functions.controlErrors(err, res, ret);
 	});
-}
+};
 
 /**
  * Removes a student by id

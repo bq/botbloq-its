@@ -1,15 +1,12 @@
 'use strict';
-
+/* jshint node: true */
 
 var Courses = require('./courses.model.js'),
-	// Sections = require('./courses.model.js'),
-    config = require('../../res/config.js'),
     async = require('async'),
     fs = require('fs'), 
     _ = require('lodash');
 var CoursesFunctions = require('./courses.functions.js'),
-	mongoose = require('mongoose'),
-	controller = require('./courses.controller.js');
+	mongoose = require('mongoose');
 
 /**
  *	List of requests:
@@ -129,7 +126,7 @@ exports.create_lesson = function(req, res) {
 	} else {
 		res.status(404).send('The course with id: ' + courseId + ' is not registrated');
 	}
-}
+};
 
 /**
  *	Updates a lesson from a section and a course.
@@ -204,7 +201,7 @@ exports.delete_lesson = function (req, res) {
 						course.sections[inds].lessons.splice(indl,1);
 
 						if (res.statusCode !== 200){
-							res.status(400).send('error while updating '+err)
+							res.status(400).send('error while updating '+err);
 						} else {
 							res.status(200).send({ok:1, n: 1});
 						}
@@ -258,7 +255,7 @@ exports.get_lessonObjectives = function (req, res) {
  * Include photo in a lesson.
  */
 exports.includePhoto =  function (req, res) {
-	var sectionId = req.params.ids, lessonId = req.params.idl;
+	var courseId = req.params.idc, sectionId = req.params.ids, lessonId = req.params.idl;
 	Courses.findOne({_id: req.params.idc}, function(err, course){
 		if(!course) { 
 			res.status(404).send('The course with id: '+  req.params.idc +' is not registrated');
@@ -358,7 +355,7 @@ exports.includeObjectives = function(req, res) {
 			CoursesFunctions.controlErrors(err, res, course.sections[inds].lessons[indl].objectives);
 	});
 	
-}
+};
 
 
 /**
@@ -413,4 +410,5 @@ exports.deleteObjectives = function(req, res) {
 			CoursesFunctions.controlErrors(err, res, course.sections[inds].lessons[indl].objectives);
 	});
 	
-}
+};
+

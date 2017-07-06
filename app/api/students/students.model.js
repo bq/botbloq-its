@@ -1,4 +1,6 @@
 // grab the things we need
+/* jshint node: true */
+
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 

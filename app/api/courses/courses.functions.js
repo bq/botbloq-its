@@ -1,8 +1,8 @@
-'use strict';
+/* jshint node: true */
 
 var Courses = require('./courses.model.js'),
-    config = require('../../res/config.js'),
     _ = require('lodash');
+
 
 /**
  *	Returns the index position of the section or lesson identified by id
@@ -17,7 +17,7 @@ exports.exist_section_lesson = function (id,array){
 		}
 	});
 	return ret;
-}
+};
 
 /**
  *	Returns the index position of the lom identified by lomId
@@ -32,7 +32,7 @@ exports.find_lom = function(lomId,loms){
 		}
 	});
 	return ret;
-}
+};
 
 /**
  *	Find the first course with the name indicated. Then
@@ -41,10 +41,10 @@ exports.find_lom = function(lomId,loms){
 exports.update_field = function(courseId,field,value){
 	Courses.findOne({_id: courseId}, function (err, course) {
 		course[field] = value;
-		course.save(function (err) {return err});
+		course.save(function (err) {return err;});
 		}
 	);
-}
+};
 
 /**
  *  Controls callback errors and shows the solution
@@ -61,7 +61,7 @@ exports.controlErrors = function (err, res, ret){
 			res.sendStatus(res.statusCode);
 		}
 	}
-}
+};
 
 /**
  *	Function to update a course without deleting data.
@@ -86,7 +86,7 @@ exports.doUpdate = function(object, newObject){
 		});
 	} 
 	return object;
-}
+};
 
 /**
  *	Function to translate the LOM format to a type.
@@ -112,5 +112,5 @@ exports.translateFormat = function(format){
 
 	return type;
 
-}
+};
 

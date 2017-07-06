@@ -1,4 +1,5 @@
 'use strict';
+/* jshint node: true */
 
 var express = require('express');
 var controller = require('./courses.controller.js');

@@ -1,4 +1,5 @@
 'use strict';
+/* jshint node: true */
 
 // grab the things we need
 var mongoose = require('mongoose');

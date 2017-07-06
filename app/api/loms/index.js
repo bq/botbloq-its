@@ -1,11 +1,12 @@
 'use strict';
+/* jshint node: true */
 
 var express = require('express');
 var controller = require('./loms.controller.js');
 var multer = require('multer');
 
 var router = express.Router();
-var upload = multer({ dest: '/tmp' })
+var upload = multer({ dest: '/tmp' });
 
 
 

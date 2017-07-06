@@ -2,6 +2,7 @@
 /**
  * Main application file
  */
+/* jshint node: true */
 
 'use strict';
 
