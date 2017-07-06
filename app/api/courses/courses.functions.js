@@ -1,3 +1,5 @@
+'use strict';
+
 /* jshint node: true */
 
 var Courses = require('./courses.model.js'),

@@ -92,7 +92,7 @@ exports.get = function (req, res) {
 				/**
 				 * 	Only active courses are shown.
 				 */
-				student.course.find(function(element, index, array){
+				student.course.find(function(element){
 					if(element.active === 1){ 
 						arrayCourses.push(element); 
 					} 
@@ -430,7 +430,7 @@ exports.enrollment = function (req, res) {
 						 *	The course is searched in the courses in which the student is enrolled to verify 
 						 *	that he is not enrolled in the course.
 						 */
-						student.course.find(function(element ,index , array){
+						student.course.find(function(element){
 							if(element.idCourse === req.params.idc){
 								if (element.active === 1){ 
 									res.status(400).send('The student: ' + student._id + 
@@ -501,7 +501,7 @@ exports.unenrollment = function (req, res) {
 			    } else {
 					if(student.active === 1){
 						var coursed = false;
-						student.course.find(function(element ,index , array){
+						student.course.find(function(element, index){
 							if(element.idCourse === req.params.idc && element.active !== 0){
 								coursed = true;
 								element.active = 0;
@@ -525,7 +525,7 @@ exports.unenrollment = function (req, res) {
 			    }
 			});	
 	    }
-	], function(err, student) {
+	], function(err) {
 		functions.controlErrors(err, res, activity);
 	});
 };
@@ -611,7 +611,7 @@ exports.newActivity = function (req, res) {
 					if(student.active === 1){
 
 						coursed = true;							
-						student.course.find(function(element ,index , array){
+						student.course.find(function(element){
 							if(course._id.equals(element.idCourse)){
 								
 								if(element.active === 1 || element.active === -1 ){
@@ -705,7 +705,7 @@ exports.newActivity = function (req, res) {
 											} else {
 
 
-												student.activity_log.find(function(element1, index1, array1){
+												student.activity_log.find(function(element1){
 													if(element1.idCourse === element.idCourse && element1.idLom === element.idLom){
 														
 														element1.created_at = Date.now();
@@ -759,7 +759,7 @@ exports.newActivity = function (req, res) {
 			
 			});	
 	    }
-	], function(err, student) {		
+	], function(err) {		
 		functions.controlErrors(err, res, activity);
 	});
 };
@@ -782,7 +782,7 @@ exports.finalizeActivity = function(req, res){
 			    } else {
 					if(student.active === 1){
 						var coursed = false;
-						student.course.find(function(element ,index , array){
+						student.course.find(function(element){
 							if(element.idCourse === req.params.idc){
 								if(element.active === 1){
 									coursed = true;
@@ -817,7 +817,7 @@ exports.finalizeActivity = function(req, res){
 
 										if(res.statusCode === 200){
 											// The activity duration is updated 
-											student.activity_log.find(function(element1, index1, array1){
+											student.activity_log.find(function(element1){
 												if (element1.idCourse === element.idCourse && element1.idSection === element.idSection && 
 												  element1.idLesson === element.idLesson && element1.IdLom === element.IdLom){
 
@@ -852,7 +852,7 @@ exports.finalizeActivity = function(req, res){
 				}
 			});
 		}
-	], function(err, student) {
+	], function(err) {
 		functions.controlErrors(err, res, ret);
 	});
 };

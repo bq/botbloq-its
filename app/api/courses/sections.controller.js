@@ -234,7 +234,7 @@ exports.includeObjectives = function(req, res) {
 				} else {
 					var objectives = course.sections[ind].objectives;
 					_.forEach(new_obj, function(key){
-						objectives.find(function(element, index, array){
+						objectives.find(function(element){
 							if(element.code === key.code && element.description === key.description &&
 							  element.bloom === key.bloom && element.level === key.level){
 								bool = false;
@@ -279,7 +279,7 @@ exports.deleteObjectives = function(req, res) {
 				} else {
 					var objectives = course.sections[ind].objectives;
 					_.forEach(new_obj, function(key){
-						objectives.find(function(element, index, array){
+						objectives.find(function(element, index){
 							if(element.code === key.code && element.description === key.description &&
 							  element.bloom === key.bloom && element.level === key.level){
 								obj = index;

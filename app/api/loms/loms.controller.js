@@ -114,7 +114,7 @@ exports.remove = function (req, res) {
 	if(mongoose.Types.ObjectId.isValid(req.params.id)){
 		async.waterfall([
 		    LOMS.findById.bind(LOMS, req.params.id),
-		    function(lom, next) {
+		    function(lom) {
 				if(!lom) {
 					res.status(404).send('The lom with id: ' + req.params.id + ' is not registrated');
 			    } else{
@@ -153,7 +153,7 @@ exports.uploadFile =  function (req, res) {
 		if(!lom) { 
 			res.status(404).send('The lom with id: '+  req.params.id +' is not registrated');
 		} else {
-			fs.stat(__dirname + '/../../res/files/' + req.params.id, function(err, stats){
+			fs.stat(__dirname + '/../../res/files/' + req.params.id, function(err){
 				if(err) { fs.mkdir(__dirname + '/../../res/files/' + req.params.id); }
 			});
 			var file = __dirname + '/../../res/files/' + req.params.id + '/' + req.file.originalname;
@@ -183,7 +183,7 @@ exports.uploadFile =  function (req, res) {
 /**
  * Downloads a file of a LOM
  */
-exports.downloadFile = function(req, res, next){
+exports.downloadFile = function(req, res){
 	var file = req.params.file;
 	var path = __dirname + '/../../res/files/' + req.params.id + '/' + file;
 
@@ -207,7 +207,7 @@ exports.includePhoto =  function (req, res) {
 		if(!lom) { 
 			res.status(404).send('The lom with id: '+  req.params.id +' is not registrated');
 		} else {
-			fs.stat(__dirname + '/../../res/files/photos/' + req.params.id, function(err, stats){
+			fs.stat(__dirname + '/../../res/files/photos/' + req.params.id, function(err){
 				if(err) { fs.mkdir(__dirname + '/../../res/files/photos/' + req.params.id); }
 			});
 			var file = __dirname + '/../../res/files/photos/' + req.params.id + '/' + req.file.originalname;

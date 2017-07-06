@@ -71,7 +71,7 @@ exports.get = function (req, res){
 exports.remove = function(req,res) {
 	async.waterfall([
 	    Courses.findById.bind(Courses, req.params.id),
-	    function(course, next) {
+	    function(course) {
 	    	if(!course){
 				res.status(404).send('The course with id: ' + req.params.id + ' is not registrated');
 			} else{
@@ -80,7 +80,7 @@ exports.remove = function(req,res) {
 			    });
 			}
 	    }
-	], function(err, course) {
+	], function(err) {
 	    if (err) {
 	    	console.log(err);
 			res.status(err.code).send(err);				
@@ -201,7 +201,7 @@ exports.includePhoto =  function (req, res) {
 		if(!course) { 
 			res.status(404).send('The course with id: '+  req.params.id +' is not registrated');
 		} else {
-			fs.stat(__dirname + '/../../res/files/photos/' + req.params.id, function(err, stats){
+			fs.stat(__dirname + '/../../res/files/photos/' + req.params.id, function(err){
 				if(err) { fs.mkdir(__dirname + '/../../res/files/photos/' + req.params.id); }
 			});
 			var file = __dirname + '/../../res/files/photos/' + req.params.id + '/' + req.file.originalname;
@@ -247,7 +247,7 @@ exports.getActivity = function (req, res) {
 						case 'student':
 							var student = req.params.idFind;
 
-							course.solutions.find(function(element, index, array){
+							course.solutions.find(function(element){
 								if(element.idStudent.toString() === student.toString()){
 									ret.push(element);
 								}
@@ -258,7 +258,7 @@ exports.getActivity = function (req, res) {
 						case 'lom':
 							var lom = req.params.idFind;
 
-							course.solutions.find(function(element, index, array){
+							course.solutions.find(function(element){
 								if(element.idLom.toString() === lom.toString()){
 									ret.push(element);
 								}
@@ -283,7 +283,7 @@ exports.getActivity = function (req, res) {
 			}
 			course.save(next);
 		}
-	], function(err, course) {
+	], function(err) {
 		CoursesFunctions.controlErrors(err, res, ret);
 	});
 };
@@ -311,7 +311,7 @@ exports.correctActivity = function(req, res){
 					} else if(!student){
 						res.status(404).send('The student with id: ' + idStudent + ' is not registrated');
 					}else {
-						student.activity_log.find(function(element, index, array){
+						student.activity_log.find(function(element){
 							if(element.idLom === idLom && element.idCourse === idCourse){
 								element.score = score;
 								// If the student passes activity
@@ -321,7 +321,7 @@ exports.correctActivity = function(req, res){
 									var lesson = CoursesFunctions.exist_section_lesson(element.idLesson, course.sections[0].lessons);
 									lesson = course.sections[0].lessons[lesson];
 									// The knowledge level is updated
-									student.knowledgeLevel.find(function(element1, index1, array1){
+									student.knowledgeLevel.find(function(element1){
 										if(element1.code === lesson.objectives[0].code && element1.level === lesson.objectives[0].level){
 											bool = true;
 										}
@@ -336,14 +336,14 @@ exports.correctActivity = function(req, res){
 								}
 								ret = element;
 
-								student.course.find(function(element1, index1, array1){
+								student.course.find(function(element1){
 									if(element1.idLom === idLom && element1.idCourse === idCourse){
 										element1.status = element.status;
 									}
 								});
 
 								// The activity is removed from the list of pending activities to be corrected.
-								course.solutions.find(function(element1, index1, array1){
+								course.solutions.find(function(element1, index1){
 									if(element1.idLom === idLom && element1.idStudent === idStudent){
 										course.solutions.splice(index1, 1);
 									}
@@ -358,7 +358,7 @@ exports.correctActivity = function(req, res){
 
 			}
 		}
-	], function(err, course) {
+	], function(err) {
 		CoursesFunctions.controlErrors(err, res, ret);
 	});
 };
@@ -378,7 +378,7 @@ exports.includeObjectives = function(req, res) {
 			} else {
 				var objectives = course.objectives;
 				_.forEach(new_obj, function(key){
-					objectives.find(function(element, index, array){
+					objectives.find(function(element){
 						if(element.code === key.code && element.description === key.description &&
 						  element.bloom === key.bloom && element.level === key.level){
 							bool = false;
@@ -414,7 +414,7 @@ exports.deleteObjectives = function(req, res) {
 			} else {
 				var objectives = course.objectives;
 				_.forEach(new_obj, function(key){
-					objectives.find(function(element, index, array){
+					objectives.find(function(element, index){
 						if(element.code === key.code && element.description === key.description &&
 						  element.bloom === key.bloom && element.level === key.level){
 							obj = index;

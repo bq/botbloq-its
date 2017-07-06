@@ -3,7 +3,6 @@
 
 
 var Courses = require('./courses.model.js'),
-    async = require('async'),
     _ = require('lodash'),
 	mongoose = require('mongoose');
 	

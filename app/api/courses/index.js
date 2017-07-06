@@ -110,9 +110,9 @@ router.put('/:idc/section/:ids', section_ctrl.update_section); // update a parti
 // GETs
 router.get('/:idc/:findBy/:idFind', controller.getActivity); //get an activity by student of lom to correct.
 
-router.get('/:idc/:findBy', controller.getActivity); //get an activity to correct.
+router.get('/:id/objectives', controller.getObjectives); // list the objectives of the indicated course
 
-router.get('/:id/objectives', controller.getObjectives); // list the objectives of the indicated course 
+router.get('/:idc/:findBy', controller.getActivity); //get an activity to correct. 
 
 router.get('/:id', controller.get); // list the indicated course 
 

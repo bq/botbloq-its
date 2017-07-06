@@ -270,7 +270,7 @@ exports.includePhoto =  function (req, res) {
 					res.status(404).send('The lesson with id : ' + lessonId +
 					' has not been found in the section with id: ' + sectionId);
 				} else {
-					fs.stat(__dirname + '/../../res/files/photos/' + lessonId, function(err, stats){
+					fs.stat(__dirname + '/../../res/files/photos/' + lessonId, function(err){
 						if(err) { fs.mkdir(__dirname + '/../../res/files/photos/' + lessonId); }
 					});
 					var file = __dirname + '/../../res/files/photos/' + lessonId + '/' + req.file.originalname;
@@ -334,7 +334,7 @@ exports.includeObjectives = function(req, res) {
 						var objectives = course.sections[inds].lessons[indl].objectives;
 						
 						_.forEach(new_obj, function(key){
-							objectives.find(function(element, index, array){
+							objectives.find(function(element){
 								if(element.code === key.code && element.description === key.description &&
 								  element.bloom === key.bloom && element.level === key.level){
 									bool = false;
@@ -390,7 +390,7 @@ exports.deleteObjectives = function(req, res) {
 						var objectives = course.sections[inds].lessons[indl].objectives;
 						
 						_.forEach(new_obj, function(key){
-							objectives.find(function(element, index, array){
+							objectives.find(function(element, index){
 								if(element.code === key.code && element.description === key.description &&
 								  element.bloom === key.bloom && element.level === key.level){
 									obj = index;
