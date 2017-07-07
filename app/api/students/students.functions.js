@@ -340,7 +340,7 @@ exports.findTypeLesson = function(lessons, type, course){
  *	Function which analyzes if a student has already successfully completed a lesson before.
  */
 exports.isCursed = function(lesson, student){
-	var ret = false, bool = false;
+	var bool = false;
 	var indexActivities = 0;
 	var activities = student.activity_log;
 
@@ -352,13 +352,9 @@ exports.isCursed = function(lesson, student){
 		} else {
 			indexActivities += 1;
 		}
-	}
-
-	if(bool){
-		ret = true;
 	} 
 
-	return ret;
+	return bool;
 };
 /**
  *	Function that selects from a group of lessons the first lesson 
@@ -678,6 +674,16 @@ exports.selectActivityBeginner = function(course, myLesson, status, student){
 				if(posibilities.length === 1){
 					ret = posibilities[0];
 
+					if(this.isCursed(ret, student)){
+						posibilities = this.findTypeLesson(myLesson.learning_path, 'Essential', course);
+
+						if(posibilities.length > 0){
+							ret = this.selectLessonNotCoursed(posibilities, student); 
+						} else {
+							ret = -1;
+						}
+					}
+
 				} else if(posibilities.length > 1){
 					posibilities.sort(function(a, b){
 						return (a.dificulty - b.dificulty);
@@ -949,6 +955,8 @@ exports.adaptativeMode = function(student, course){
 			case 'beginner':
 				fail = this.yieldBeginner(activities);
 				time = this.timeBeginner(activities, student, fail);
+
+				console.log(fail + ' ---- ' + time);
 
 				student.identification.type = beginnerTable[fail][time];
 				break;

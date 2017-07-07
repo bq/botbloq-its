@@ -311,9 +311,23 @@ exports.correctActivity = function(req, res){
 					} else if(!student){
 						res.status(404).send('The student with id: ' + idStudent + ' is not registrated');
 					}else {
+						
+						// Selects the last element from activity log with the same idLOM and idCourse
+						var lastElement = {idLom: ''};
 						student.activity_log.find(function(element){
 							if(element.idLom === idLom && element.idCourse === idCourse){
+								if(lastElement.idLom === '' || lastElement.created_at < element.created_at){
+									lastElement = element;
+								} else if(lastElement.created_at < element.created_at){
+									lastElement = element;
+								}
+							}
+						});
+
+						student.activity_log.find(function(element){
+							if(element === lastElement){
 								element.score = score;
+								
 								// If the student passes activity
 								if(score >= 5){
 									element.status = 1;
@@ -326,7 +340,7 @@ exports.correctActivity = function(req, res){
 											bool = true;
 										}
 									});
-							 		
+									
 									if(bool === false && lesson.objectives.length !== 0){
 										student.knowledgeLevel.push(lesson.objectives[0]);
 									} 

@@ -163,8 +163,7 @@ var activitySchema = new Schema({
 	score: {
 		type: Number,
 		required: false
-	},
-	_id: false
+	}
 });
 
 var Objective = new Schema({
