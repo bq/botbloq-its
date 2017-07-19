@@ -40,15 +40,6 @@ var LOM = function() {
 		loms.push(this.generateRandomLOM('sesion00', 'https://youtu.be/PzPrX1JU5Pw?list=PL_AaWt7YXUYgKKAeIDcUmSj0f8Z5FwCeu', 'application/youtube'));
 		loms.push(this.generateRandomLOM('sesion01', 'https://youtu.be/hprno1wRpHc?list=PL_AaWt7YXUYgKKAeIDcUmSj0f8Z5FwCeu', 'application/youtube'));
 		loms.push(this.generateRandomLOM('sesion02', 'https://youtu.be/tuUjFOdtq5Q?list=PL_AaWt7YXUYgKKAeIDcUmSj0f8Z5FwCeu', 'application/youtube'));
-		loms.push(this.generateRandomLOM('sesion03', 'https://youtu.be/hpSVzBJFQTw?list=PL_AaWt7YXUYgKKAeIDcUmSj0f8Z5FwCeu', 'application/youtube'));
-		loms.push(this.generateRandomLOM('sesion04', 'https://youtu.be/3zspOSGqzrc?list=PL_AaWt7YXUYgKKAeIDcUmSj0f8Z5FwCeu', 'application/youtube'));
-		loms.push(this.generateRandomLOM('sesion05', 'https://youtu.be/aNR9E-1Vkf0?list=PL_AaWt7YXUYgKKAeIDcUmSj0f8Z5FwCeu', 'application/youtube'));
-		loms.push(this.generateRandomLOM('sesion06', 'https://youtu.be/2dQ5RB8BMLo?list=PL_AaWt7YXUYgKKAeIDcUmSj0f8Z5FwCeu', 'application/youtube'));
-		loms.push(this.generateRandomLOM('sesion07', 'https://youtu.be/HuoBCLkdmNU?list=PL_AaWt7YXUYgKKAeIDcUmSj0f8Z5FwCeu', 'application/youtube'));
-		loms.push(this.generateRandomLOM('sesion08', 'https://youtu.be/5nnshdYPymQ?list=PL_AaWt7YXUYgKKAeIDcUmSj0f8Z5FwCeu', 'application/youtube'));
-		loms.push(this.generateRandomLOM('sesion09', 'https://youtu.be/hUJ2RJDzqFY?list=PL_AaWt7YXUYgKKAeIDcUmSj0f8Z5FwCeu', 'application/youtube'));
-		loms.push(this.generateRandomLOM('sesion10', 'https://youtu.be/kV_5hH8IUDQ?list=PL_AaWt7YXUYgKKAeIDcUmSj0f8Z5FwCeu', 'application/youtube'));
-		
 		return loms;
 	};
 

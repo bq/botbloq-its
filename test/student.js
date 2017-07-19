@@ -9,7 +9,7 @@ var Student = function() {
 				name:  nameStudent,
 				email: emailStudent
 			},
-			learningStyle : {
+			learningStyle: {
 				comprehension: 'global',
     			input: 'visual',
     			perception: 'sensing',

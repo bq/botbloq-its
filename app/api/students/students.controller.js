@@ -134,8 +134,8 @@ exports.create = function(req, res) {
 				        	res.status(err.code).send(err);
 				        } else {
 				        	console.log('Student created!');
-				        	var features = functions.calcFeatures(student);
 
+				        	var features = functions.calcFeatures(student);
 				        	// Calculate the student's group
 							ruleEngineGR.execute(features, function(result){
 								student.learningStyle.group = result.group;
@@ -793,6 +793,7 @@ exports.finalizeActivity = function(req, res){
 												ret = 'Activity paused correctly';
 												res.status(200);
 												break;
+
 											case 'finalize': // finalize the activity.
 												element.status = 3;
 												res.status(200);
@@ -809,6 +810,34 @@ exports.finalizeActivity = function(req, res){
 												});
 												course.save();
 												break;
+
+											case 'ok':
+												var bool = false;
+												element.status = 1;
+												res.status(200);
+
+												var lesson = functions2.exist_section_lesson(element.idLesson, course.sections[0].lessons);
+												lesson = course.sections[0].lessons[lesson];
+												// The knowledge level is updated
+												student.knowledgeLevel.find(function(element1){
+													if(element1.code === lesson.objectives[0].code && element1.level === lesson.objectives[0].level){
+														bool = true;
+													}
+												});
+												
+												if(bool === false && lesson.objectives.length !== 0){
+													student.knowledgeLevel.push(lesson.objectives[0]);
+												} 
+
+												ret = element;
+												break;
+
+											case 'nok':
+												element.status = -1;
+												res.status(200);
+												ret = element;
+												break;
+
 											default:
 												res.status(400);
 												ret = 'the status: ' + req.params.status + ' is not correct'; 
@@ -827,6 +856,7 @@ exports.finalizeActivity = function(req, res){
 												}
 											});
 										}
+
 
 										student.save(next);
 									} else {

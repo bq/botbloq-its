@@ -47,7 +47,7 @@ describe('Chakram', function(){
  	    var randomStudent = student.generateRandomStudent('pepe','pepe@gmail.com');
     	// create student
 	    return request.postBackend('/students',200,randomStudent).then(function (response) {
-	    	idStudent = response.body.id_student;
+	    	idStudent = response.body._id;
 	    	var answer = student.generateAnswer(['sequential', 'visual', 'sensing', 'active']);
 	    	// update learning style
 	    	return request.postBackend('/students/' + idStudent + '/init', 200,answer ).then(function (response1) {
@@ -152,7 +152,7 @@ describe('Chakram', function(){
 
 			return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/idle', 200)
 			.then(function (response2) {
-				expect(response2.body).to.equal('The activity has been paused correctly');
+				expect(response2.body).to.equal('Activity paused correctly');
 				console.log('The activity has been paused');
 				
 				return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
