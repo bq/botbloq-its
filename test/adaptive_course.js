@@ -45,7 +45,7 @@ describe('Chakram', function(){
  	    var randomStudent = student.generateRandomStudent('pepe','pepe@gmail.com');
     	// create student
 	    return request.postBackend('/students',200,randomStudent).then(function (response) {
-	    	idStudent = response.body.id_student;
+	    	idStudent = response.body._id;
 	    	var answer = student.generateAnswer(['sequential', 'visual', 'sensing', 'active']);
 	    	// update learning style
 	    	return request.postBackend('/students/' + idStudent + '/init', 200,answer ).then(function (response1) {

@@ -45,7 +45,7 @@ describe('Chakram', function(){
  	    var randomStudent = student.generateRandomStudent('pepe','pepe@gmail.com');
     	// create student
 	    return request.postBackend('/students',200,randomStudent).then(function (response) {
-	    	idStudent = response.body.id_student;
+	    	idStudent = response.body._id;
 	    	var answer = student.generateAnswer(['sequential', 'visual', 'sensing', 'active']);
 	    	// update learning style
 	    	return request.postBackend('/students/' + idStudent + '/init', 200,answer ).then(function (response1) {
@@ -187,9 +187,9 @@ describe('Chakram', function(){
 											lom = response.body._id;
 											console.log('The system returns the fourth lesson of the course: 4. LED');
 													
-											return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/nok', 200)
+											return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/ok', 200)
 											.then(function (response2) {
-												expect(response2.body).to.have.property('status', -1);
+												expect(response2.body).to.have.property('status', 1);
 										    	return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
 												.then(function(response) {
 													expect(response.body.general).to.have.property('title', '¡Muévete! El servo de rotación continua');
@@ -219,23 +219,35 @@ describe('Chakram', function(){
 																		expect(response2.body).to.have.property('status', 1);
 																    	return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
 																		.then(function(response) {
-																			expect(response.body.general).to.have.property('title', '¡Elemental, querido Watson! La lógica booleana');
+																			expect(response.body.general).to.have.property('title', 'O blanco o negro. El sensor infrarrojo.');
 																			lom = response.body._id;
-																			console.log('The system returns the twentieth lesson of the course: 20. Logica booleana');
+																			console.log('The system returns the tenth lesson of the course: 10. Sensor IR');
 																			
 																			return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/ok', 200)
 																			.then(function (response2) {
 																				expect(response2.body).to.have.property('status', 1);
-																		    	return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
-																				.then(function(response) {
-																					expect(response.body[1].level).to.equal(2);
-																					console.log('Course finished');
+																				return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
+																		    	.then(function (response) {
+																		    		expect(response.body.general).to.have.property('title', 'Ve hacia la luz robotín… programando el sensor de luz');
+																					lom = response.body._id;
+																					console.log('The system returns the twelve lesson of the course: 12. Sensor luz');
 																					
-																					chakram.wait();
+																					return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/ok', 200)
+																					.then(function (response2) {
+																						expect(response2.body).to.have.property('status', 1);
+																				    
+																				    	return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
+																						.then(function(response) {
+																							expect(response.body[1].level).to.equal(2);
+																							console.log('Course finished');
+																							
+																							chakram.wait();
+																						});
+																					});
 																				});
+																		    	
 																			});
 																		});
-
 																	});
 																});
 															});

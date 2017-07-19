@@ -47,7 +47,7 @@ describe('Chakram', function(){
 	it('Testing to create a new student and testing errors', function () {
  	    var randomStudent = student.generateRandomStudent('pepe','pepe@gmail.com');
 	    return request.postBackend('/students',200,randomStudent).then(function (response) {
-	    	idStudent = response.body.id_student;
+	    	idStudent = response.body._id;
 	    	console.log('creating a new student');
 			
 			randomStudent = student.generateRandomStudent('jose',undefined);
@@ -116,7 +116,7 @@ describe('Chakram', function(){
 				
 						var badStudent = student.generateRandomStudent('Luis', 'luis@gmail.com');
 					    return request.postBackend('/students/', 200, badStudent).then(function (response) {	
-						    var badId = response.body.id_student;
+						    var badId = response.body._id;
 							badStudent = student.generateRandomStudent('Luis', 'pepe@gmail.com');
 							return request.putBackend('/students/' + badId, 400, badStudent).then(function (response) {	
 								expect(response.body).to.equal('A student with the same email already exists');	
