@@ -35,7 +35,36 @@ Returns the lesson assigned to id selected.
 If successful, this action returns a JSON data block containing the information for the lesson selected.
 If this action is not successful, it returns the error code. 
 
+----------
 
+
+**GET /botbloq/v1/its/students/:idstd/course/:idc/isEnrolled**
+-------------
+
+Returns true or false if the student is or is not enrolled in the course.
+
+**Parameters**: 
+
+- idstd: student ID
+- idc: course ID
+
+**Query Parameters**:
+
+**Permissions**:
+
+**Status Codes**:
+200 OK - Action successfully attempted.
+400 Bad Request - The request contains bad syntax.
+403 Forbidden - The student is not activated.
+404 Not Found - Resource not found.
+
+**Input**:
+
+**Return**:  
+If successful, this action returns true or false if the student is or is not enrolled in the course 
+If this action is not successful, it returns the error code. 
+
+----------
 
 **GET /botbloq/v1/its/students/:idstd/course/:idc**
 -------------
