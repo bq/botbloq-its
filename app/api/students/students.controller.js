@@ -921,3 +921,40 @@ exports.destroy  = function(req, res){
 		functions.controlErrors(err, res, resp);
 	});
 };
+
+/**
+ *	Returns true or false if the student is or is not enrolled in the course 
+ */
+exports.isEnrolled = function(req, res){
+	var bool = false;
+	async.waterfall([
+	    Students.findById.bind(Students, req.params.idstd),
+	    function(student, next) {
+	    	student.course.find(function(element){
+	    		if(element.idCourse === req.params.idc && element.active !== -1){
+	    			bool = true;
+	    		}
+	    	});
+	    	student.save(next);
+	    }
+	], function(err) {
+		if(err){
+			console.log(err);
+			res.status(err.code).send(err);
+		} else {
+		 	res.status(200).send(bool);
+
+		}
+	});
+}
+
+
+
+
+
+
+
+
+
+
+
