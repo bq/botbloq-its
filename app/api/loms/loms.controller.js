@@ -7,6 +7,10 @@ var LOMS = require('./loms.model.js'),
 	fs = require('fs'), 
 	functions = require('./loms.functions.js'),
 	mongoose = require('mongoose');
+
+var base64 = require('node-base64-image');
+var Grid = require('gridfs-stream');
+var conn = mongoose.connection;
 	
 /**
  *	List of requests:
@@ -203,35 +207,76 @@ exports.downloadFile = function(req, res){
  * Include photo in a LOM
  */
 exports.includePhoto =  function (req, res) {
-	LOMS.findById(req.params.id, function(err, lom){
-		if(!lom) { 
-			res.status(404).send('The lom with id: '+  req.params.id +' is not registrated');
-		} else {
-			fs.stat(__dirname + '/../../res/files/photos/' + req.params.id, function(err){
-				if(err) { fs.mkdir(__dirname + '/../../res/files/photos/' + req.params.id); }
-			});
-			var file = __dirname + '/../../res/files/photos/' + req.params.id + '/' + req.file.originalname;
-			lom.photo = file;
-			fs.readFile( req.file.path, function (err, data) {
-				if(!data){ 
-					res.status(400).send('No data to upload');
-				} else {
-					fs.writeFile(file, data, function (err) {
-						if(err){
-							console.error(err);
-					        res.status(404).send(err);
-						    res.end('Sorry, the photo: '+  req.file.originalname + 
-							' couldn\'t be uploaded in the lom with id: ' + req.params.id);
+	async.waterfall([
+	    LOMS.findById.bind(LOMS, req.params.id),
+	    function(lom, next) {
+			if(!lom) { 
+				res.status(404).send('The lom with id: '+  req.params.id +' is not registrated');
+			} else {
+				
+				// convert image to base64 encoded string
+				var base64str = functions.base64_encode(req.file.path);
+				//console.log(base64str);
 
-						}else{
-						    res.end('Photo: '+  req.file.originalname + 
-							' uploaded successfully in the lom with id: ' + req.params.id);
-						}
-					});
-				}
-			});
-			lom.save();
+				lom.photo = base64str;
+				// convert base64 string back to image 
+				//base64_decode(base64str, 'copy.jpg');
+				lom.save(next);
+			}
 		}
-			 
+	], function(err, lom) {
+	    functions.controlErrors(err, res, lom);
 	});
 };
+
+/**
+ *	Return the base64 photo
+ */
+exports.getPhoto = function(req, res) {
+	var ret;
+	async.waterfall([
+	    LOMS.findById.bind(LOMS, req.params.id),
+	    function(lom, next) { 
+	    	if(lom.photo){
+	    		res.status(200);
+	    		ret = lom.photo;
+	    	} else {
+	    		res.status(400);
+	    		ret = 'Lom does not have a photo';
+	    	}
+	    	lom.save(next);
+
+	    }], function(err, lom) {
+		if(err){
+			console.error(err);
+			res.status(404).send(err);
+		} else {
+			res.send(ret);
+		}
+	});
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

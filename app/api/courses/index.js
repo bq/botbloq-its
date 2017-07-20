@@ -46,7 +46,8 @@ router.delete('/:idc/section/:ids/lesson/:idle/lom/:idlo', loms_ctrl.delete_lom)
 */
 
 // GETs 
-
+// Return the base64 photo
+router.get('/:course_id/section/:section_id/lesson/:lesson_id/photo', lesson_ctrl.getPhoto); 
 // list the objectives of the indicated lesson
 router.get('/:course_id/section/:section_id/lesson/:lesson_id/objectives', lesson_ctrl.get_lessonObjectives); 
 // list the indicated lesson
@@ -111,6 +112,8 @@ router.put('/:idc/section/:ids', section_ctrl.update_section); // update a parti
 router.get('/:idc/:findBy/:idFind', controller.getActivity); //get an activity by student of lom to correct.
 
 router.get('/:id/objectives', controller.getObjectives); // list the objectives of the indicated course
+
+router.get('/:id/photo', controller.getPhoto);//gets the base64 photo
 
 router.get('/:idc/:findBy', controller.getActivity); //get an activity to correct. 
 

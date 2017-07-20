@@ -218,6 +218,12 @@ var useSchema = new Schema({
 	_id : false
 });
 
+var photoSchema = new Schema({ 
+	data: Buffer, 
+	contentType: String,
+	_id: false
+});
+
 var lomSchema = new Schema({
 	general: {
 		type: generalSchema,
@@ -245,7 +251,9 @@ var lomSchema = new Schema({
 		default : ''
 	},
 	photo: {
-		type: String
+		type: String,
+		required: true,
+		default: ''
 	}
 });
 

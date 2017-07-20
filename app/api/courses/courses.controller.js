@@ -3,7 +3,7 @@
 
 var Courses = require('./courses.model.js'),
 	Students = require('../students/students.model.js'),
-    CoursesFunctions = require('./courses.functions.js'),
+    functions = require('./courses.functions.js'),
     async = require('async'),
     fs = require('fs'), 
     mongoose = require('mongoose'),
@@ -40,7 +40,7 @@ var Courses = require('./courses.model.js'),
  */
 exports.all = function (req, res) {
     Courses.find({}, function (err, course) {
-		CoursesFunctions.controlErrors(err, res, course);
+		functions.controlErrors(err, res, course);
 	});
 };
 
@@ -76,7 +76,7 @@ exports.remove = function(req,res) {
 				res.status(404).send('The course with id: ' + req.params.id + ' is not registrated');
 			} else{
 				Courses.remove({_id: course._id}, function (err, resp) {
-			        CoursesFunctions.controlErrors(err, res, resp);
+			        functions.controlErrors(err, res, resp);
 			    });
 			}
 	    }
@@ -95,7 +95,7 @@ exports.remove = function(req,res) {
  */
 exports.reset  = function(req, res){
     Courses.remove({}, function (err, resp) {
-	    CoursesFunctions.controlErrors(err, res, resp);
+	    functions.controlErrors(err, res, resp);
     });
 };
 
@@ -153,20 +153,20 @@ exports.update = function(req, res) {
 					}
 	
 					if(res.statusCode === 200) {
-						var newCourse = CoursesFunctions.doUpdate(course, req.body);
+						var newCourse = functions.doUpdate(course, req.body);
 						course = _.extend(course, newCourse);
 						course.save(next);						
 					}
 				});
 			} else {
 				res.status(200);
-				var newCourse = CoursesFunctions.doUpdate(course, req.body);
+				var newCourse = functions.doUpdate(course, req.body);
 				course = _.extend(course, newCourse);
 				course.save(next);	
 			}
 	    }
 	], function(err, course) {
-	    CoursesFunctions.controlErrors(err, res, course);
+	    functions.controlErrors(err, res, course);
 	});		
 };
 
@@ -197,37 +197,54 @@ exports.getObjectives = function (req, res){
  * Include photo in a course
  */
 exports.includePhoto =  function (req, res) {
-	Courses.findOne({_id: req.params.id}, function(err, course){
-		if(!course) { 
-			res.status(404).send('The course with id: '+  req.params.id +' is not registrated');
-		} else {
-			fs.stat(__dirname + '/../../res/files/photos/' + req.params.id, function(err){
-				if(err) { fs.mkdir(__dirname + '/../../res/files/photos/' + req.params.id); }
-			});
-			var file = __dirname + '/../../res/files/photos/' + req.params.id + '/' + req.file.originalname;
-			course.photo = file;
-			fs.readFile( req.file.path, function (err, data) {
-				if(!data) {res.status(400).send('No data to upload');
-				} else {
-					fs.writeFile(file, data, function (err) {
-						if( err ){
-							console.error( err );
-					        res.status(404).send(err);
-						    res.end('Sorry, the photo: '+  req.file.originalname + 
-							' couldn\'t be uploaded in the course with id: ' + req.params.id);
+	async.waterfall([
+	    Courses.findById.bind(Courses, req.params.id),
+	    function(course, next) {
+			if(!course) { 
+				res.status(404).send('The course with id: '+  req.params.id +' is not registrated');
+			} else {
+				
+				// convert image to base64 encoded string
+				var base64str = functions.base64_encode(req.file.path);
+				//console.log(base64str);
 
-						}else{
-						    res.end('Photo: '+  req.file.originalname + 
-							' uploaded successfully in the course with id: ' + req.params.id);
-						}
-					});
-				}
-			});
-			course.save();
+				course.photo = base64str;
+				// convert base64 string back to image 
+				//base64_decode(base64str, 'copy.jpg');
+				course.save(next);
+			}
 		}
-			 
+	], function(err, course) {
+	    functions.controlErrors(err, res, course);
 	});
 };
+
+/**
+ *	Return the base64 photo
+ */
+exports.getPhoto = function(req, res) {
+	var ret;
+	async.waterfall([
+	    Courses.findById.bind(Courses, req.params.id),
+	    function(course, next) {
+	    	if(course.photo){
+	    		res.status(200);
+	    		ret = course.photo;
+	    	} else {
+	    		res.status(400);
+	    		ret = 'course does not have a photo';
+	    	}
+	    	course.save(next);
+
+	    }], function(err, course) {
+		if(err){
+			console.error(err);
+			res.status(404).send(err);
+		} else {
+			res.send(ret);
+		}
+	});
+}
 
 /**
  *	Function to obtain one or more activities to correct them.
@@ -284,7 +301,7 @@ exports.getActivity = function (req, res) {
 			course.save(next);
 		}
 	], function(err) {
-		CoursesFunctions.controlErrors(err, res, ret);
+		functions.controlErrors(err, res, ret);
 	});
 };
 
@@ -332,7 +349,7 @@ exports.correctActivity = function(req, res){
 								if(score >= 5){
 									element.status = 1;
 
-									var lesson = CoursesFunctions.exist_section_lesson(element.idLesson, course.sections[0].lessons);
+									var lesson = functions.exist_section_lesson(element.idLesson, course.sections[0].lessons);
 									lesson = course.sections[0].lessons[lesson];
 									// The knowledge level is updated
 									student.knowledgeLevel.find(function(element1){
@@ -373,7 +390,7 @@ exports.correctActivity = function(req, res){
 			}
 		}
 	], function(err) {
-		CoursesFunctions.controlErrors(err, res, ret);
+		functions.controlErrors(err, res, ret);
 	});
 };
 
@@ -408,7 +425,7 @@ exports.includeObjectives = function(req, res) {
 				course.save(next);
 			}
 		}], function(err, course) {
-			CoursesFunctions.controlErrors(err, res, course.objectives);
+			functions.controlErrors(err, res, course.objectives);
 	});
 	
 };
@@ -443,7 +460,7 @@ exports.deleteObjectives = function(req, res) {
 				course.save(next);
 			}
 		}], function(err, course) {
-			CoursesFunctions.controlErrors(err, res, course.objectives);
+			functions.controlErrors(err, res, course.objectives);
 	});
 	
 };

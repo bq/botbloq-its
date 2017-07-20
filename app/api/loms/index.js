@@ -12,8 +12,13 @@ var upload = multer({ dest: '/tmp' });
 
 //////////////////////////// GETs
 
+
+
 //downloads a file of a lom
 router.get('/:id/download/:file', controller.downloadFile);
+
+//gets the base64 photo
+router.get('/:id/photo', controller.getPhoto);
 
 //gets a lom selected
 router.get('/:id', controller.get);

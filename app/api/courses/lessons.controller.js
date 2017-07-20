@@ -5,7 +5,7 @@ var Courses = require('./courses.model.js'),
     async = require('async'),
     fs = require('fs'), 
     _ = require('lodash');
-var CoursesFunctions = require('./courses.functions.js'),
+var functions = require('./courses.functions.js'),
 	mongoose = require('mongoose');
 
 /**
@@ -38,9 +38,9 @@ exports.all_lessons = function (req, res) {
 	        	console.log(err);
 				res.status(err.code).send(err);
 			} else if (!course) {
-				res.status(404).send('The course with id: ' + courseId + ' is not registrated'); 
+				res.status(404).send('The course with id: ' + courseId + ' is not registered'); 
 			} else{
-				var ind = CoursesFunctions.exist_section_lesson(sectionId,course.sections);
+				var ind = functions.exist_section_lesson(sectionId,course.sections);
 				if (ind < 0){ 
 					res.status(404).send('The section with id : ' + sectionId +
 					' has not been found in the course with id: ' + courseId);
@@ -50,7 +50,7 @@ exports.all_lessons = function (req, res) {
 			}   
 		});
 	} else {
-		res.status(404).send('The course with id: ' + courseId + ' is not registrated'); 
+		res.status(404).send('The course with id: ' + courseId + ' is not registered'); 
 	}
 };
 
@@ -67,14 +67,14 @@ exports.get_lesson = function (req, res) {
 	        	console.log(err);
 				res.status(err.code).send(err); 
 			} else if (!course) {
-				res.status(404).send('The course with id: ' + courseId + ' is not registrated'); 
+				res.status(404).send('The course with id: ' + courseId + ' is not registered'); 
 			} else { 
-				var inds = CoursesFunctions.exist_section_lesson(sectionId,course.sections);
+				var inds = functions.exist_section_lesson(sectionId,course.sections);
 				if (inds < 0){
 					res.status(404).send('The section with id : ' + sectionId +
 					' has not been found in the course with id: ' + courseId);
 				} else {	// section exists
-					var indl = CoursesFunctions.exist_section_lesson(lessonId,course.sections[inds].lessons);
+					var indl = functions.exist_section_lesson(lessonId,course.sections[inds].lessons);
 					if (indl < 0) {
 						res.status(404).send('The lesson with id : ' + lessonId +
 						' has not been found in the section with id: ' + sectionId);
@@ -85,7 +85,7 @@ exports.get_lesson = function (req, res) {
 			}
 		});
 	} else {
-		res.status(404).send('The course with id: ' + courseId + ' is not registrated'); 
+		res.status(404).send('The course with id: ' + courseId + ' is not registered'); 
 	}
 };
 
@@ -103,14 +103,14 @@ exports.create_lesson = function(req, res) {
 				console.log(err);
 				res.status(err.code).send(err);
 			} else if (!course){
-				res.status(404).send('The course with id: ' + courseId + ' is not registrated');
+				res.status(404).send('The course with id: ' + courseId + ' is not registered');
 			} else {
-				var inds = CoursesFunctions.exist_section_lesson(sectionId,course.sections);
+				var inds = functions.exist_section_lesson(sectionId,course.sections);
 				if (inds === -1){
 					res.status(404).send('The section with id : ' + sectionId +
 					' has not been found in the course with id: ' + courseId);
 				} else {					
-					var indl = CoursesFunctions.exist_section_lesson(lessonId,course.sections[inds].lessons);
+					var indl = functions.exist_section_lesson(lessonId,course.sections[inds].lessons);
 					if ( indl !== -1 ){
 						res.status(400).send('Error lesson already exist');
 					} else {
@@ -124,7 +124,7 @@ exports.create_lesson = function(req, res) {
 			}
 		});
 	} else {
-		res.status(404).send('The course with id: ' + courseId + ' is not registrated');
+		res.status(404).send('The course with id: ' + courseId + ' is not registered');
 	}
 };
 
@@ -142,21 +142,21 @@ exports.update_lesson = function(req, res) {
 				console.log(err);
 				res.status(err.code).send(err);
 			} else if (!course) {
-				 res.status(404).send('The course with id: ' + courseId + ' is not registrated');
+				 res.status(404).send('The course with id: ' + courseId + ' is not registered');
 			} else {
-				var inds = CoursesFunctions.exist_section_lesson(sectionId,course.sections);
+				var inds = functions.exist_section_lesson(sectionId,course.sections);
 				if (inds < 0){
 					res.status(404).send('The section with id : ' + sectionId +
 					' has not been found in the course with id: ' + courseId);
 				} else {					
-					var indl = CoursesFunctions.exist_section_lesson(lessonId,course.sections[inds].lessons);
+					var indl = functions.exist_section_lesson(lessonId,course.sections[inds].lessons);
 					if ( indl < 0 ){
 						res.status(404).send('The lesson with id : ' + lessonId +
 						' has not been found in the section with id: ' + sectionId);
 					} else {
 
 						var lessons = course.sections[inds].lessons;
-						lessons[indl] = CoursesFunctions.doUpdate(lessons[indl] , new_lec);
+						lessons[indl] = functions.doUpdate(lessons[indl] , new_lec);
 
 						if (res.statusCode !== 200) {
 							res.status(404).send('error while updating '+err);							
@@ -169,7 +169,7 @@ exports.update_lesson = function(req, res) {
 			}
 		});
 	} else {
-		res.status(404).send('The course with id: ' + courseId + ' is not registrated');
+		res.status(404).send('The course with id: ' + courseId + ' is not registered');
 	}
 };
 
@@ -186,14 +186,14 @@ exports.delete_lesson = function (req, res) {
 	        	console.log(err);
 				res.status(err.code).send(err);
 			} else if (!course) {
-				res.status(404).send('The course with id: ' + courseId + ' is not registrated');
+				res.status(404).send('The course with id: ' + courseId + ' is not registered');
 			} else{ 
-				var inds = CoursesFunctions.exist_section_lesson(sectionId,course.sections);
+				var inds = functions.exist_section_lesson(sectionId,course.sections);
 				if (inds < 0) {
 					res.status(404).send('The section with id : ' + sectionId +
 					' has not been found in the course with id: ' + courseId);
 				} else {	// section exists
-					var indl = CoursesFunctions.exist_section_lesson(lessonId,course.sections[inds].lessons);
+					var indl = functions.exist_section_lesson(lessonId,course.sections[inds].lessons);
 					if ( indl < 0 ){
 						res.status(404).send('The lesson with id : ' + lessonId +
 						' has not been found in the section with id: ' + sectionId);
@@ -211,7 +211,7 @@ exports.delete_lesson = function (req, res) {
 			}
 		});
 	} else {
-		res.status(404).send('The course with id: ' + courseId + ' is not registrated');
+		res.status(404).send('The course with id: ' + courseId + ' is not registered');
 	}
 };
 
@@ -229,14 +229,14 @@ exports.get_lessonObjectives = function (req, res) {
 	        	console.log(err);
 				res.status(err.code).send(err); 
 			} else if (!course) {
-				res.status(404).send('The course with id: ' + courseId + ' is not registrated'); 
+				res.status(404).send('The course with id: ' + courseId + ' is not registered'); 
 			} else { 
-				var inds = CoursesFunctions.exist_section_lesson(sectionId,course.sections);
+				var inds = functions.exist_section_lesson(sectionId,course.sections);
 				if (inds < 0){
 					res.status(404).send('The section with id : ' + sectionId +
 					' has not been found in the course with id: ' + courseId);
 				} else {	// section exists
-					var indl = CoursesFunctions.exist_section_lesson(lessonId,course.sections[inds].lessons);
+					var indl = functions.exist_section_lesson(lessonId,course.sections[inds].lessons);
 					if (indl < 0) {
 						res.status(404).send('The lesson with id : ' + lessonId +
 						' has not been found in the section with id: ' + sectionId);
@@ -247,7 +247,7 @@ exports.get_lessonObjectives = function (req, res) {
 			}
 		});
 	} else {
-		res.status(404).send('The course with id: ' + courseId + ' is not registrated'); 
+		res.status(404).send('The course with id: ' + courseId + ' is not registered'); 
 	}
 };
 
@@ -255,51 +255,83 @@ exports.get_lessonObjectives = function (req, res) {
  * Include photo in a lesson.
  */
 exports.includePhoto =  function (req, res) {
-	var courseId = req.params.idc, sectionId = req.params.ids, lessonId = req.params.idl;
-	Courses.findOne({_id: req.params.idc}, function(err, course){
-		if(!course) { 
-			res.status(404).send('The course with id: '+  req.params.idc +' is not registrated');
-		} else {
-			var inds = CoursesFunctions.exist_section_lesson(sectionId,course.sections);
-			if (inds < 0){
-				res.status(404).send('The section with id : ' + sectionId +
-				' has not been found in the course with id: ' + courseId);
-			} else {	// section exists
-				var indl = CoursesFunctions.exist_section_lesson(lessonId,course.sections[inds].lessons);
-				if (indl < 0) {
-					res.status(404).send('The lesson with id : ' + lessonId +
-					' has not been found in the section with id: ' + sectionId);
-				} else {
-					fs.stat(__dirname + '/../../res/files/photos/' + lessonId, function(err){
-						if(err) { fs.mkdir(__dirname + '/../../res/files/photos/' + lessonId); }
-					});
-					var file = __dirname + '/../../res/files/photos/' + lessonId + '/' + req.file.originalname;
-					course.sections[inds].lessons[indl].photo = file;
-					fs.readFile( req.file.path, function (err, data) {
-						if(!data) {res.status(400).send('No data to upload');
-						} else {
-							fs.writeFile(file, data, function (err) {
-								if( err ){
-									console.error( err );
-							        res.status(404).send(err);
-								    res.end('Sorry, the photo: '+  req.file.originalname + 
-									' couldn\'t be uploaded in the lesson with id: ' + lessonId);
+	var courseId = req.params.idc, sectionId = req.params.ids, lessonId = req.params.idl, inds, indl;
 
-								}else{
-								    res.end('Photo: '+  req.file.originalname + 
-									' uploaded successfully in the lesson with id: ' + lessonId);
-								}
-							});
-						}
-					});
+	async.waterfall([
+	    Courses.findById.bind(Courses, courseId),
+	    function(course, next) {
+			if(!course) { 
+				res.status(404).send('The course with id: '+  courseId +' is not registered');
+			} else {
+				inds = functions.exist_section_lesson(sectionId,course.sections);
+				if (inds < 0){
+					res.status(404).send('The section with id : ' + sectionId +
+					' has not been found in the course with id: ' + courseId);
+				} else {	// section exists
+					indl = functions.exist_section_lesson(lessonId,course.sections[inds].lessons);
+					if (indl < 0) {
+						res.status(404).send('The lesson with id : ' + lessonId +
+						' has not been found in the section with id: ' + sectionId);
+					} else {
+						// convert image to base64 encoded string
+						var base64str = functions.base64_encode(req.file.path);
 
+						course.sections[inds].lessons[indl].photo = base64str;
+						// convert base64 string back to image 
+						//base64_decode(base64str, 'copy.jpg');
+						course.save(next);
+
+					}
 				}
-			}		
-			course.save();
+			}
 		}
-			 
+	], function(err, course) {
+	    functions.controlErrors(err, res, course.sections[inds].lessons[indl]);
 	});
 };
+
+/**
+ *	Return the base64 photo
+ */
+exports.getPhoto = function(req, res) {
+	var courseId = req.params.course_id, sectionId = req.params.section_id, lessonId = req.params.lesson_id, ret;
+	async.waterfall([
+	    Courses.findById.bind(Courses, courseId),
+	    function(course, next) {
+	    	if(!course) { 
+				res.status(404).send('The course with id: '+  courseId +' is not registered');
+			} else {
+				var inds = functions.exist_section_lesson(sectionId,course.sections);
+				if (inds < 0){
+					res.status(404).send('The section with id : ' + sectionId +
+					' has not been found in the course with id: ' + courseId);
+				} else {	// section exists
+					var indl = functions.exist_section_lesson(lessonId,course.sections[inds].lessons);
+					if (indl < 0) {
+						res.status(404).send('The lesson with id : ' + lessonId +
+						' has not been found in the section with id: ' + sectionId);
+					} else {
+				    	if(course.sections[inds].lessons[indl].photo){
+				    		res.status(200);
+				    		ret = course.sections[inds].lessons[indl].photo;
+				    	} else {
+				    		res.status(400);
+				    		ret = 'course does not have a photo';
+				    	}
+				    	course.save(next);
+				    }
+				}
+			}
+
+	    }], function(err) {
+		if(err){
+			console.error(err);
+			res.status(404).send(err);
+		} else {
+			res.send(ret);
+		}
+	});
+}
 
 
 /**
@@ -317,15 +349,15 @@ exports.includeObjectives = function(req, res) {
    	 	Courses.findById.bind(Courses, courseId),
     	function(course, next) {
 			if (!course){
-				res.status(404).send('The course with id: ' + courseId + ' is not registrated');
+				res.status(404).send('The course with id: ' + courseId + ' is not registered');
 			} else {
-				inds = CoursesFunctions.exist_section_lesson(sectionId,course.sections);
+				inds = functions.exist_section_lesson(sectionId,course.sections);
 
 				if (inds < 0){
 					res.status(404).send('The section with id : ' + sectionId +
 					' has not been found in the course with id: ' + courseId);
 				} else {
-					indl = CoursesFunctions.exist_section_lesson(lessonId,course.sections[inds].lessons);
+					indl = functions.exist_section_lesson(lessonId,course.sections[inds].lessons);
 					
 					if (indl < 0) {
 						res.status(404).send('The lesson with id : ' + lessonId +
@@ -352,7 +384,7 @@ exports.includeObjectives = function(req, res) {
 				}
 			}
 		}], function(err, course) {
-			CoursesFunctions.controlErrors(err, res, course.sections[inds].lessons[indl].objectives);
+			functions.controlErrors(err, res, course.sections[inds].lessons[indl].objectives);
 	});
 	
 };
@@ -373,15 +405,15 @@ exports.deleteObjectives = function(req, res) {
    	 	Courses.findById.bind(Courses, courseId),
     	function(course, next) {
 			if (!course){
-				res.status(404).send('The course with id: ' + courseId + ' is not registrated');
+				res.status(404).send('The course with id: ' + courseId + ' is not registered');
 			} else {
-				inds = CoursesFunctions.exist_section_lesson(sectionId,course.sections);
+				inds = functions.exist_section_lesson(sectionId,course.sections);
 
 				if (inds < 0){
 					res.status(404).send('The section with id : ' + sectionId +
 					' has not been found in the course with id: ' + courseId);
 				} else {
-					indl = CoursesFunctions.exist_section_lesson(lessonId,course.sections[inds].lessons);
+					indl = functions.exist_section_lesson(lessonId,course.sections[inds].lessons);
 					
 					if (indl < 0) {
 						res.status(404).send('The lesson with id : ' + lessonId +
@@ -407,7 +439,7 @@ exports.deleteObjectives = function(req, res) {
 				}
 			}
 		}], function(err, course) {
-			CoursesFunctions.controlErrors(err, res, course.sections[inds].lessons[indl].objectives);
+			functions.controlErrors(err, res, course.sections[inds].lessons[indl].objectives);
 	});
 	
 };
