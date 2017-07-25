@@ -28,18 +28,18 @@ var LOM = function() {
 	
 	this.generate3LOMS = function() {
 		var loms = [];
-		loms.push(this.generateRandomLOM('lom0', '', 'video'));
-		loms.push(this.generateRandomLOM('lom1', '', 'video'));
-		loms.push(this.generateRandomLOM('lom2', '', 'video'));
+		loms.push(this.generateRandomLOM('Scratch: Zowi charla con el gato', 'http://diwo.bq.com/video/curso-scratch-sesion-1/', 'video'));
+		loms.push(this.generateRandomLOM('Scratch: Zowi camina por la luna', 'http://diwo.bq.com/video/curso-scratch-sesion-2/', 'video'));
+		loms.push(this.generateRandomLOM('Scratch: moviendo a Zowi', 'http://diwo.bq.com/video/curso-scratch-sesion-3/', 'video'));
 		
 		return loms;
 	};
 	
 	this.generateZowiLOMS = function() {
 		var loms = [];
-		loms.push(this.generateRandomLOM('sesion00', 'https://youtu.be/PzPrX1JU5Pw?list=PL_AaWt7YXUYgKKAeIDcUmSj0f8Z5FwCeu', 'application/youtube'));
-		loms.push(this.generateRandomLOM('sesion01', 'https://youtu.be/hprno1wRpHc?list=PL_AaWt7YXUYgKKAeIDcUmSj0f8Z5FwCeu', 'application/youtube'));
-		loms.push(this.generateRandomLOM('sesion02', 'https://youtu.be/tuUjFOdtq5Q?list=PL_AaWt7YXUYgKKAeIDcUmSj0f8Z5FwCeu', 'application/youtube'));
+		loms.push(this.generateRandomLOM('Scratch: Zowi charla con el gato', 'http://diwo.bq.com/video/curso-scratch-sesion-1/', 'video'));
+		loms.push(this.generateRandomLOM('Scratch: Zowi camina por la luna', 'http://diwo.bq.com/video/curso-scratch-sesion-2/', 'video'));
+		loms.push(this.generateRandomLOM('Scratch: moviendo a Zowi', 'http://diwo.bq.com/video/curso-scratch-sesion-3/', 'video'));
 		return loms;
 	};
 

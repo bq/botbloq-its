@@ -6,7 +6,7 @@ var Course = function() {
 
     this.generateRandomCourse = function() {
         var course = {
-			name : 'Test_Course_' + currentDate,
+			name : ' Curso de Prueba' + currentDate,
 			code : 'TEST'+ currentDate,
 			statistics: {
 				std_enrolled : [],
@@ -62,14 +62,14 @@ var Course = function() {
 	
 	this.generateCompleteCourse = function(loms){
 		var course = {
-			name: 'course_Zowi_partial',
+			name: 'Curso Zowi',
 			code: 'COURSE' + currentDate,
 			statistics: {
 				std_enrolled : [],
 				std_finished : [],
 				std_unenrolled : []
 			},
-			summary: 'Zowi course',
+			summary: 'Curso de Zowi',
 			sections: [
 				{
 					name: 'Section_1_1',
