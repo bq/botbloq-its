@@ -13,7 +13,7 @@
 					"en": ""
 				},
 				"title": {
-					"en": "Comprehension?"
+					"en": "Comprendes mejor los conceptos de forma:"
 				},
 				"idname": "single-choice",
 				"children": [{
@@ -21,7 +21,7 @@
 					"required": true,
 					"choices": [{
 						"label": {
-							"en": "Sequential"
+							"en": "Sequencial"
 						}
 					}, {
 						"label": {
@@ -39,7 +39,7 @@
 					"en": ""
 				},
 				"title": {
-					"en": "How you prefer information to be presented?"
+					"en": "Prefieres que la informacion te sea presentada de forma:"
 				},
 				"idname": "single-choice",
 				"children": [{
@@ -65,7 +65,7 @@
 					"en": ""
 				},
 				"title": {
-					"en": "How do you prefer to perceive or take information?"
+					"en": "Prefieres obtener la información de forma:"
 				},
 				"idname": "single-choice",
 				"children": [{
@@ -73,11 +73,11 @@
 					"required": true,
 					"choices": [{
 						"label": {
-							"en": "Sensing"
+							"en": "Sensitiva"
 						}
 					}, {
 						"label": {
-							"en": "Intuitive"
+							"en": "Intuitiva"
 						}
 					}]
 				}],
@@ -91,7 +91,7 @@
 					"en": ""
 				},
 				"title": {
-					"en": "How do you prefer to process information?"
+					"en": "Prefieres procesar la información de forma:"
 				},
 				"idname": "single-choice",
 				"children": [{
@@ -99,11 +99,11 @@
 					"required": true,
 					"choices": [{
 						"label": {
-							"en": "Active"
+							"en": "Activa"
 						}
 					}, {
 						"label": {
-							"en": "Reflexive"
+							"en": "Reflexiva"
 						}
 					}]
 				}],
