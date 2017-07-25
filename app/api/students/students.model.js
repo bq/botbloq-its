@@ -54,7 +54,7 @@ var learningStyleSchema = new Schema({
         type: String,
 		required: false,
 		enum:[
-			'sequential',
+			'sequencial',
 			'global'
 		]
     },
@@ -70,16 +70,16 @@ var learningStyleSchema = new Schema({
         type: String,
 		required: false,
 		enum: [
-			'sensing',
-			'intuitive'
+			'sensitiva',
+			'intuitiva'
 		]
     },
     processing: {
         type: String,
 		required: false,
 		enum: [
-			'active',
-			'reflexive'
+			'activa',
+			'reflexiva'
 		]
     },
 	_id: false

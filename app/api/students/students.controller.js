@@ -348,7 +348,7 @@ exports.init = function (req, res) {
 	    Students.findById.bind(Students,  req.params.id),
 	    function(student, next) {
 			if(student.active === 1){
-				var answers = req.body.answers;
+				var answers = req.body.answers.answers; // FRM front-end error
 				for (var i = 0; i < answers.length; i++) { 
 					switch(answers[i].id_question) {
 					case 'ls_comp': 

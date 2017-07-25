@@ -3,11 +3,11 @@
 
 	"consequence": "function(R) {   this.type = 'video';   R.stop();   }"
 },{
-	"condition": "function(R) {   R.when((this.learningStyle.input == 'verbal') && (this.learningStyle.perception == 'sensorial'));   }",
+	"condition": "function(R) {   R.when((this.learningStyle.input == 'verbal') && (this.learningStyle.perception == 'sensitiva'));   }",
 
 	"consequence": "function(R) {   this.type = 'audio';   R.stop();   }"
 },{
-	"condition": "function(R) {   R.when((this.learningStyle.input == 'verbal') && (this.learningStyle.perception == 'sensing'));   }",
+	"condition": "function(R) {   R.when((this.learningStyle.input == 'verbal') && (this.learningStyle.perception == 'sensitiva'));   }",
 
 	"consequence": "function(R) {   this.type = 'document';   R.stop();   }"
 }]
