@@ -124,6 +124,7 @@ exports.create = function(req, res) {
 				for(var i = 0; i< students.length; i++){
 					if(students[i].identification.email === req.body.identification.email){
 						bool = true;
+						break;
 					}
 				}
 				// The email is unique
@@ -144,14 +145,16 @@ exports.create = function(req, res) {
 									// ideal format type is calculated
 					        		ruleEngineLS.execute(student, function(result1){
 										student.learningStyle.type = result1.type;
-
 										student.save();
 										res.json(student);
 									});
 					        	} else {
 					        		// If learning style is not included, a survey is returned.
 									var json_survey = require('../../res/learningstyle.json'); 
+									
 									json_survey.id_student = student._id;
+									json_survey.nuevo = 1;
+									console.log("Formulario completo" + json_survey.form.length);
 									student.save();
 									res.json(json_survey);
 								}
@@ -159,7 +162,14 @@ exports.create = function(req, res) {
 				        }
 				    });
 				} else {
-					res.status(403).send('A student with the same email already exists');
+					// If learning style is not included, a survey is returned.
+					var json_survey = require('../../res/learningstyle.json'); 
+					json_survey.id_student = students[i]._id;
+					json_survey.nuevo = 0;
+					console.log("Formulario vacio" + json_survey.form.length);
+					res.json(json_survey);
+					
+					//res.status(403).send('A student with the same email already exists');
 				}
 			}
 		});
