@@ -47,7 +47,7 @@ describe('Chakram', function(){
 	    	return request.postBackend('/students/' + idStudent + '/init', 200,answer ).then(function (response1) {
 				// data verification
 		    	return request.getBackend('/students/' + idStudent, 200).then(function (response2) {
-		    		expect(response2.body.learningStyle.processing).to.equal('active');
+		    		expect(response2.body.learningStyle.processing).to.equal('activa');
 	 	    		expect(response2.body.identification.name).to.equal(randomStudent.identification.name);
 	 	    		chakram.wait();
  	    
@@ -174,7 +174,7 @@ describe('Chakram', function(){
 	    	return request.postBackend('/students/' + idStudent + '/init', 200,answer ).then(function (response1) {
 				// data verification
 		    	return request.getBackend('/students/' + idStudent, 200).then(function (response2) {
-		    		expect(response2.body.learningStyle.processing).to.equal('active');
+		    		expect(response2.body.learningStyle.processing).to.equal('activa');
 	 	    		expect(response2.body.identification.name).to.equal(randomStudent.identification.name);
 	 	    		chakram.wait();
  	    
@@ -205,17 +205,17 @@ describe('Chakram', function(){
 		var lom;
     	return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
 		.then(function(response) {
-			expect(response.body.technical).to.have.property('format', 'document');
-			console.log('The system returns the first activity (type document) of the course ');
+			expect(response.body.technical).to.have.property('format', 'audio');
+			console.log('The system returns the first activity (type audio) of the course ');
 			lom = response.body._id;
 			return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/ok', 200)
 			.then(function (response) {
 				expect(response.body).to.have.property('status', 1);
 		    	return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
 				.then(function(response) {
-					expect(response.body.technical).to.have.property('format', 'document');
+					expect(response.body.technical).to.have.property('format', 'audio');
 					lom = response.body._id;
-					console.log('The system returns the second activity (type document) of the course');
+					console.log('The system returns the second activity (type audio) of the course');
 					
 					
 					return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/nok', 200) 			

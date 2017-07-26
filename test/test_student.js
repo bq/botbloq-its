@@ -152,7 +152,7 @@ describe('Chakram', function(){
 					
 						return request.putBackend('/students/'+ idStudent + '/course/' + idCourse,200)
 						.then(function(response) {
-							expect(response.body.active).to.equals(-1); // return a course enrolled
+							expect(response.body.active).to.equals(1); // return a course enrolled
 							console.log('Enrolling a student in a course');
 							
 							return request.lockBackend('/students/'+ idStudent + '/course/' + idCourse,200)
@@ -164,7 +164,7 @@ describe('Chakram', function(){
 								.then(function(response) {
 									expect(response.body).to.equal('The student: ' + idStudent +
 									 ' is not enrolled in the course with id: ' + idCourse);
-									console.log('Unenrolling a student in a course not registrated');
+									console.log('Unenrolling a student in a course not registered');
 									chakram.wait();
 								});
 							});

@@ -42,7 +42,7 @@ exports.all_loms = function (req, res) {
 				res.status(err.code).send(err);
 			} else{
 				if (!course){
-					res.status(404).send('The course with id: ' + courseId + ' is not registrated'); 
+					res.status(404).send('The course with id: ' + courseId + ' is not registered'); 
 				}else{
 					var inds = CoursesFunctions.exist_section_lesson(sectionId,course.sections);
 					if (inds < 0){
@@ -62,7 +62,7 @@ exports.all_loms = function (req, res) {
 			}
 		});
 	} else {
-		res.status(404).send('The course with id: ' + courseId + ' is not registrated'); 
+		res.status(404).send('The course with id: ' + courseId + ' is not registered'); 
 	}
 };
 
@@ -81,7 +81,7 @@ exports.get_lom = function (req, res) {
 				res.status(err.code).send(err); 
 			} else{
 				if (!course) {
-					res.status(404).send('The course with id: ' + courseId + ' is not registrated'); 
+					res.status(404).send('The course with id: ' + courseId + ' is not registered'); 
 				} else { // course exists
 					var inds = CoursesFunctions.exist_section_lesson(sectionId,course.sections);
 					if (inds < 0){
@@ -107,7 +107,7 @@ exports.get_lom = function (req, res) {
 			}
 		});
 	} else {
-		res.status(404).send('The course with id: ' + courseId + ' is not registrated');
+		res.status(404).send('The course with id: ' + courseId + ' is not registered');
 	}
 };
 
@@ -127,7 +127,7 @@ exports.assign_lom = function(req, res) {
 				res.status(err.code).send(err);
 			} else{
 				if (!course) {
-					res.status(404).send('The course with id: ' + courseId + ' is not registrated');
+					res.status(404).send('The course with id: ' + courseId + ' is not registered');
 				} else {
 					var inds = CoursesFunctions.exist_section_lesson(sectionId,course.sections);
 					if (inds < 0){
@@ -150,7 +150,7 @@ exports.assign_lom = function(req, res) {
 											console.log(err);
 											res.status(err.code).send(err);
 										} else if(!lom){
-											res.status(404).send('The lom with id: ' + lomId + ' is not registrated');
+											res.status(404).send('The lom with id: ' + lomId + ' is not registered');
 										} else {
 											var loms = lessons[indl].loms;
 
@@ -166,7 +166,7 @@ exports.assign_lom = function(req, res) {
 										}	
 									});
 								} else {
-									res.status(404).send('The lom with id: ' + lomId + ' is not registrated');
+									res.status(404).send('The lom with id: ' + lomId + ' is not registered');
 								}
 								
 							}
@@ -176,7 +176,7 @@ exports.assign_lom = function(req, res) {
 			}	
 		});
 	} else {
-		res.status(404).send('The course with id: ' + courseId + ' is not registrated');
+		res.status(404).send('The course with id: ' + courseId + ' is not registered');
 	}
 };
 
@@ -195,7 +195,7 @@ exports.assign_loms = function(req, res) {
 				res.status(err.code).send(err);
 			} else{
 				if (!course) {
-					res.status(404).send('The course with id: ' + courseId + ' is not registrated');
+					res.status(404).send('The course with id: ' + courseId + ' is not registered');
 				} else {
 					var inds = CoursesFunctions.exist_section_lesson(sectionId,course.sections);
 					if (inds < 0){
@@ -214,7 +214,7 @@ exports.assign_loms = function(req, res) {
 									console.log(err);
 									res.status(err.code).send(err);
 								} else if(!loms){
-									res.status(404).send('The loms with id: ' + newLoms + ' is not registrated');
+									res.status(404).send('The loms with id: ' + newLoms + ' is not registered');
 								} else {
 
 									var allLoms = lessons[indl].loms;
@@ -239,7 +239,7 @@ exports.assign_loms = function(req, res) {
 			}	
 		});
 	} else {
-		res.status(404).send('The course with id: ' + courseId + ' is not registrated');
+		res.status(404).send('The course with id: ' + courseId + ' is not registered');
 	}
 };
 
@@ -257,7 +257,7 @@ exports.delete_lom = function(req, res) {
 				console.log(err);
 				res.status(err.code).send(err);
 			} else if (!course){ 
-				res.status(404).send('The course with id: ' + courseId + ' is not registrated');
+				res.status(404).send('The course with id: ' + courseId + ' is not registered');
 			} else {
 				var inds = CoursesFunctions.exist_section_lesson(sectionId,course.sections);
 				if (inds < 0){
@@ -290,7 +290,7 @@ exports.delete_lom = function(req, res) {
 			}
 		});
 	} else {
-		res.status(404).send('The course with id: ' + courseId + ' is not registrated');
+		res.status(404).send('The course with id: ' + courseId + ' is not registered');
 	}
 };
 
@@ -309,7 +309,7 @@ exports.delete_loms = function(req, res) {
 				res.status(err.code).send(err);
 			} else{
 				if (!course) {
-					res.status(404).send('The course with id: ' + courseId + ' is not registrated');
+					res.status(404).send('The course with id: ' + courseId + ' is not registered');
 				} else {
 					var inds = CoursesFunctions.exist_section_lesson(sectionId,course.sections);
 					if (inds < 0){
@@ -328,7 +328,7 @@ exports.delete_loms = function(req, res) {
 									console.log(err);
 									res.status(err.code).send(err);
 								} else if(!loms){
-									res.status(404).send('The loms with id: ' + newLoms + ' is not registrated');
+									res.status(404).send('The loms with id: ' + newLoms + ' is not registered');
 								} else {
 
 									var allLoms = lessons[indl].loms;
@@ -354,7 +354,7 @@ exports.delete_loms = function(req, res) {
 			}	
 		});
 	} else {
-		res.status(404).send('The course with id: ' + courseId + ' is not registrated');
+		res.status(404).send('The course with id: ' + courseId + ' is not registered');
 	}
 };
 

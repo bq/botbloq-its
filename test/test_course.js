@@ -228,7 +228,7 @@ describe('Chakram', function(){
 	    return request.postBackend('/courses/' + idCourse,200, section).then(function (response) {
 	    	console.log('including a section in a course');
 		    return request.getBackend('/courses/'+id+'/section/'+id+'/lessons',404).then(function (response) {
-				expect(response.body).to.equal('The course with id: ' + id + ' is not registrated');
+				expect(response.body).to.equal('The course with id: ' + id + ' is not registered');
 				console.log('getting all lessons of a section of a not registrated course');
 				
 			    return request.getBackend('/courses/'+idCourse+'/section/'+id+'/lessons',404).then(function (response) {
@@ -250,7 +250,7 @@ describe('Chakram', function(){
 	it('Testing to create a lesson in a section and a course and testing errors', function () {
 		lesson = course.generateDefaultLesson();
 	    return request.postBackend('/courses/'+ id + '/section/' + section.name,404, lesson).then(function (response) {
-			expect(response.body).to.equal('The course with id: ' + id + ' is not registrated');
+			expect(response.body).to.equal('The course with id: ' + id + ' is not registered');
 			console.log('creating a lesson in a section of a not registrated course');
 		    
 		    return request.postBackend('/courses/'+ idCourse + '/section/' + id,404, lesson).then(function (response) {
@@ -275,7 +275,7 @@ describe('Chakram', function(){
 	
 	it('Testing to get a lesson of a section and a course and testing errors', function () {
 	    return request.getBackend('/courses/'+id+'/section/'+id+'/lesson/'+id,404).then(function (response) {
-			expect(response.body).to.equal('The course with id: ' + id + ' is not registrated');
+			expect(response.body).to.equal('The course with id: ' + id + ' is not registered');
 			console.log('getting a lesson of a section of a not registrated course');
 			
 		    return request.getBackend('/courses/'+idCourse+'/section/'+id+'/lesson/'+id,404).then(function (response) {
@@ -303,7 +303,7 @@ describe('Chakram', function(){
 		lesson = course.generateDefaultLesson();
 
 	    return request.putBackend('/courses/' + id + '/section/' + id + '/lesson/' + id, 404, lesson).then(function (response) {
-			expect(response.body).to.equal('The course with id: ' + id + ' is not registrated');
+			expect(response.body).to.equal('The course with id: ' + id + ' is not registered');
 			console.log('updating a lesson of a section of a not registrated course');
 			
 		    return request.putBackend('/courses/' + idCourse + '/section/' + id + '/lesson/' + id, 404, lesson).then(function (response) {
@@ -331,7 +331,7 @@ describe('Chakram', function(){
 	
 	it('Testing to delete a lesson of a section and a course and testing errors', function () {
 	    return request.deleteBackend('/courses/' + id + '/section/' + id + '/lesson/' + id,404).then(function (response) {
-			expect(response.body).to.equal('The course with id: ' + id + ' is not registrated');
+			expect(response.body).to.equal('The course with id: ' + id + ' is not registered');
 			console.log('deleting a lesson of a section and a not registrated course');
 			
 		    return request.deleteBackend('/courses/' + idCourse + '/section/' + id + '/lesson/' + id,404).then(function (response) {
@@ -363,7 +363,7 @@ describe('Chakram', function(){
 		console.log('-------------- loms testing ---------------');
 		return request.getBackend('/courses/' + id + '/section/' + id +
 		'/lesson/' + id + '/loms',404).then(function (response) {
-			expect(response.body).to.equal('The course with id: ' + id + ' is not registrated');
+			expect(response.body).to.equal('The course with id: ' + id + ' is not registered');
 			console.log('getting all loms of a lesson of a section and a not registrated course');
 			
 			return request.getBackend('/courses/' + idCourse + '/section/' + id +
@@ -396,7 +396,7 @@ describe('Chakram', function(){
 			console.log('creating a lom');
 			
 			return request.postBackend('/courses/' + id + '/section/' + id + '/lesson/' + id + '/lom/' + id, 404).then(function (response) {
-				expect(response.body).to.equal('The course with id: ' + id + ' is not registrated');
+				expect(response.body).to.equal('The course with id: ' + id + ' is not registered');
 				console.log('assigning a lom in a lesson of a section and a not registrated course');
 				
 				return request.postBackend('/courses/' + idCourse + '/section/' + id + '/lesson/' + id + '/lom/' + id, 404).then(function (response) {
@@ -410,7 +410,7 @@ describe('Chakram', function(){
 						console.log('assigning a lom in a not registrated lesson of a section and a course');
 						
 						return request.postBackend('/courses/' + idCourse + '/section/' + section.name + '/lesson/' + lesson.name + '/lom/' + id, 404).then(function (response) {
-							expect(response.body).to.equal('The lom with id: ' + id + ' is not registrated');
+							expect(response.body).to.equal('The lom with id: ' + id + ' is not registered');
 							console.log('assigning a not registrated lom in a lesson of a section and a course');
 							
 							return request.postBackend('/courses/' + idCourse + '/section/' + section.name + '/lesson/' + lesson.name + '/lom/' + idLOM, 200).then(function (response) {
@@ -428,7 +428,7 @@ describe('Chakram', function(){
 	it('Testing to get a lom of a lesson and a section and a course and testing errors', function () {
 		return request.getBackend('/courses/' + id + '/section/' + id +
 		'/lesson/' + id + '/lom/'+ id ,404).then(function (response) {
-			expect(response.body).to.equal('The course with id: ' + id + ' is not registrated');
+			expect(response.body).to.equal('The course with id: ' + id + ' is not registered');
 			console.log('getting a lom of a lesson of a section and a not registrated course');
 			
 			return request.getBackend('/courses/' + idCourse + '/section/' + id +
@@ -466,7 +466,7 @@ describe('Chakram', function(){
 
 		return request.deleteBackend('/courses/' + id + '/section/' + id +
 		'/lesson/' + id + '/lom/'+ id,404).then(function (response) {
-			expect(response.body).to.equal('The course with id: ' + id + ' is not registrated');
+			expect(response.body).to.equal('The course with id: ' + id + ' is not registered');
 			console.log('removing a lom in a lesson of a section and a not registrated course');
 			
 			return request.deleteBackend('/courses/' + idCourse + '/section/' + id +

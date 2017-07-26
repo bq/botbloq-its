@@ -51,7 +51,7 @@ describe('Chakram', function(){
 	    	return request.postBackend('/students/' + idStudent + '/init', 200,answer ).then(function (response1) {
 				// data verification
 		    	return request.getBackend('/students/' + idStudent, 200).then(function (response2) {
-		    		expect(response2.body.learningStyle.processing).to.equal('active');
+		    		expect(response2.body.learningStyle.processing).to.equal('activa');
 	 	    		expect(response2.body.identification.name).to.equal(randomStudent.identification.name);
 	 	    		chakram.wait();
  	    

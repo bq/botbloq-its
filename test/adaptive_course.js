@@ -40,7 +40,7 @@ describe('Chakram', function(){
 
 	it('Testing to create a new student', function () {
 		console.log('------------------------------------------');
-		console.log('---------- no_adaptive_course2 -----------');
+		console.log('------------ adaptive_course -------------');
 		console.log('------------------------------------------');
  	    var randomStudent = student.generateRandomStudent('pepe','pepe@gmail.com');
     	// create student
@@ -51,7 +51,7 @@ describe('Chakram', function(){
 	    	return request.postBackend('/students/' + idStudent + '/init', 200,answer ).then(function (response1) {
 				// data verification
 		    	return request.getBackend('/students/' + idStudent, 200).then(function (response2) {
-		    		expect(response2.body.learningStyle.processing).to.equal('active');
+		    		expect(response2.body.learningStyle.processing).to.equal('activa');
 	 	    		expect(response2.body.identification.name).to.equal(randomStudent.identification.name);
 	 	    		chakram.wait();
  	    
