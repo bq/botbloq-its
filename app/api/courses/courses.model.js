@@ -24,7 +24,8 @@ var Objective = new Schema({
 
 var Lesson = new Schema({ 
 	name: { type: String, required: true}, 
-	summary: {type: String, default: 'no summary'},  
+	summary: {type: String, default: '--'}, 
+	description: {type: String, default: '--'},
 	objectives: [Objective],
 	learning_path: [Number],
 	photo: String,

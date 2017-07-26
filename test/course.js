@@ -126,22 +126,23 @@ var Course = function() {
 	
 	this.generateZowiCourse = function(loms) {
 		var course = {
-			name: 'course_Zowi_complete',
+			name: 'Curso de Scratch con Zowi',
 			code: 'COURSE' + currentDate,
 			statistics: {
 				std_enrolled: [],
 				std_finished: [],
 				std_unenrolled: []
 			},
-			summary: 'Zowi course',
+			summary: 'Con éste curso aprenderás a usar Scratch, pero lo realmente emocionante viene después. Cuando aprendas cómo pensar a la hora de programar ¡podrás realizar alucinantes videojuegos y animaciones! Intenta desarrollar tus propias ideas y terminar tus propios proyectos',
 			sections: [
 				{
-					name: 'Section_1_1',
-					summary: 'Main section',
+					name: '1',
+					summary: 'Sección única',
 					lessons: [
 						{
-							name: 'Lesson_0_0',
-							summary: 'initial lesson',
+							name: '1',
+							summary: 'Scratch: Zowi charla con el gato',
+							description: 'Aprende a cargar fondos y personajes en Scratch',
 							learning_path: [],
 							objectives: [{
 								code: 'ROBOT02',
@@ -152,8 +153,9 @@ var Course = function() {
 							loms: [{lom_id: loms[0], type: 'video'}]
 						},
 						{
-							name: 'Lesson_0_1',
-							summary: 'Zowi charla con gato',
+							name: '2',
+							summary: 'Scratch: Zowi camina por la luna',
+							description: 'Aprende a mover Zowi utilizando las flechas de tu teclado',
 							learning_path: [],
 							objectives: [{
 								code: 'ROBOT02',
@@ -164,8 +166,9 @@ var Course = function() {
 							loms: [{lom_id: loms[1], type: 'video'}]
 						},
 						{
-							name: 'Lesson_0_2',
-							summary: 'Zowi camina por la lluvia',
+							name: '3',
+							summary: 'Scratch: moviendo a Zowi',
+							description: 'Mueve a Zowi usando el raton y modifica su tamaño para que parezca que está lejos o más cerca',
 							learning_path: [],
 							objectives: [{
 								code: 'ROBOT02',
