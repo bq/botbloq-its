@@ -472,7 +472,7 @@ exports.enrollment = function (req, res) {
 								student.identification.type = type;
 
 								newCourse = {idCourse: course._id, idSection: '', 
-								idLesson: '', idLom: '', status: 0, active: -1};
+								idLesson: '', idLom: '', status: 0, active: 1};
 
 								student.course.push(newCourse);
 								activity = newCourse;

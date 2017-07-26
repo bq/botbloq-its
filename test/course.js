@@ -6,7 +6,7 @@ var Course = function() {
 
     this.generateRandomCourse = function() {
         var course = {
-			name : ' Curso de Prueba' + currentDate,
+			name : 'Curso de Prueba' + currentDate,
 			code : 'TEST'+ currentDate,
 			statistics: {
 				std_enrolled : [],

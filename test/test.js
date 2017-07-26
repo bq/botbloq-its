@@ -49,12 +49,12 @@ describe('Chakram', function(){
     	// create student
 	    return request.postBackend('/students',200,randomStudent).then(function (response) {
 	    	idStudent = response.body._id;
-	    	var answer = student.generateAnswer(['sequential', 'visual', 'sensing', 'active']);
+	    	var answer = student.generateAnswer(['secuencial', 'visual', 'sensitiva', 'activa']);
 	    	// update learning style
 	    	return request.postBackend('/students/' + idStudent + '/init', 200,answer ).then(function (response1) {
 				// data verification
 		    	return request.getBackend('/students/' + idStudent, 200).then(function (response2) {
-		    		expect(response2.body.learningStyle.processing).to.equal('active');
+		    		expect(response2.body.learningStyle.processing).to.equal('activa');
 	 	    		expect(response2.body.identification.name).to.equal(randomStudent.identification.name);
 	 	    		chakram.wait();
  	    
@@ -178,7 +178,7 @@ describe('Chakram', function(){
 								.then(function(response4) {
 									
 									// testing if the system returns the first activity of the course
-									expect(response4.body.general).to.have.property('title', 'lom0');
+									expect(response4.body.general).to.have.property('title', 'Scratch: Zowi charla con el gato');
 									var lom = response4.body._id;
 									console.log('The system returns the first activity of the course');
 									
@@ -189,7 +189,7 @@ describe('Chakram', function(){
 										.then(function(response6) {
 											
 											// testing if the system returns the third activity of the course
-											expect(response6.body.general).to.have.property('title', 'lom2');
+											expect(response6.body.general).to.have.property('title', 'Scratch: moviendo a Zowi');
 											lom = response6.body._id;
 											console.log('The system returns the third activity of the course because the first activity completed successfully');
 											

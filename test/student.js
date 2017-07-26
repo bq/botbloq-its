@@ -12,8 +12,8 @@ var Student = function() {
 			learningStyle: {
 				comprehension: 'global',
     			input: 'visual',
-    			perception: 'sensing',
-    			processing: 'active'
+    			perception: 'sensitiva',
+    			processing: 'activa'
 			} 
         };
         return student;
@@ -34,12 +34,12 @@ var Student = function() {
 
     this.generateAnswer = function(answers) {
     	var answer = { 
-    		answers : [
+    		answers : { answers : [
        	    {id_question : 'ls_comp', value: answers[0]},
     		{id_question : 'ls_input', value: answers[1]},
     		{id_question : 'ls_per', value: answers[2]},
     		{id_question : 'ls_proc', value: answers[3]}
-    	]};
+    	]} };
     	return answer;
     };
 

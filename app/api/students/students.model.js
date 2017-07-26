@@ -54,7 +54,7 @@ var learningStyleSchema = new Schema({
         type: String,
 		required: false,
 		enum:[
-			'sequencial',
+			'secuencial',
 			'global'
 		]
     },
