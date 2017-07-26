@@ -116,61 +116,46 @@ exports.get = function (req, res) {
 exports.create = function(req, res) {
 	var bool = false;
 	if (req.body.identification.email){
-		Students.find({}, function(err, students) {
+		Students.findOne({'identification.email': req.body.identification.email}, function(err, student) {
 			if(err){
 				console.log(err);
 	        	res.status(err.code).send(err);
-			} else {
-				for(var i = 0; i< students.length; i++){
-					if(students[i].identification.email === req.body.identification.email){
-						bool = true;
-						break;
-					}
-				}
-				// The email is unique
-				if(bool === false){
-				    Students.create(req.body, function (err, student) {
-				        if (err){
-				        	console.log(err);
-				        	res.status(err.code).send(err);
-				        } else {
-				        	console.log('Student created!');
+			} else if(!student){
+			    Students.create(req.body, function (err, student) {
+			        if (err){
+			        	console.log(err);
+			        	res.status(err.code).send(err);
+			        } else {
+			        	console.log('Student created!');
 
-				        	var features = functions.calcFeatures(student);
-				        	// Calculate the student's group
-							ruleEngineGR.execute(features, function(result){
-								student.learningStyle.group = result.group;
-								if(req.body.learningStyle){
-									// If the learning style is included, the student's 
-									// ideal format type is calculated
-					        		ruleEngineLS.execute(student, function(result1){
-										student.learningStyle.type = result1.type;
-										student.save();
-										res.json(student);
-									});
-					        	} else {
-					        		// If learning style is not included, a survey is returned.
-									var json_survey = require('../../res/learningstyle.json'); 
-									
-									json_survey.id_student = student._id;
-									json_survey.nuevo = 1;
-									console.log("Formulario completo" + json_survey.form.length);
+			        	var features = functions.calcFeatures(student);
+			        	// Calculate the student's group
+						ruleEngineGR.execute(features, function(result){
+							student.learningStyle.group = result.group;
+							if(req.body.learningStyle){
+								// If the learning style is included, the student's 
+								// ideal format type is calculated
+				        		ruleEngineLS.execute(student, function(result1){
+									student.learningStyle.type = result1.type;
 									student.save();
-									res.json(json_survey);
-								}
-							});
-				        }
-				    });
-				} else {
-					// If learning style is not included, a survey is returned.
-					var json_survey = require('../../res/learningstyle.json'); 
-					json_survey.id_student = students[i]._id;
-					json_survey.nuevo = 0;
-					console.log("Formulario vacio" + json_survey.form.length);
-					res.json(json_survey);
-					
-					//res.status(403).send('A student with the same email already exists');
-				}
+									res.json(student);
+								});
+				        	} else {
+				        		// If learning style is not included, a survey is returned.
+								var json_survey = require('../../res/learningstyle.json'); 
+								
+								json_survey.id_student = student._id;
+								json_survey.nuevo = 1;
+								console.log("Formulario completo" + json_survey.form.length);
+								student.save();
+								res.json(json_survey);
+							}
+						});
+			        }
+			    });
+			} else {
+
+				res.status(403).send('A student with the same email already exists');
 			}
 		});
 	} else {
