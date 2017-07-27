@@ -17,6 +17,9 @@ router.get('/:idstd/course/:idc/section/:ids/lesson/:idl', controller.getLesson)
 // returns true or false if the student is or is not enrolled in the course 
 router.get('/:idstd/course/:idc/isEnrolled', controller.isEnrolled); 
 
+// returns true or false if the student is or is not finished the course 
+router.get('/:idstd/course/:idc/isFinished', controller.isFinished); 
+
 // gets a new activity for the enrolled course
 router.get('/:idstd/course/:idc', controller.newActivity); 
 

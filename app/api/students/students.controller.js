@@ -944,7 +944,28 @@ exports.isEnrolled = function(req, res){
 }
 
 
+exports.isFinished = function(req, res){
+	var bool = false;
+	async.waterfall([
+	    Students.findById.bind(Students, req.params.idstd),
+	    function(student, next) {
+	    	student.course.find(function(element){
+	    		if(element.idCourse === req.params.idc && element.status === -2){
+	    			bool = true;
+	    		}
+	    	});
+	    	student.save(next);
+	    }
+	], function(err) {
+		if(err){
+			console.log(err);
+			res.status(err.code).send(err);
+		} else {
+		 	res.status(200).send(bool);
 
+		}
+	});
+}
 
 
 

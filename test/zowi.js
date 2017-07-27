@@ -44,7 +44,7 @@ describe('Chakram', function(){
 	    	idStudent = response.body._id;
 			// data verification
 	    	return request.getBackend('/students/' + idStudent, 200).then(function (response2) {
-	    		expect(response2.body.learningStyle.processing).to.equal('active');
+	    		expect(response2.body.learningStyle.processing).to.equal('activa');
  	    		expect(response2.body.identification.name).to.equal(randomStudent.identification.name);
  	    		chakram.wait();
     		});	    	
@@ -100,7 +100,7 @@ describe('Chakram', function(){
 		var lom;
     	return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
 		.then(function(response) {
-			expect(response.body.general).to.have.property('title', 'sesion00');
+			expect(response.body.general).to.have.property('title', 'Scratch: Zowi charla con el gato');
 			console.log('The system returns the first activity of the course');
 			lom = response.body._id;
 			return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/ok', 200)
@@ -108,7 +108,7 @@ describe('Chakram', function(){
 				expect(response2.body).to.have.property('status', 1);
 		    	return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)
 				.then(function(response3) {
-					expect(response3.body.general).to.have.property('title', 'sesion01');
+					expect(response3.body.general).to.have.property('title', 'Scratch: Zowi camina por la luna');
 					lom = response3.body._id;
 					console.log('The system returns the second activity of the course');
 					
@@ -118,7 +118,7 @@ describe('Chakram', function(){
 						expect(response4.body).to.have.property('status', -1);													//////
 				    	return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)								//////    testing
 						.then(function(response5) {																							//////      nok
-							expect(response5.body.general).to.have.property('title', 'sesion01');											//////
+							expect(response5.body.general).to.have.property('title', 'Scratch: Zowi camina por la luna');											//////
 							console.log('The system returns the same activity because it did not finish correctly');						//////   situation
 							lom = response5.body._id;																						//////
 							return request.putBackend('/students/'+idStudent+ '/course/' + idCourse +'/lom/' + lom + '/ok', 200)		//////
@@ -126,7 +126,7 @@ describe('Chakram', function(){
 								expect(response4.body).to.have.property('status', 1);												//////
 						    	return request.getBackend('/students/'+ idStudent + '/course/' + idCourse,200)						//////
 								.then(function(response5) {																					//////
-									expect(response5.body.general).to.have.property('title', 'sesion02');									//////
+									expect(response5.body.general).to.have.property('title', 'Scratch: moviendo a Zowi');									//////
 									lom = response5.body._id;																				//////
 									console.log('The system returns the third activity of the course');
 									
