@@ -137,25 +137,21 @@ exports.update = function(req, res) {
  * Removes a teacher by id
  */
 exports.remove = function (req, res) {
+	var resp;
 	async.waterfall([
 	    Teachers.findById.bind(Teachers, req.params.id),
 	    function(teacher, next) {
 			if(!teacher){
 				res.status(404).send('The teacher with id: ' + req.params.id + ' is not registrated');
 			} else{
-			    Teachers.remove({_id: teacher._id}, function (err, resp) {
-			        functions.controlErrors(err, res, resp);
+			    Teachers.remove({_id: teacher._id}, function (err, response) {
+			    	resp = response;
 			        teacher.save(next);
 			    });
 			}
 	    }
 	], function(err) {
-		if(err){
-			console.log(err);
-			res.status(err.code).send(err);
-		} else {
-		 	res.sendStatus(200);
-		}
+		functions.controlErrors(err, res, resp);
 	});
 };
 
