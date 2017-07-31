@@ -47,6 +47,7 @@
     "merge": "^1.2.0",
     "mongoose": "^4.4.4",
     "morgan": "^1.7.0",
+    "node-base64-image": "^1.0.4",
     "node-rules": "^3.1.0",
     "path": "^0.12.7",
     "request": "^2.72.0",

@@ -13,6 +13,7 @@ module.exports = function(app) {
     // Insert routes below
     //router.use('/example', require('./api/example/index'));
 	router.use('/students', require('./api/students/index')); // students
+    router.use('/teachers', require('./api/teachers/index')); // teachers
 	router.use('/courses', require('./api/courses/index')); // Courses
 	router.use('/loms', require('./api/loms/index')); // Learning Object Metadata
 	
