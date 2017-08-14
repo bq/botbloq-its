@@ -12,7 +12,7 @@ var chakram = require('chakram'),
 var idStudent, idCourse, idLOM, idLoms = [], zowiCourse;
 	
 describe('Chakram', function(){
-	
+
 	it('Testing to reset the database', function(){
 		return request.deleteBackend('/loms',200).then(function (response) {
 			return request.getBackend('/loms',200).then(function (response1) {

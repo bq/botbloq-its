@@ -78,6 +78,7 @@ var CoursesSchema = new mongoose.Schema({
 	objectives: [Objective],
 	sections  : [Section],
 	photo: String,
+	author: String,
 	statistics: {type: Statistics, required: true, default: ''},
 	history: [History],
 	solutions: [Solution]

@@ -128,6 +128,8 @@ var Course = function() {
 		var course = {
 			name: 'Curso de Scratch con Zowi',
 			code: 'COURSE' + currentDate,
+			photo: 'http://diwo.bq.com/wp-content/uploads/2015/11/zowi-destacado.jpg',
+			author: 'q3',
 			statistics: {
 				std_enrolled: [],
 				std_finished: [],
