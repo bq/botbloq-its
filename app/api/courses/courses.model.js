@@ -29,7 +29,7 @@ var Lesson = new Schema({
 	objectives: [Objective],
 	learning_path: [Number],
 	photo: String,
-	dificulty : { type: Number, default: 0},
+	difficulty : { type: Number, default: 0},
 	type: {
 		type: String,
 		enum: ['Reinforcement', 'Essential', 'Extension'],

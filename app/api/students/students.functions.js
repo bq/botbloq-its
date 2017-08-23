@@ -403,7 +403,7 @@ exports.selectActivityAdvanced = function(course, myLesson, status, student){
 			if(posibilities.length > 0){
 
 				posibilities.sort(function(a, b){
-					return (b.dificulty - a.dificulty);
+					return (b.difficulty - a.difficulty);
 				});
 
 				if(status === 1){
@@ -468,7 +468,7 @@ exports.selectActivityAdvanced = function(course, myLesson, status, student){
 
 				if(posibilities.length > 0){
 					posibilities.sort(function(a, b){
-						return (b.dificulty - a.dificulty);
+						return (b.difficulty - a.difficulty);
 					});
 
 					ret = this.selectLessonNotCoursed(posibilities, student); 
@@ -643,7 +643,7 @@ exports.selectActivityBeginner = function(course, myLesson, status, student){
 
 				} else if(posibilities.length > 1){
 					posibilities.sort(function(a, b){
-						return (a.dificulty - b.dificulty);
+						return (a.difficulty - b.difficulty);
 					});
 
 					ret = this.selectLessonNotCoursed(posibilities, student); 
@@ -686,7 +686,7 @@ exports.selectActivityBeginner = function(course, myLesson, status, student){
 
 				} else if(posibilities.length > 1){
 					posibilities.sort(function(a, b){
-						return (a.dificulty - b.dificulty);
+						return (a.difficulty - b.difficulty);
 					});
 
 					ret = this.selectLessonNotCoursed(posibilities, student); 
@@ -932,9 +932,9 @@ exports.adaptativeMode = function(student, course){
 			var lesson = functions2.exist_section_lesson(activity.idLesson, course.sections[0].lessons);
 			lesson = course.sections[0].lessons[lesson];
 			
-			if(lesson.dificulty === 0){
+			if(lesson.difficulty === 0){
 				activities.easy.push(activity);
-			} else if (lesson.dificulty === 1){
+			} else if (lesson.difficulty === 1){
 				activities.medium.push(activity);
 			} else {
 				activities.hard.push(activity);
