@@ -91,6 +91,7 @@ exports.doUpdate = function(object, newObject){
 	return object;
 };
 
+
 /**
  *	Function to translate the LOM format to a type.
  */
