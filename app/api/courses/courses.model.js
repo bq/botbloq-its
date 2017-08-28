@@ -17,7 +17,7 @@ var Objective = new Schema({
 	bloom: {
 		type: String,
 		enum: ['knowledge', 'comprehension', 'application', 
-		'analysis', 'sintehsis', 'evaluation']
+		'analysis', 'sinthesis', 'evaluation']
 	},
 	_id: false
 });
