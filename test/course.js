@@ -78,7 +78,7 @@ var Course = function() {
 						{
 							name: 'Lesson_1',
 							summary: 'Zowi Lesson 1',
-							learning_path: [2,1],
+							learning_path: [3,2],
 							type: 'Essential',
 							difficulty: 0,
 							objectives: [{
@@ -92,7 +92,7 @@ var Course = function() {
 						{
 							name: 'Lesson_2',
 							summary: 'Zowi Lesson 2',
-							learning_path: [2],
+							learning_path: [3],
 							type: 'Extension',
 							difficulty: 0,
 							objectives: [{
@@ -106,7 +106,7 @@ var Course = function() {
 						{
 							name: 'Lesson_3',
 							summary: 'Zowi Lesson 3',
-							learning_path: [2],
+							learning_path: [3],
 							type: 'Reinforcement',
 							difficulty: 0,
 							objectives: [{
@@ -206,7 +206,7 @@ var Course = function() {
 						{
 							name: 'Lesson_1',
 							summary: 'Antes de empezar',
-							learning_path: [1],
+							learning_path: [2],
 							difficulty: 0,
 							type: 'Essential',
 							objectives: [{
@@ -220,7 +220,7 @@ var Course = function() {
 						{
 							name: 'Lesson_2',
 							summary: 'Conociendo el entorno',
-							learning_path: [1],
+							learning_path: [2],
 							difficulty: 0,
 							type: 'Essential',
 							objectives: [{
@@ -258,7 +258,7 @@ var Course = function() {
 						{
 							name: 'Lesson_1',
 							summary: 'Antes de empezar',
-							learning_path: [1],
+							learning_path: [2],
 							type: 'Essential',
 							difficulty: 0,
 							objectives: [{
@@ -272,7 +272,7 @@ var Course = function() {
 						{
 							name: 'Lesson_2',
 							summary: 'Conociendo el entorno',
-							learning_path: [2],
+							learning_path: [3],
 							type: 'Essential',
 							difficulty: 1,
 							objectives: [{
@@ -286,7 +286,7 @@ var Course = function() {
 						{
 							name: 'Lesson_3',
 							summary: '¿Que es un robot?',
-							learning_path: [5],
+							learning_path: [6],
 							type: 'Essential',
 							difficulty: 2,
 							objectives: [{
@@ -300,7 +300,7 @@ var Course = function() {
 						{
 							name: 'Lesson_4',
 							summary: 'LED',
-							learning_path: [9, 4],
+							learning_path: [10, 5],
 							type: 'Reinforcement',
 							difficulty: 0,
 							objectives: [{
@@ -314,7 +314,7 @@ var Course = function() {
 						{
 							name: 'Lesson_5',
 							summary: 'Condicionales',
-							learning_path: [6, 10],
+							learning_path: [7, 11],
 							difficulty: 2,
 							type: 'Essential',
 							objectives: [{
@@ -328,7 +328,7 @@ var Course = function() {
 						{
 							name: 'Lesson_8',
 							summary: 'Algoritmos',
-							learning_path: [3, 4],
+							learning_path: [4, 5],
 							type: 'Essential',
 							difficulty: 1,
 							objectives: [{
@@ -342,7 +342,7 @@ var Course = function() {
 						{
 							name: 'Lesson_9',
 							summary: 'Zumbador',
-							learning_path: [7, 10],
+							learning_path: [8, 11],
 							type: 'Reinforcement',
 							difficulty: 0,
 							objectives: [{
@@ -356,7 +356,7 @@ var Course = function() {
 						{
 							name: 'Lesson_10',
 							summary: 'Sensor IR',
-							learning_path: [8, 10],
+							learning_path: [9, 11],
 							type: 'Reinforcement',
 							difficulty: 0,
 							objectives: [{
@@ -370,7 +370,7 @@ var Course = function() {
 						{
 							name: 'Lesson_12',
 							summary: 'Sensor luz',
-							learning_path: [10],
+							learning_path: [11],
 							type: 'Reinforcement',
 							difficulty: 1,
 							objectives: [{
@@ -384,7 +384,7 @@ var Course = function() {
 						{
 							name: 'Lesson_15',
 							summary: 'Servo rotacion continua',
-							learning_path: [4],
+							learning_path: [5],
 							type: 'Reinforcement',
 							difficulty: 1,
 							objectives: [{
@@ -398,7 +398,7 @@ var Course = function() {
 						{
 							name: 'Lesson_20',
 							summary: 'Logica booleana',
-							learning_path: [10],
+							learning_path: [11],
 							type: 'Extension',
 							difficulty: 2,
 							objectives: [{
@@ -435,7 +435,7 @@ var Course = function() {
 						{
 							name: 'Lesson_1',
 							summary: 'Antes de empezar',
-							learning_path: [2],
+							learning_path: [3],
 							type: 'Essential',
 							difficulty: 0,
 							objectives: [{
@@ -449,7 +449,7 @@ var Course = function() {
 						{
 							name: 'Lesson_2',
 							summary: 'Conociendo el entorno',
-							learning_path: [7],
+							learning_path: [8],
 							type: 'Essential',
 							difficulty: 0,
 							objectives: [{
@@ -463,7 +463,7 @@ var Course = function() {
 						{
 							name: 'Lesson_3',
 							summary: '¿Que es un robot?',
-							learning_path: [1],
+							learning_path: [2],
 							type: 'Essential',
 							difficulty: 0,
 							objectives: [{
@@ -477,7 +477,7 @@ var Course = function() {
 						{
 							name: 'Lesson_4',
 							summary: 'LED',
-							learning_path: [14, 4],
+							learning_path: [15, 5],
 							type: 'Reinforcement',
 							difficulty: 1,
 							objectives: [{
@@ -491,7 +491,7 @@ var Course = function() {
 						{
 							name: 'Lesson_5',
 							summary: 'Condicionales',
-							learning_path: [8, 9, 11 ,19, 6],
+							learning_path: [9, 10, 12 ,20, 7],
 							difficulty: 0,
 							type: 'Essential',
 							objectives: [{
@@ -505,7 +505,7 @@ var Course = function() {
 						{
 							name: 'Lesson_6',
 							summary: 'Puerto serie',
-							learning_path: [12],
+							learning_path: [13],
 							difficulty: 0,
 							type: 'Extension',
 							objectives: [{
@@ -519,7 +519,7 @@ var Course = function() {
 						{
 							name: 'Lesson_7',
 							summary: 'Variables',
-							learning_path: [10, 13, 5, 16, 12],
+							learning_path: [11, 14, 6, 17, 13],
 							type: 'Essential',
 							difficulty: 0,
 							objectives: [{
@@ -533,7 +533,7 @@ var Course = function() {
 						{
 							name: 'Lesson_8',
 							summary: 'Algoritmos',
-							learning_path: [3, 14, 4],
+							learning_path: [4, 15, 5],
 							type: 'Essential',
 							difficulty: 1,
 							objectives: [{
@@ -547,7 +547,7 @@ var Course = function() {
 						{
 							name: 'Lesson_9',
 							summary: 'Zumbador',
-							learning_path: [9, 11, 19, 6],
+							learning_path: [10, 12, 20, 7],
 							type: 'Reinforcement',
 							difficulty: 0,
 							objectives: [{
@@ -561,7 +561,7 @@ var Course = function() {
 						{
 							name: 'Lesson_10',
 							summary: 'Sensor IR',
-							learning_path: [8, 11, 19, 6],
+							learning_path: [9, 12, 20, 7],
 							type: 'Reinforcement',
 							difficulty: 1,
 							objectives: [{
@@ -575,7 +575,7 @@ var Course = function() {
 						{
 							name: 'Lesson_11',
 							summary: 'Potenciometro (mapear)',
-							learning_path: [13, 5, 16, 12],
+							learning_path: [14, 6, 17, 13],
 							type: 'Reinforcement',
 							difficulty: 0,
 							objectives: [{
@@ -589,7 +589,7 @@ var Course = function() {
 						{
 							name: 'Lesson_12',
 							summary: 'Sensor luz',
-							learning_path: [8, 9, 19, 6],
+							learning_path: [9, 10, 20, 7],
 							type: 'Reinforcement',
 							difficulty: 2,
 							objectives: [{
@@ -603,7 +603,7 @@ var Course = function() {
 						{
 							name: 'Lesson_13',
 							summary: 'Bucles',
-							learning_path: [15, 23, 17],
+							learning_path: [16, 24, 18],
 							type: 'Essential',
 							difficulty: 2,
 							objectives: [{
@@ -617,7 +617,7 @@ var Course = function() {
 						{
 							name: 'Lesson_14',
 							summary: 'Miniservo (mapear)',
-							learning_path: [10, 5, 16, 12],
+							learning_path: [11, 6, 17, 13],
 							type: 'Reinforcement',
 							difficulty: 1,
 							objectives: [{
@@ -631,7 +631,7 @@ var Course = function() {
 						{
 							name: 'Lesson_15',
 							summary: 'Servo rotacion continua',
-							learning_path: [3, 4],
+							learning_path: [4, 5],
 							type: 'Reinforcement',
 							difficulty: 0,
 							objectives: [{
@@ -645,7 +645,7 @@ var Course = function() {
 						{
 							name: 'Lesson_16',
 							summary: 'Maquina de estados',
-							learning_path: [23, 17],
+							learning_path: [24, 18],
 							type: 'Extension',
 							difficulty: 0,
 							objectives: [{
@@ -659,7 +659,7 @@ var Course = function() {
 						{
 							name: 'Lesson_17',
 							summary: 'Sensor de ultrasonidos',
-							learning_path: [10, 13, 6, 12],
+							learning_path: [11, 14, 7, 13],
 							type: 'Reinforcement',
 							difficulty: 0,
 							objectives: [{
@@ -673,7 +673,7 @@ var Course = function() {
 						{
 							name: 'Lesson_18',
 							summary: 'Funciones sin retorno',
-							learning_path: [22, 18, 20, 21],
+							learning_path: [23, 19, 21, 22],
 							type: 'Essential',
 							difficulty: 1,
 							objectives: [{
@@ -687,7 +687,7 @@ var Course = function() {
 						{
 							name: 'Lesson_19',
 							summary: 'Funciones con retorno',
-							learning_path: [22, 20, 21],
+							learning_path: [23, 21, 22],
 							type: 'Extension',
 							difficulty: 2,
 							objectives: [{
@@ -701,7 +701,7 @@ var Course = function() {
 						{
 							name: 'Lesson_20',
 							summary: 'Logica booleana',
-							learning_path: [6],
+							learning_path: [7],
 							type: 'Extension',
 							difficulty: 2,
 							objectives: [{
@@ -715,7 +715,7 @@ var Course = function() {
 						{
 							name: 'Lesson_21',
 							summary: 'LCD',
-							learning_path: [22, 18, 21],
+							learning_path: [23, 19, 22],
 							type: 'Extension',
 							difficulty: 0,
 							objectives: [{
@@ -729,7 +729,7 @@ var Course = function() {
 						{
 							name: 'Lesson_22',
 							summary: 'Joystick (Arrays)',
-							learning_path: [22, 18, 20],
+							learning_path: [23, 19, 21],
 							type: 'Extension',
 							difficulty: 0,
 							objectives: [{
@@ -743,7 +743,7 @@ var Course = function() {
 						{
 							name: 'Lesson_23',
 							summary: 'Melodias',
-							learning_path: [18, 20, 21],
+							learning_path: [19, 21, 22],
 							type: 'Essential',
 							difficulty: 2,
 							objectives: [{
@@ -757,7 +757,7 @@ var Course = function() {
 						{
 							name: 'Lesson_24',
 							summary: 'Botonera',
-							learning_path: [15, 17],
+							learning_path: [16, 18],
 							type: 'Extension',
 							difficulty: 2,
 							objectives: [{
@@ -794,7 +794,7 @@ var Course = function() {
 						{
 							name: 'Lesson_Complex_1',
 							summary: 'First complex lesson',
-							learning_path: [1],
+							learning_path: [2],
 							type: 'Essential',
 							objectives: [{
 								code: 'COMPLEX01',
@@ -810,7 +810,7 @@ var Course = function() {
 						{
 							name: 'Lesson_Complex_2',
 							summary: 'Second complex lesson',
-							learning_path: [1],
+							learning_path: [2],
 							type: 'Essential',
 							objectives: [{
 								code: 'COMPLEX01',

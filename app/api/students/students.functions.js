@@ -325,6 +325,17 @@ exports.selectLOM = function(student, element, course){
  *  The type of lesson can be 'Essential', 'Reinforcement' and 'Extension', depending on their content.
  */
 
+exports.findTypeLessonPath = function(lessons, type, course){
+	var ret = [];
+	for(var i = 0; i <= lessons.length; i++){
+				
+		if(course.sections[0].lessons[lessons[i]-1] && course.sections[0].lessons[lessons[i]-1].type === type){
+			ret.push(course.sections[0].lessons[lessons[i]-1]);
+		}
+	}
+	return ret;
+};
+
 exports.findTypeLesson = function(lessons, type, course){
 	var ret = [];
 	for(var i = 0; i <= lessons.length; i++){
@@ -398,7 +409,7 @@ exports.selectActivityAdvanced = function(course, myLesson, status, student){
 		 *	'Extension' without completing, and if there is, return the following 'Essential'.
 		 */
 		case 'Essential':
-			posibilities = this.findTypeLesson(myLesson.learning_path, 'Reinforcement', course);
+			posibilities = this.findTypeLessonPath(myLesson.learning_path, 'Reinforcement', course);
 
 			if(posibilities.length > 0){
 
@@ -419,13 +430,13 @@ exports.selectActivityAdvanced = function(course, myLesson, status, student){
 					}
 				}
 			} else {
-				posibilities = this.findTypeLesson(myLesson.learning_path, 'Extension', course);
+				posibilities = this.findTypeLessonPath(myLesson.learning_path, 'Extension', course);
 
 				if(posibilities.length > 0){
 					ret = this.selectLessonNotCoursed(posibilities, student); 
 
 					if(this.isCursed(ret, student)){
-						posibilities = this.findTypeLesson(myLesson.learning_path, 'Essential', course);
+						posibilities = this.findTypeLessonPath(myLesson.learning_path, 'Essential', course);
 					
 						if(posibilities.length > 0){
 							ret = this.selectLessonNotCoursed(posibilities, student); 
@@ -435,7 +446,7 @@ exports.selectActivityAdvanced = function(course, myLesson, status, student){
 					}
 
 				} else {
-					posibilities = this.findTypeLesson(myLesson.learning_path, 'Essential', course);
+					posibilities = this.findTypeLessonPath(myLesson.learning_path, 'Essential', course);
 					
 					if(posibilities.length > 0){
 						ret = this.selectLessonNotCoursed(posibilities, student); 
@@ -452,19 +463,19 @@ exports.selectActivityAdvanced = function(course, myLesson, status, student){
 		 */
 		case 'Reinforcement':
 			if(status === 1){
-				posibilities = this.findTypeLesson(myLesson.learning_path, 'Extension', course);
+				posibilities = this.findTypeLessonPath(myLesson.learning_path, 'Extension', course);
 
 				if(posibilities.length > 0){
 					ret = this.selectLessonNotCoursed(posibilities, student); 
 				} else {
-					posibilities = this.findTypeLesson(myLesson.learning_path, 'Essential', course);
+					posibilities = this.findTypeLessonPath(myLesson.learning_path, 'Essential', course);
 
 					if(posibilities.length > 0){
 						ret = this.selectLessonNotCoursed(posibilities, student); 
 					} 
 				}
 			} else {
-				posibilities = this.findTypeLesson(myLesson.learning_path, 'Reinforcement', course);
+				posibilities = this.findTypeLessonPath(myLesson.learning_path, 'Reinforcement', course);
 
 				if(posibilities.length > 0){
 					posibilities.sort(function(a, b){
@@ -474,7 +485,7 @@ exports.selectActivityAdvanced = function(course, myLesson, status, student){
 					ret = this.selectLessonNotCoursed(posibilities, student); 
 
 					if(this.isCursed(ret, student)){
-						posibilities = this.findTypeLesson(myLesson.learning_path, 'Essential', course);
+						posibilities = this.findTypeLessonPath(myLesson.learning_path, 'Essential', course);
 
 						if(posibilities.length > 0){
 							ret = this.selectLessonNotCoursed(posibilities, student); 
@@ -483,7 +494,7 @@ exports.selectActivityAdvanced = function(course, myLesson, status, student){
 						}
 					}
 				} else {
-					 posibilities = this.findTypeLesson(myLesson.learning_path, 'Essential', course);
+					 posibilities = this.findTypeLessonPath(myLesson.learning_path, 'Essential', course);
 
 					 if(posibilities.length > 0){
 					 	ret = this.selectLessonNotCoursed(posibilities, student); 
@@ -499,13 +510,13 @@ exports.selectActivityAdvanced = function(course, myLesson, status, student){
 		 */
 		case 'Extension': 
 			if(status === 1){
-				posibilities = this.findTypeLesson(myLesson.learning_path, 'Extension', course);
+				posibilities = this.findTypeLessonPath(myLesson.learning_path, 'Extension', course);
 
 				if(posibilities.length > 0){
 					ret = this.selectLessonNotCoursed(posibilities, student); 
 
 					if(this.isCursed(ret, student)){
-						posibilities = this.findTypeLesson(myLesson.learning_path, 'Essential', course);
+						posibilities = this.findTypeLessonPath(myLesson.learning_path, 'Essential', course);
 
 						if(posibilities.length > 0){
 							ret = this.selectLessonNotCoursed(posibilities, student); 
@@ -515,7 +526,7 @@ exports.selectActivityAdvanced = function(course, myLesson, status, student){
 					}
 
 				} else {
-					posibilities = this.findTypeLesson(myLesson.learning_path, 'Essential', course);
+					posibilities = this.findTypeLessonPath(myLesson.learning_path, 'Essential', course);
 
 					if(posibilities.length > 0){
 						ret = this.selectLessonNotCoursed(posibilities, student); 
@@ -549,12 +560,12 @@ exports.selectActivityMedium = function(course, myLesson, status, student){
 		case 'Essential':
 
 			if(status === 1){
-				posibilities = this.findTypeLesson(myLesson.learning_path, 'Reinforcement', course);
+				posibilities = this.findTypeLessonPath(myLesson.learning_path, 'Reinforcement', course);
 
 				if(posibilities.length > 0){
 					ret = this.selectLessonNotCoursed(posibilities, student); 
 				} else {
-					posibilities = this.findTypeLesson(myLesson.learning_path, 'Essential', course);
+					posibilities = this.findTypeLessonPath(myLesson.learning_path, 'Essential', course);
 					
 					if(posibilities.length > 0){
 						ret = this.selectLessonNotCoursed(posibilities, student); 
@@ -580,25 +591,25 @@ exports.selectActivityMedium = function(course, myLesson, status, student){
 				var indexMyLesson = functions2.exist_section_lesson(myLesson.name ,course.sections[0].lessons);
 
 				if(typePrevLesson !== 'Reinforcement' || indexMyLesson === prevLesson){
-					posibilities = this.findTypeLesson(myLesson.learning_path, 'Reinforcement', course);
+					posibilities = this.findTypeLessonPath(myLesson.learning_path, 'Reinforcement', course);
 
 					if(posibilities.length > 0){
 						ret = this.selectLessonNotCoursed(posibilities, student); 
 					} else {
-						posibilities = this.findTypeLesson(myLesson.learning_path, 'Essential', course);
+						posibilities = this.findTypeLessonPath(myLesson.learning_path, 'Essential', course);
 
 						if(posibilities.length > 0){
 							ret = this.selectLessonNotCoursed(posibilities, student); 
 						} 
 					}
 				} else {
-					posibilities = this.findTypeLesson(myLesson.learning_path, 'Essential', course);
+					posibilities = this.findTypeLessonPath(myLesson.learning_path, 'Essential', course);
 
 					if(posibilities.length > 0){
 						ret = this.selectLessonNotCoursed(posibilities, student); 
 					
 					} else {
-							posibilities = this.findTypeLesson(myLesson.learning_path, 'Reinforcement', course);
+							posibilities = this.findTypeLessonPath(myLesson.learning_path, 'Reinforcement', course);
 
 							if(posibilities.length > 0){
 								ret = this.selectLessonNotCoursed(posibilities, student); 
@@ -636,7 +647,7 @@ exports.selectActivityBeginner = function(course, myLesson, status, student){
 		case 'Essential':
 
 			if(status === 1){
-				posibilities = this.findTypeLesson(myLesson.learning_path, 'Reinforcement', course);
+				posibilities = this.findTypeLessonPath(myLesson.learning_path, 'Reinforcement', course);
 
 				if(posibilities.length === 1){
 					ret = posibilities[0];
@@ -649,7 +660,7 @@ exports.selectActivityBeginner = function(course, myLesson, status, student){
 					ret = this.selectLessonNotCoursed(posibilities, student); 
 				
 				} else {
-					posibilities = this.findTypeLesson(myLesson.learning_path, 'Essential', course);
+					posibilities = this.findTypeLessonPath(myLesson.learning_path, 'Essential', course);
 
 					if(posibilities.length > 0){
 						ret = this.selectLessonNotCoursed(posibilities, student); 
@@ -669,13 +680,13 @@ exports.selectActivityBeginner = function(course, myLesson, status, student){
 		case 'Reinforcement':
 
 			if(status === 1){
-				posibilities = this.findTypeLesson(myLesson.learning_path, 'Reinforcement', course);
+				posibilities = this.findTypeLessonPath(myLesson.learning_path, 'Reinforcement', course);
 
 				if(posibilities.length === 1){
 					ret = posibilities[0];
 
 					if(this.isCursed(ret, student)){
-						posibilities = this.findTypeLesson(myLesson.learning_path, 'Essential', course);
+						posibilities = this.findTypeLessonPath(myLesson.learning_path, 'Essential', course);
 
 						if(posibilities.length > 0){
 							ret = this.selectLessonNotCoursed(posibilities, student); 
@@ -692,7 +703,7 @@ exports.selectActivityBeginner = function(course, myLesson, status, student){
 					ret = this.selectLessonNotCoursed(posibilities, student); 
 
 					if(this.isCursed(ret, student)){
-						posibilities = this.findTypeLesson(myLesson.learning_path, 'Essential', course);
+						posibilities = this.findTypeLessonPath(myLesson.learning_path, 'Essential', course);
 
 						if(posibilities.length > 0){
 							ret = this.selectLessonNotCoursed(posibilities, student); 
@@ -702,7 +713,7 @@ exports.selectActivityBeginner = function(course, myLesson, status, student){
 					}
 
 				} else {
-					posibilities = this.findTypeLesson(myLesson.learning_path, 'Essential', course);
+					posibilities = this.findTypeLessonPath(myLesson.learning_path, 'Essential', course);
 
 					if(posibilities.length > 0){
 						ret = this.selectLessonNotCoursed(posibilities, student); 
@@ -782,7 +793,7 @@ exports.nextActivity = function (element, course, student){
 				 *  the course because we are in the last activity.
 				 */
 				
-				if(myLesson.learning_path[0] === indexMyLesson){
+				if((myLesson.learning_path[0] - 1) === indexMyLesson){
 					ret = -1;
 				} else {
 					indexMyLesson = this.selectActivity(myLesson, course, element.status, student);
