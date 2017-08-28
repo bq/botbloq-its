@@ -132,6 +132,8 @@ router.put('/:idc/student/:idstd/lom/:idl/:score', controller.correctActivity);
 
 router.put('/:id/includeObjectives', controller.includeObjectives); // include objectives in a course
 
+router.put('/:id/all', controller.updateAll); // update all course information 
+
 router.put('/:id', controller.update); // update the whole course 
 
 // DELETEs

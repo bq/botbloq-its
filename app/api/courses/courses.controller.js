@@ -172,6 +172,45 @@ exports.update = function(req, res) {
 
 
 /**
+ *  Updates all course information by id
+ */
+exports.updateAll = function(req, res) {
+	async.waterfall([
+	    Courses.findById.bind(Courses, req.params.id),
+	    function(course, next) {
+			if(req.body.name){
+				Courses.findOne({name: req.body.name}, function(err, course2) {
+					if(err){
+						console.log(err);
+			        	res.status(err.code).send(err);
+					} else if(!course2){
+						res.status(200);
+					} else {
+						if(course._id.equals(course2._id)){
+							res.status(200);
+						} else {
+							res.status(400).send('A course with the same name already exists');
+						}
+					}
+	
+					if(res.statusCode === 200) {
+						course = _.extend(course, req.body);
+						course.save(next);						
+					}
+				});
+			} else {
+				res.status(200);
+				course = _.extend(course, req.body);
+				course.save(next);	
+			}
+	    }
+	], function(err, course) {
+	    functions.controlErrors(err, res, course);
+	});		
+};
+
+
+/**
  *	Returns course objectives list
  */
 exports.getObjectives = function (req, res){
