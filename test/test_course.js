@@ -317,9 +317,9 @@ describe('Chakram', function(){
 					console.log('updating a not registrated lesson of a section and a course');
 					
 					lesson.name = 'Lesson_1_1';
-					lesson.summary = 'Updated_Summary'
+					lesson.title = 'Updated_Summary'
 				    return request.putBackend('/courses/' + idCourse + '/section/' + section.name + '/lesson/' + lesson.name, 200, lesson).then(function (response) {
-						expect(response.body.summary).to.equal(lesson.summary);
+						expect(response.body.title).to.equal(lesson.title);
 						console.log('updating a lesson of a section and a course');
 						
 						chakram.wait();
