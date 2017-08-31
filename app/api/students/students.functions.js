@@ -721,10 +721,12 @@ exports.selectActivityBeginner = function(course, myLesson, status, student){
 				}
 			} else {
 				var history = [];
-
+				
 				for(var i = 0; i < course.history.length; i++){
-					if(student._id.equals(course.history[i].id)){
-						history.push(course.history[i].lesson);
+					if (course.history[i] != null) {
+						if(student._id.equals(course.history[i].id)){
+							history.push(course.history[i].lesson);
+						}
 					}
 				}
 
