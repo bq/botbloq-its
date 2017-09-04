@@ -11,6 +11,9 @@ var router = express.Router();
 
 /////////////////////////////// GETs
 
+// login a teacher
+router.get('/:name/password/:pass', controller.login);
+
 // gets a teacher
 router.get('/:id', controller.get); 
 

@@ -31,6 +31,10 @@ var identificationSchema = new Schema({
 			'advanced'
 		]
     },
+    password: {
+    	type: String,
+    	required: false,
+    },
 	_id: false
 });
 

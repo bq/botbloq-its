@@ -23,6 +23,9 @@ router.get('/:idstd/course/:idc/isFinished', controller.isFinished);
 // gets a new activity for the enrolled course
 router.get('/:idstd/course/:idc', controller.newActivity); 
 
+// login a student
+router.get('/:name/password/:pass', controller.login); 
+
 // gets a student knowledgeLevel
 router.get('/:id/knowledge', controller.getKnowledge); 
 

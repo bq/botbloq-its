@@ -14,6 +14,10 @@ var identificationSchema = new Schema({
 		required: false,
 		unique : true
     },
+    password: {
+    	type: String,
+    	required: false,
+    },
 	_id: false
 });
 

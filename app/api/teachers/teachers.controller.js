@@ -21,6 +21,8 @@ var Teachers = require('./teachers.model.js'),
  *
  *	- update: 			Updates a teacher by id.
  *
+ *	- login: 			Login a teacher.
+ *
  *	- remove: 			Removes a teacher by id.
  *
  *	- destroy: 			Destroys all teachers.						
@@ -130,6 +132,23 @@ exports.update = function(req, res) {
 	], function(err, teacher) {
 	    functions.controlErrors(err, res, teacher);
 	});		
+};
+
+exports.login = function(req, res) {
+	Teachers.findOne({'identification.name': req.params.name}, function(err, teacher) {
+    	if(err){
+    		console.log(err);
+			res.status(err.code).send(err);
+    	}else if(!teacher){
+			res.status(400).send('Incorrect username or password');
+		} else {
+			if(req.params.pass === teacher.identification.password){
+	    		res.json(teacher);
+	    	} else {
+	    		res.status(400).send('Incorrect username or password');
+	    	}
+    	}
+    });
 };
 
 

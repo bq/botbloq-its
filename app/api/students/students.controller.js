@@ -29,6 +29,8 @@ ruleEngineLS.fromJSON(learning_rules);
  *
  *	- update: 			Updates a student by id.
  *
+ *	- login: 			Login a student.
+ *
  *	- remove: 			Removes a student by id.
  *
  *	- destroy: 			Destroys all students.
@@ -207,6 +209,23 @@ exports.update = function(req, res) {
 	], function(err, student) {
 	    functions.controlErrors(err, res, student);
 	});		
+};
+
+exports.login = function(req, res) {
+	Students.findOne({'identification.name': req.params.name}, function(err, student) {
+    	if(err){
+    		console.log(err);
+			res.status(err.code).send(err);
+    	}else if(!student){
+			res.status(400).send('Incorrect username or password');
+		} else {
+			if(req.params.pass === student.identification.password){
+	    		res.json(student);
+	    	} else {
+	    		res.status(400).send('Incorrect username or password');
+	    	}
+    	}
+    });
 };
 
 /**
