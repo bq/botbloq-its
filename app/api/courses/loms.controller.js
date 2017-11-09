@@ -221,8 +221,8 @@ exports.assign_loms = function(req, res) {
 
 									_.forEach(loms, function(value){
 										var typeLOM = CoursesFunctions.translateFormat(value.technical.format);
-
-										allLoms.push({lom_id: value._id, type: typeLOM});
+										
+										allLoms.push({lom_id: value._id, type: typeLOM, title: value.general.title});
 									});	
 
 									if (res.statusCode !== 200){

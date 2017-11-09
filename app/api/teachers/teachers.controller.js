@@ -68,27 +68,49 @@ exports.get = function (req, res) {
  */
 exports.create = function(req, res) {
 	var bool = false;
-	if (req.body.identification.email){
-		Teachers.findOne({'identification.email': req.body.identification.email}, function(err, teacher) {
+	if (req.body.identification.name && req.body.identification.email && req.body.identification.password){
+		Teachers.findOne({'identification.name': req.body.identification.name}, function(err, teacher) {
 			if(err){
 				console.log(err);
 	        	res.status(err.code).send(err);
 			} else if(!teacher){
-			    Teachers.create(req.body, function (err, teacher) {
-			        if (err){
-			        	console.log(err);
+			    Teachers.findOne({'identification.email': req.body.identification.email}, function(err, teacher) {
+					if(err){
+						console.log(err);
 			        	res.status(err.code).send(err);
-			        } else {
-			        	console.log('teacher created!');
-						res.json(teacher);
-			        }
-			    });
+					} else if(!teacher){
+					    Teachers.create(req.body, function (err, teacher) {
+					        if (err){
+					        	console.log(err);
+					        	res.status(err.code).send(err);
+					        } else {
+					        	console.log('teacher created!');
+								res.json(teacher);
+					        }
+					    });
+					} else {
+							res.status(403).send('Ya existe un profesor con este email');
+					}
+				});
 			} else {
-				res.status(403).send('A teacher with the same email already exists');
+				res.status(403).send('Ya existe un profesor con este nombre');
 			}
 		});
 	} else {
-		res.status(400).send('teacher email is required');
+		if(!req.body.identification.name && !req.body.identification.email && !req.body.identification.password)
+			res.status(400).send('Todos los campos son requerido');
+		else if(!req.body.identification.name && req.body.identification.email && req.body.identification.password)
+			res.status(400).send('El campo nombre del profesor es requerido');
+		else if(req.body.identification.name && !req.body.identification.email && req.body.identification.password) 
+			res.status(400).send('El campo email del profesor es requerido');
+		else if(req.body.identification.name && req.body.identification.email && !req.body.identification.password) 
+			res.status(400).send('El campo password del profesor es requerido');
+		else if(!req.body.identification.name && !req.body.identification.email && req.body.identification.password) 
+			res.status(400).send('El nombre y email del profesor son requeridos');
+		else if(req.body.identification.name && !req.body.identification.email && !req.body.identification.password) 
+			res.status(400).send('El email y password del profesor son requeridos');
+		else if(!req.body.identification.name && req.body.identification.email && !req.body.identification.password) 
+			res.status(400).send('El name y password del profesor son requeridos');
 	}
 };
 

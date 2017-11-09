@@ -117,53 +117,78 @@ exports.get = function (req, res) {
  */
 exports.create = function(req, res) {
 	var bool = false;
-	if (req.body.identification.email){
-		Students.findOne({'identification.email': req.body.identification.email}, function(err, student) {
+	if (req.body.identification.name && req.body.identification.email && req.body.identification.password){
+		Students.findOne({'identification.name': req.body.identification.name}, function(err, student) {
 			if(err){
 				console.log(err);
 	        	res.status(err.code).send(err);
 			} else if(!student){
-			    Students.create(req.body, function (err, student) {
-			        if (err){
-			        	console.log(err);
+			    Students.findOne({'identification.email': req.body.identification.email}, function(err, student) {
+					if(err){
+						console.log(err);
 			        	res.status(err.code).send(err);
-			        } else {
-			        	console.log('Student created!');
+					} else if(!student){
+					    Students.create(req.body, function (err, student) {
+					        if (err){
+					        	console.log(err);
+					        	res.status(err.code).send(err);
+					        } else {
+					        	console.log('Student created!');
 
-			        	var features = functions.calcFeatures(student);
-			        	// Calculate the student's group
-						ruleEngineGR.execute(features, function(result){
-							student.learningStyle.group = result.group;
-							if(req.body.learningStyle){
-								// If the learning style is included, the student's 
-								// ideal format type is calculated
-				        		ruleEngineLS.execute(student, function(result1){
-									student.learningStyle.type = result1.type;
-									student.save();
-									res.json(student);
+					        	var features = functions.calcFeatures(student);
+					        	// Calculate the student's group
+								ruleEngineGR.execute(features, function(result){
+									student.learningStyle.group = result.group;
+									if(req.body.learningStyle){
+										// If the learning style is included, the student's 
+										// ideal format type is calculated
+						        		ruleEngineLS.execute(student, function(result1){
+											student.learningStyle.type = result1.type;
+											student.save();
+											res.json(student);
+										});
+						        	} else {
+						        		// If learning style is not included, a survey is returned.
+										var json_survey = require('../../res/learningstyle.json'); 
+										
+										json_survey.id_student = student._id;
+										json_survey.nuevo = 1;
+										console.log("Formulario completo" + json_survey.form.length);
+										student.save();
+										res.json(json_survey);
+									}
 								});
-				        	} else {
-				        		// If learning style is not included, a survey is returned.
-								var json_survey = require('../../res/learningstyle.json'); 
-								
-								json_survey.id_student = student._id;
-								json_survey.nuevo = 1;
-								console.log("Formulario completo" + json_survey.form.length);
-								student.save();
-								res.json(json_survey);
-							}
-						});
-			        }
-			    });
+					        }
+					    });
+					} else {
+						res.status(403).send('Ya existe un estudiante con este email');
+					}
+				});
 			} else {
 
-				res.status(403).send('A student with the same email already exists');
+				res.status(403).send('Ya existe un estudiante con este nombre');
 			}
 		});
-	} else {
-		res.status(400).send('Student email is required');
+	} 
+	else {
+		if(!req.body.identification.name && !req.body.identification.email && !req.body.identification.password)
+			res.status(400).send('Todos los campos son requerido');
+		else if(!req.body.identification.name && req.body.identification.email && req.body.identification.password)
+			res.status(400).send('El campo nombre del estudiante es requerido');
+		else if(req.body.identification.name && !req.body.identification.email && req.body.identification.password) 
+			res.status(400).send('El campo email del estudiante es requerido');
+		else if(req.body.identification.name && req.body.identification.email && !req.body.identification.password) 
+			res.status(400).send('El campo password del estudiante es requerido');
+		else if(!req.body.identification.name && !req.body.identification.email && req.body.identification.password) 
+			res.status(400).send('El nombre y email del estudiante son requeridos');
+		else if(req.body.identification.name && !req.body.identification.email && !req.body.identification.password) 
+			res.status(400).send('El email y password del estudiante son requeridos');
+		else if(!req.body.identification.name && req.body.identification.email && !req.body.identification.password) 
+			res.status(400).send('El nombrecampo  y password del estudiante son requeridos');
 	}
+
 };
+
 
 
 /**
@@ -293,12 +318,12 @@ exports.getLesson = function (req, res) {
 								res.status(404).send('The section with id : ' + sectionId +
 								' has not been found in the course with id: ' + courseId);
 							} else {	// section exists
-								var indl = functions2.exist_section_lesson(lessonId,course.sections[inds].lessons);
+								var indl = functions2.exist_section_lesson(lessonId,course.sections[0].lessons);
 								if (indl < 0) {
 									res.status(404).send('The lesson with id : ' + lessonId +
 									' has not been found in the section with id: ' + sectionId);
 								} else {
-									res.status(200).send(course.sections[inds].lessons[indl]);	
+									res.status(200).send(course.sections[0].lessons[indl]);	
 								}	
 							}   
 						} 			 
@@ -482,6 +507,14 @@ exports.enrollment = function (req, res) {
 								activity = newCourse;
 								// The student changes in the course statistics
 								course.statistics.std_enrolled.push(student._id);
+								var indexAux=0;
+								course.statistics.std_unenrolled.find(function(element1, index1, array1){
+									if(element1 === student._id){
+										array1.splice(index1, 1);
+									}
+									indexAux=index1;
+								});
+								course.statistics.std_unenrolled.splice(indexAux, 1);
 							}
 
 							course.save();
@@ -522,11 +555,15 @@ exports.unenrollment = function (req, res) {
 								activity = element;
 								// The student changes in the course statistics
 								course.statistics.std_unenrolled.push(student._id);
+								var indexAux=0;
 								course.statistics.std_enrolled.find(function(element1, index1, array1){
 									if(element1 === student._id){
-										array1.splice(index, 1);
+										array1.splice(index1, 1);
 									}
+									indexAux=index1;
 								});
+								course.statistics.std_enrolled.splice(indexAux, 1);
+								student.course.splice(index,1);
 								course.save();
 								student.save(next);
 							}
@@ -605,6 +642,7 @@ exports.dataCourses = function (req, res) {
  *  the student is enrolled, depending on their previous activity
  *  and the result of the same.
  */
+
 exports.newActivity = function (req, res) {
 	var activity, ret = 0,
 	coursed = false;
@@ -613,7 +651,14 @@ exports.newActivity = function (req, res) {
 	    Students.findById.bind(Students,  req.params.idstd),
 	    function(student, next) { //find a student by id
 			Courses.findOne({_id: req.params.idc}, function(err, course){ 
-
+				 // var course2 =JSON.parse( JSON.stringify( course ) );
+				 // for(var i=0;i<course.sections.length;i++){
+				 //  	if(i!=0){
+				 //  		for(var j=0;j<course.sections[i].lessons.length;j++){
+				 //  			course2.sections[0].lessons.push(course.sections[i].lessons[j]);
+				 //  		}
+				 //  	}	
+				 //  }
 				// find a course by id
 			    if (err) {
 			        console.log(err);
@@ -623,7 +668,6 @@ exports.newActivity = function (req, res) {
 					activity = 'The course with id: ' + req.params.idc + ' is not registrated';
 				} else {
 					if(student.active === 1){
-
 						coursed = true;							
 						student.course.find(function(element){
 							if(course._id.equals(element.idCourse)){
@@ -641,7 +685,6 @@ exports.newActivity = function (req, res) {
 										ret = -4;
 
 									} else if(element.status !== 2){
-
 										ret = functions.nextActivity(element, course, student);	
 									} else {
 										ret = element;
@@ -652,12 +695,19 @@ exports.newActivity = function (req, res) {
 										/**
 										 *	The completed course is included in the student's statistics.
 										 */
-										course.statistics.std_finished.push(student._id);
-										course.statistics.std_enrolled.find(function(element, index, array){
+										var addFinished=true;
+										course.statistics.std_finished.find(function(element, index, array){
 											if(student._id.equals(element)){
-												array.splice(index,1) ;
+												addFinished=false;
 											}
 										});
+										if(addFinished) course.statistics.std_finished.push(student._id);
+
+										// course.statistics.std_enrolled.find(function(element, index, array){
+										// 	if(student._id.equals(element)){
+										// 		array.splice(index,1) ;
+										// 	}
+										// });
 										activity = student.knowledgeLevel;
 										element.status = -2;
 										res.status(200);

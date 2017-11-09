@@ -166,7 +166,8 @@ var technicalSchema = new Schema({
 var useSchema = new Schema({
 	interactivity_type: {
 		type: String,
-		default: 'no interactivity type'
+		default: 'no interactivity type',
+		required: false
 	},
 	interactivity_level: {
 		type: String,
@@ -225,6 +226,11 @@ var photoSchema = new Schema({
 });
 
 var lomSchema = new Schema({
+	author:{
+        type:String,
+        required: false,
+        default: 'unknown author'
+    },
 	general: {
 		type: generalSchema,
 		required: true,

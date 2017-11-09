@@ -14,8 +14,9 @@ var router = express.Router();
 // login a teacher
 router.get('/:name/password/:pass', controller.login);
 
-// gets a teacher
+// gets courses of a teacher
 router.get('/:id', controller.get); 
+
 
 // gets all teachers
 router.get('/', controller.all);

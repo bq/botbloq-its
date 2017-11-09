@@ -768,8 +768,20 @@ exports.selectActivity = function(myLesson, course, status, student){
 exports.nextActivity = function (element, course, student){
 	var ret = 0, indexMyLesson = 0, myLesson;
 		
-	// It is verified that the course has at least 1 section.	
+	// It is verified that the course has at least 1 section.
 	if(course.sections.length > 0 ){
+		// 	 var course2 =JSON.parse( JSON.stringify( course ) );
+		// // 	course.sections=new Object();
+		// 		 // 	course.sections.lessons=[];
+		// 		 // course.sections[0].lessons=[];
+		// 		 for(var i=0;i<course.sections.length;i++){
+		// 		  	if(i!=0){
+		// 		  		for(var j=0;j<course.sections[i].lessons.length;j++){
+		// 		  			course2.sections[0].lessons.push(course.sections[i].lessons[j]);
+		// 		  		}
+		// 		  	}	
+		// 		  }
+
 		element.idSection = course.sections[0].name;
 	
 	 	/**

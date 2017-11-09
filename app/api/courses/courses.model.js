@@ -7,6 +7,7 @@ var mongoose = require('mongoose'),
 var LOM = new Schema({ 
 	lom_id: String,
 	type: String,
+	title: String,
 	_id: false 
 });
 	
@@ -78,7 +79,16 @@ var CoursesSchema = new mongoose.Schema({
 	objectives: [Objective],
 	sections  : [Section],
 	photo: String,
-	author: String,
+	author:{
+        type:String,
+        required: false,
+        default: 'unknown author'
+    },
+    numLessons:{
+        type:Number,
+        required: false,
+        default: 0
+    },
 	statistics: {type: Statistics, required: true, default: ''},
 	history: [History],
 	solutions: [Solution]

@@ -52,7 +52,7 @@ router.post('/', controller.create);
 ////////////////////////// LOCKs
 
 // deactivates a course in a student
-router.lock('/:idstd/course/:idc', controller.unenrollment);
+router.delete('/:idstd/course/:idc', controller.unenrollment);
 
 // deactivates a student
 router.lock('/:id', controller.deactivate);

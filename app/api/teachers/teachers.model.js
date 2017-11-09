@@ -7,7 +7,8 @@ var Schema = mongoose.Schema;
 var identificationSchema = new Schema({
     name: {
         type: String,
-		required: false,		
+		required: false,
+        unique : true		
     },
     email: {
         type: String,
@@ -21,13 +22,36 @@ var identificationSchema = new Schema({
 	_id: false
 });
 
+var elementsSchema = new Schema({
+    loms: {
+        type: [String],
+        required: false,
+        default:[]
+    },
+    courses: {
+        type: [String],
+        required: false,
+        default:[]
+    },
+    _id: false
+});
 
 var teacherSchema = new Schema({
 	identification: {
 		type:identificationSchema,
 		required: false,
 		default: ''
-	}
+	},
+    elements: {
+        type:elementsSchema,
+        required: false,
+        default: ''
+    },
+    role: {
+        type:String,
+        required: false,
+        default: 'teacher'
+    }
 });
 
 // the schema is useless so far
