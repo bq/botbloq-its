@@ -37,6 +37,7 @@ Create base config.json file in app/res/config/config.json:
 ## Stability
 
 The current stable branch is **master**.
+The version in branch **develop** is also usable.
 
 
 ## Run
