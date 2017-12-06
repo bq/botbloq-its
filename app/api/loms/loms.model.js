@@ -30,7 +30,10 @@ var generalSchema = new Schema({
 		type: String,
 		enum: [
 			'atomic',
-			'complex'
+			'collection',
+			'networked',
+			'hierarchical',
+			'linear'
 		],
 		default: 'atomic'
 	},
@@ -86,7 +89,12 @@ var lifecycleSchema = new Schema({
 	},
 	contribution_type: {
 		type: String,
-		default: 'no type'
+		enum: [
+			'',
+			'creator',
+			'validator'
+		],
+		default: ''
 	},
 	contribution_entity: {
 		type: String,
@@ -119,7 +127,32 @@ var metadataSchema = new Schema({
 var technicalSchema = new Schema({
 	format: {
 		type: String,
-		default: 'no format'
+		enum: [
+			'',
+			'doc',
+			'acrobat',
+			'webPage',
+			'textFile',
+			'excel',
+			'powerPoint',
+			'flash',
+			'MIDIsound',
+			'MPEGsound',
+			'WAVEsound',
+			'realSound',
+			'BMPimage',
+			'GIFimage',
+			'JPGimage',
+			'PNGimage',
+			'AVIvideo',
+			'MPGvideo',
+			'QuickTimeVideo',
+			'realVideo',
+			'videoMediaPlayer',
+			'windowsMediaVideo',
+			'flashVideo'
+		],
+		default: ''
 	},
 	size_kb: {
 		type: Number,
@@ -129,9 +162,6 @@ var technicalSchema = new Schema({
 		type: String,
 		default: 'no URL'
 	},
-
-	///////////////////////////////////////
-
 	requirements_type: {
 		type: String,
 		required: false
@@ -166,20 +196,96 @@ var technicalSchema = new Schema({
 var useSchema = new Schema({
 	interactivity_type: {
 		type: String,
-		default: 'no interactivity type',
-		required: false
+		enum: [
+			'',
+			'active',
+			'expository',
+			'combinative'
+		],
+		default: '',
+		required: false		
 	},
 	interactivity_level: {
 		type: String,
-		default: 'no interactivity level'
+		enum: [
+			'',
+			'veryLow',
+			'low',
+			'medium',
+			'high',
+			'veryHigh'
+		],
+		default: ''
 	},
 	language: {
 		type: String,
-		default: 'English'
+		enum: [
+			'',
+			'es',
+			'en'
+		],
+		default: 'es'
 	},	
 	resource_type: {
 		type: String,
-		default: 'no resource type'
+		enum: [
+			'',
+			'pic',
+			'ilustration',
+			'video',
+			'animation',
+			'music',
+			'soundEfect',
+			'locution',
+			'compuestAudio',
+			'narrativeText',
+			'hypertext',
+			'graphicPc',
+			'integrateMedia',
+			'bbdd',
+			'table',
+			'grapich',
+			'conceptualMap',
+			'navigation',
+			'mapNavigation',
+			'digitalDic',
+			'digitalEnc',
+			'periodicdigitalPublication',
+			'web',
+			'wiki',
+			'weblog',
+			'creationEditMul',
+			'creationEditWeb',
+			'office',
+			'programming',
+			'analitic',
+			'support',
+			'manage',
+			'createEditMulService',
+			'officeService',
+			'programmingService',
+			'analiticService',
+			'serviceSupport',
+			'serviceManage',
+			'lecture',
+			'lesson',
+			'coment-text-image',
+			'activityArgue',
+			'closeExercise',
+			'contextualizeCase',
+			'openProblem',
+			'virtual',
+			'didacticPlay',
+			'webquest',
+			'experiment',
+			'realProyect',
+			'simulation',
+			'questionnaire',
+			'exam',
+			'autoEvaluation',
+			'presentationMul'
+		],
+		default: ''
 	},
 	resource_target: {
 		type: String,
@@ -187,11 +293,23 @@ var useSchema = new Schema({
 	},
 	resource_context: {
 		type: String,
-		default: 'no resource context'
+		enum: [
+			'',
+			'basicEducation',
+			'highEducation',
+			'capacity',
+			'other'
+		],
+		default: ''
 	},
 	resource_difficulty: {
 		type: String,
-		default: 'no resource difficulty'
+		enum: [
+			'basic',
+			'medium',
+			'advanced'
+		],
+		default: 'medium'
 	},
 
 	///////////////////////////////////////
